@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Util
 {
+    using Managers;
     [DefaultExecutionOrder(-50)]
     public class AddSingletonIfNeeded : MonoBehaviour
     {

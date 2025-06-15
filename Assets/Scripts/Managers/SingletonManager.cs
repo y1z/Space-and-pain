@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Managers 
 {
-    using Managers;
     [DefaultExecutionOrder(-30)]
     public class SingletonManager : MonoBehaviour
     {
