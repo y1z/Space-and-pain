@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-namespace Util
+namespace Managers 
 {
     using Managers;
     [DefaultExecutionOrder(-30)]
