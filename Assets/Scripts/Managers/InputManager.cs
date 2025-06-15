@@ -4,7 +4,31 @@ using UnityEngine;
 namespace Managers
 {
     using UnityEngine.InputSystem;
+
+    public enum InputInfo : ushort
+    {
+
+        NONE = 0,
+        SHOOT_ACTION_PRESSED_THIS_FRAME = 0b0000_0000_0000_0001,
+        PAUSE_ACTION_PRESSED_THIS_FRAME = 0b0000_0000_0000_0010,
+        ANY_ACTION_PRESSED_THIS_FRAME = SHOOT_ACTION_PRESSED_THIS_FRAME | SHOOT_ACTION_PRESSED_THIS_FRAME,
+
+        SHOOT_ACTION_PRESSED = 0b0000_0000_0001_0000,
+        PAUSE_ACTION_PRESSED = 0b0000_0000_0010_0000,
+        ANY_ACTION_PRESSED = SHOOT_ACTION_PRESSED | PAUSE_ACTION_PRESSED,
+
+
+        UP = 0b0001_0000_0000_0000,
+        DOWN = 0b0010_0000_0000_0000,
+        LEFT = 0b0100_0000_0000_0000,
+        RIGHT = 0b1000_0000_0000_0000,
+        VERTICAL = UP | DOWN,
+        HORIZONTAL = LEFT | RIGHT,
+        ANY_DIRECTION = VERTICAL | HORIZONTAL,
+    }
+
     /// <summary>
+    /// Controls input for the current projec5
     /// </summary>
     public sealed class InputManager : MonoBehaviour
     {
@@ -15,8 +39,8 @@ namespace Managers
         private InputAction pauseAction;
 
         public Vector2 movement { get; private set; } = Vector2.zero;
-        public bool shootActionIsPressed { get; private set; } = false;
-        public bool pauseActionIsPressed { get; private set; } = false;
+
+        public InputInfo currentInputInfo { get; private set; } = InputInfo.NONE;
 
         private void OnEnable()
         {
@@ -27,6 +51,7 @@ namespace Managers
         {
             asset.FindActionMap("Player").Disable();
         }
+
         private void Awake()
         {
             moveAction = InputSystem.actions.FindAction("Move");
@@ -37,26 +62,93 @@ namespace Managers
 
         private void Update()
         {
-            movement = moveAction.ReadValue<Vector2>();
+            currentInputInfo = InputInfo.NONE;
+            checkMovementDirection();
+            checkIsBeingPressed();
+            checkIsBeingPressedThisFrame();
+        }
+
+        #region READ_INPUT
+
+        private void checkIsBeingPressedThisFrame()
+        {
 
             if (shootAction.WasPressedThisFrame())
             {
-                shootActionIsPressed = true;
+                currentInputInfo |= InputInfo.SHOOT_ACTION_PRESSED_THIS_FRAME;
             }
             else
             {
-                shootActionIsPressed = false;
+                currentInputInfo = currentInputInfo & ~InputInfo.SHOOT_ACTION_PRESSED_THIS_FRAME;
             }
 
             if (pauseAction.WasPressedThisFrame())
             {
-                pauseActionIsPressed = true;
+                currentInputInfo |= InputInfo.PAUSE_ACTION_PRESSED_THIS_FRAME;
             }
             else
             {
-                pauseActionIsPressed = false;
+                currentInputInfo = currentInputInfo & ~InputInfo.PAUSE_ACTION_PRESSED_THIS_FRAME;
             }
 
+        }
+
+        private void checkIsBeingPressed()
+        {
+            if (shootAction.IsPressed())
+            {
+                currentInputInfo |= InputInfo.SHOOT_ACTION_PRESSED;
+            }
+            else
+            {
+                currentInputInfo = currentInputInfo & ~InputInfo.SHOOT_ACTION_PRESSED;
+            }
+
+            if (pauseAction.IsPressed())
+            {
+                currentInputInfo |= InputInfo.PAUSE_ACTION_PRESSED;
+            }
+            else
+            {
+                currentInputInfo = currentInputInfo & ~InputInfo.PAUSE_ACTION_PRESSED;
+            }
+
+        }
+
+        private void checkMovementDirection()
+        {
+            movement = moveAction.ReadValue<Vector2>();
+            if(movement.y > 0.1f)
+            {
+                currentInputInfo |= InputInfo.UP;
+            }
+
+            if(movement.y < -0.1f)
+            {
+                currentInputInfo |= InputInfo.DOWN;
+            }
+
+            if(movement.x > 0.1f)
+            {
+                currentInputInfo |= InputInfo.RIGHT;
+            }
+
+            if(movement.x < -0.1f)
+            {
+                currentInputInfo |= InputInfo.LEFT;
+            }
+        }
+
+        #endregion
+
+        public bool isShootActionPressedThisFrame()
+        {
+            return (currentInputInfo & InputInfo.SHOOT_ACTION_PRESSED_THIS_FRAME) > 0;
+        }
+
+        public bool isPauseActionPressedThisFrame()
+        {
+            return (currentInputInfo & InputInfo.PAUSE_ACTION_PRESSED_THIS_FRAME) > 0;
         }
 
     }
