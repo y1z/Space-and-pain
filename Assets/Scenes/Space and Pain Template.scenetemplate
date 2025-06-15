@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13966, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Space and Pain Template
+  m_EditorClassIdentifier: 
+  templateScene: {fileID: 102900000, guid: e7e87c3f3ce8f284cb1788eb6058792e, type: 3}
+  templateName: Space and pain template scene
+  description: Space and pain template scene
+  preview: {fileID: 0}
+  dependencies:
+  - dependency: {fileID: 2800000, guid: 3028dc075ba8c584d9bc7d1e0255e038, type: 3}
+    instantiationMode: 1
+  - dependency: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    instantiationMode: 1
+  - dependency: {fileID: 922067405380882876, guid: 466fd931af1e7f8459458c7c6ff314dc, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 5890880406048169634, guid: 3ff1f2b0a3725ab409bc25e4830388d1, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 1450732662822198866, guid: 2eb65f0bcb40a2a48823ab35e976ac44, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+    instantiationMode: 1
+  - dependency: {fileID: 7531365010021608856, guid: 75a99c1b755f4d24bafaae8362078e99, type: 3}
+    instantiationMode: 0
+  templatePipeline: {fileID: 0}
+  badge: {fileID: 0}
+  addToDefaults: 1
