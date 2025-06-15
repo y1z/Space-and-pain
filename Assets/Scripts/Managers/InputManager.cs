@@ -5,6 +5,7 @@ namespace Managers
 {
     using UnityEngine.InputSystem;
 
+    [System.Flags]
     public enum InputInfo : ushort
     {
 
@@ -118,28 +119,30 @@ namespace Managers
         private void checkMovementDirection()
         {
             movement = moveAction.ReadValue<Vector2>();
-            if(movement.y > 0.1f)
+            if (movement.y > 0.1f)
             {
                 currentInputInfo |= InputInfo.UP;
             }
 
-            if(movement.y < -0.1f)
+            if (movement.y < -0.1f)
             {
                 currentInputInfo |= InputInfo.DOWN;
             }
 
-            if(movement.x > 0.1f)
+            if (movement.x > 0.1f)
             {
                 currentInputInfo |= InputInfo.RIGHT;
             }
 
-            if(movement.x < -0.1f)
+            if (movement.x < -0.1f)
             {
                 currentInputInfo |= InputInfo.LEFT;
             }
         }
 
         #endregion
+
+        #region IS_INPUT_SECTION
 
         public bool isShootActionPressedThisFrame()
         {
@@ -150,6 +153,37 @@ namespace Managers
         {
             return (currentInputInfo & InputInfo.PAUSE_ACTION_PRESSED_THIS_FRAME) > 0;
         }
+
+        public bool isShootBeingPressed()
+        {
+            return (currentInputInfo & InputInfo.SHOOT_ACTION_PRESSED) > 0;
+        }
+
+        public bool isPauseBeingPressed()
+        {
+            return (currentInputInfo & InputInfo.PAUSE_ACTION_PRESSED) > 0;
+        }
+
+        public bool isDirectionBeingInputed(InputInfo desired_direction)
+        {
+            return (currentInputInfo & desired_direction) > 0;
+        }
+
+        #endregion
+
+        #region GET_INPUT
+
+        public InputInfo getInputedDirection()
+        {
+            InputInfo result = InputInfo.NONE;
+
+            result = currentInputInfo & InputInfo.ANY_DIRECTION;
+
+            return result;
+        }
+
+        #endregion
+
 
     }
 
