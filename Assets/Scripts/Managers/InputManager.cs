@@ -8,17 +8,57 @@ namespace Managers
     /// </summary>
     public sealed class InputManager : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        [SerializeField] private InputActionAsset asset;
+
+        private InputAction moveAction;
+        private InputAction shootAction;
+        private InputAction pauseAction;
+
+        public Vector2 movement { get; private set; } = Vector2.zero;
+        public bool shootActionIsPressed { get; private set; } = false;
+        public bool pauseActionIsPressed { get; private set; } = false;
+
+        private void OnEnable()
         {
+            asset.FindActionMap("Player").Enable();
+        }
+
+        private void OnDisable()
+        {
+            asset.FindActionMap("Player").Disable();
+        }
+        private void Awake()
+        {
+            moveAction = InputSystem.actions.FindAction("Move");
+            shootAction = InputSystem.actions.FindAction("Shoot");
+            pauseAction = InputSystem.actions.FindAction("Pause");
 
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
+            movement = moveAction.ReadValue<Vector2>();
+
+            if (shootAction.WasPressedThisFrame())
+            {
+                shootActionIsPressed = true;
+            }
+            else
+            {
+                shootActionIsPressed = false;
+            }
+
+            if (pauseAction.WasPressedThisFrame())
+            {
+                pauseActionIsPressed = true;
+            }
+            else
+            {
+                pauseActionIsPressed = false;
+            }
 
         }
+
     }
 
 }
