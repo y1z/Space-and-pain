@@ -1,20 +1,37 @@
+using Managers;
 using UnityEngine;
 
 namespace Entities
 {
     public sealed class Enemy : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
+        public int id;
+        /// <summary>
+        /// keeps track of how many enemies are in the scene
+        /// </summary>
+        public int enemyCount;
 
+        public GameStates gameStates;
+
+        #region GameManagerBoilerPlate
+
+        private void OnEnable()
+        {
+            SingletonManager.inst.gameManager.subscribe(onStateChange);
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnDisable()
         {
-
+            SingletonManager.inst.gameManager.unSubscribe(onStateChange);
         }
+
+        private void onStateChange(GameStates newState)
+        {
+            gameStates = newState;
+        }
+
+        #endregion
+
     }
 
 }
