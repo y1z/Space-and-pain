@@ -11,7 +11,7 @@ namespace Managers
     using Utility;
     public sealed class GameManager : MonoBehaviour
     {
-        public GameStates gameState { get; private set; } = GameStates.IDLE;
+        [field: SerializeField] public GameStates gameState { get; private set; } = GameStates.IDLE;
 
         private Action<GameStates> gameStateSignalSender;
 
@@ -25,11 +25,50 @@ namespace Managers
             gameStateSignalSender -= func;
         }
 
+        /// <summary>
+        /// This function set the state  to all subscribers of the game manager
+        /// </summary>
+        /// <param name="state">The new state to be set</param>
         public void setState(GameStates state)
         {
             gameState = state;
             gameStateSignalSender?.Invoke(gameState);
         }
+
+        #region ContextMenuFunctions
+
+        [ContextMenu("Set state to IDLE")]
+        public void setStateIdle()
+        {
+            setState(GameStates.IDLE);
+        }
+
+        [ContextMenu("Set state to Pause")]
+        public void setStatePause()
+        {
+            setState(GameStates.PAUSE);
+        }
+
+        [ContextMenu("Set state to PLAYING")]
+        public void setStatePlaying()
+        {
+            setState(GameStates.PLAYING);
+        }
+
+        [ContextMenu("Set state to GAME_OVER")]
+        public void setStateGameOver()
+        {
+            setState(GameStates.GAME_OVER);
+        }
+
+        [ContextMenu("Set state to WON")]
+        public void setStateWon()
+        {
+            setState(GameStates.WON);
+        }
+
+        #endregion
+
 
         public void printSubscribers()
         {

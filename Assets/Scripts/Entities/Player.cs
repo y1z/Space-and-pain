@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Player
+namespace Entities
 {
     [SelectionBase]
     public sealed class Player : MonoBehaviour
