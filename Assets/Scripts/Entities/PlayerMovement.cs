@@ -1,7 +1,7 @@
 using Managers;
 using UnityEngine;
 
-namespace Player
+namespace Entities
 {
     public sealed class PlayerMovement : MonoBehaviour
     {
