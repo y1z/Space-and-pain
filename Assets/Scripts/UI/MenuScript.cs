@@ -128,34 +128,6 @@ namespace UI
             selectorIndex = nextIndex;
         }
 
-        private int findUsableSelectable(int startIndex, bool lookForward = true)
-        {
-            int result = -1;
-            if (lookForward)
-            {
-                for (int i = startIndex + 1; i < selectables.Length - 1; ++i)
-                {
-                    if (selectables[i].gameObject.activeInHierarchy)
-                    {
-                        result = i;
-                        break;
-                    }
-                }
-                return result;
-            }
-
-            for (int i = startIndex - 1; i > -1; --i)
-            {
-                if (selectables[i].gameObject.activeInHierarchy)
-                {
-                    result = i;
-                    break;
-                }
-
-            }
-
-            return result;
-        }
 
         #endregion
 
@@ -178,7 +150,6 @@ namespace UI
         }
 
         #endregion
-
 
         #region Coroutines
 
