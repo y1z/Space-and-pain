@@ -164,9 +164,39 @@ namespace Managers
             return (currentInputInfo & InputInfo.PAUSE_ACTION_PRESSED) > 0;
         }
 
-        public bool isDirectionBeingInputed(InputInfo desired_direction)
+        public bool isInputBeingUsed(InputInfo desired_direction)
         {
             return (currentInputInfo & desired_direction) > 0;
+        }
+
+        public bool isDirectionUpPressed()
+        {
+            return isInputBeingUsed(InputInfo.UP);
+        }
+
+        public bool isDirectionDownPressed()
+        {
+            return isInputBeingUsed(InputInfo.DOWN);
+        }
+
+        public bool isDirectionLeftPressed()
+        {
+            return isInputBeingUsed(InputInfo.LEFT);
+        }
+
+        public bool isDirectionRightPressed()
+        {
+            return isInputBeingUsed(InputInfo.RIGHT);
+        }
+
+        public bool isPressingHorizontal()
+        {
+            return isInputBeingUsed(InputInfo.HORIZONTAL);
+        }
+
+        public bool isPressingVertical()
+        {
+            return isInputBeingUsed(InputInfo.VERTICAL);
         }
 
         #endregion

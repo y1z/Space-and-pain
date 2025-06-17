@@ -58,12 +58,12 @@ namespace UI
 
             if ((inputedDirection & blockedInputs) > 0) { return; }
 
-            if ((inputedDirection & InputInfo.UP) > 0)
+            if (im.isDirectionUpPressed())
             {
                 changeSelectorUp();
                 StartCoroutine(blockUpInput());
             }
-            else if ((inputedDirection & InputInfo.DOWN) > 0)
+            else if (im.isDirectionDownPressed())
             {
                 changeSelectorDown();
                 StartCoroutine(blockDownInput());
