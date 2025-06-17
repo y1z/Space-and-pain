@@ -39,7 +39,18 @@ namespace UI
     {
         public RectTransform rectTransform;
         public InteractionType interactionType { get; protected set; } = InteractionType.CLICK;
-        public UnityEvent<UiAction, UiResult> onActionExecute;
+        public Action<UiAction, UiResult> onActionExecute;
+
+        public void Awake()
+        {
+            if (rectTransform == null)
+            {
+                rectTransform = GetComponent<RectTransform>();
+                EDebug.Assert(rectTransform != null, $"This class needs a {typeof(RectTransform)} to work", this);
+            }
+
+        }
+
         public abstract UiResult executeAction(UiAction action);
 
         /// <summary>
