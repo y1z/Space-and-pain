@@ -173,6 +173,10 @@ namespace Managers
 
         #region GET_INPUT
 
+        /// <summary>
+        /// Gets only the values from InputInfo associated with directions.
+        /// </summary>
+        /// <returns>the following values from InputInfo UP, DOWN, LEFT, RIGHT or NONE </returns>
         public InputInfo getInputedDirection()
         {
             InputInfo result = InputInfo.NONE;
