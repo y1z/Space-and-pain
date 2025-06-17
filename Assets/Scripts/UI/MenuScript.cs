@@ -74,7 +74,8 @@ namespace UI
         void selectorPosition()
         {
             selectorObject.SetParent(selectables[selectorIndex].transform);
-            selectorObject.localPosition = distanceFromSelectedObject;
+            selectorObject.anchoredPosition = distanceFromSelectedObject;
+            //selectorObject.localPosition = distanceFromSelectedObject;
         }
 
         #endregion
