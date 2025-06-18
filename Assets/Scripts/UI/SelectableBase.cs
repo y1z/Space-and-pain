@@ -56,7 +56,9 @@ namespace UI
         /// <summary>
         /// If the UI Element needs to be a certain way use this method for that
         /// </summary>
-        public virtual void setup(Action<SelectableBase> setFunction) { }
+        public virtual void setup(Action<SelectableBase> setFunction) {
+            setFunction(this);
+        }
 
         /// <summary>
         /// Default implementation of how UI will handle input in the game 
