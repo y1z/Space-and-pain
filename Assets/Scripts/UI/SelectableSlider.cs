@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +18,8 @@ namespace UI
         [SerializeField] private Color offColor;
         public int turnOnCount { get; private set; } = 0;
 
+        public float separationBetweenSliderUnits = 0.2f;
+
         private void Start()
         {
             EDebug.Assert(sliderContainer != null, $"This script needs a type of {typeof(HorizontalOrVerticalLayoutGroup)}", this);
@@ -27,6 +29,11 @@ namespace UI
             turnOnCount = sliderUnits.Length / 2;
             base.interactionType = InteractionType.LEFT_RIGHT;
             drawSliderUnits();
+        }
+
+        private void Update()
+        {
+            sliderContainer.spacing = separationBetweenSliderUnits;
         }
 
         public override UiResult executeAction(UiAction action)
@@ -69,5 +76,18 @@ namespace UI
             }
 
         }
+
+        public override float getValue()
+        {
+            return ((float)sliderUnits.Length / (float)turnOnCount);
+        }
+
+        public override void setValue(float newValue)
+        {
+            turnOnCount = Mathf.FloorToInt(sliderUnits.Length * Mathf.Clamp01(newValue));
+            drawSliderUnits();
+        }
+
+
     }
 }
