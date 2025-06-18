@@ -94,5 +94,17 @@ namespace UI
             }
 
         }
+
+        /// <summary>
+        /// This is for UI elements that represent values
+        /// </summary>
+        /// <returns>0 by default override it if other behavior is intended</returns>
+        public virtual float getValue() => 0.0f;
+
+        /// <summary>
+        /// This is for Ui elements that can represent values by default does nothing override it if other behavior is intended
+        /// </summary>
+        /// <param name="newValue"> the new value to set</param>
+        public virtual void setValue(float newValue) { }
     }
 }

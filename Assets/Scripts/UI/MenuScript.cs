@@ -39,6 +39,7 @@ namespace UI
         void Update()
         {
             if (!isOn) { return; }
+            if (selectables.Length < 1) { return; }
             handleInput();
             handleMenuInput();
             selectorPosition();
@@ -46,8 +47,25 @@ namespace UI
 
         #region MathodsCalledByTheUpdateFunction
 
-        void handleInput()
+        void handleInput() 
         {
+            InteractionType interactionType = selectables[selectorIndex].interactionType;
+
+            if(interactionType == InteractionType.LEFT_RIGHT)
+            {
+                if((SingletonManager.inst.inputManager.getInputedDirection() & blockedInputs) > 0)
+                {
+                    return;
+                }
+
+                if(SingletonManager.inst.inputManager.isPressingHorizontal())
+                {
+                    StartCoroutine(blockHorizontalInput());
+                }
+
+                selectables[selectorIndex].handleInput();
+                return;
+            }
             selectables[selectorIndex].handleInput();
         }
 
@@ -91,7 +109,7 @@ namespace UI
             }
             if (!selectables[nextIndex].gameObject.activeInHierarchy)
             {
-                for (int i = nextIndex ; i > -1; --i)
+                for (int i = nextIndex; i > -1; --i)
                 {
                     nextIndex -= 1;
                     if (selectables[nextIndex].gameObject.activeInHierarchy)
@@ -168,6 +186,12 @@ namespace UI
             blockedInputs = blockedInputs & ~InputInfo.DOWN;
         }
 
+        IEnumerator blockHorizontalInput()
+        {
+            blockedInputs |= InputInfo.HORIZONTAL;
+            yield return new WaitForSeconds(inputDelay);
+            blockedInputs = blockedInputs & ~InputInfo.HORIZONTAL;
+        }
         #endregion
 
     }
