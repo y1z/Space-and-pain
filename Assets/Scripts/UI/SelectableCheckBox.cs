@@ -6,6 +6,7 @@ namespace UI
     public sealed class SelectableCheckBox : SelectableBase
     {
 
+        [Header("Logic")]
         public bool isChecked = false;
         private bool privousIsChecked;
 
@@ -14,7 +15,6 @@ namespace UI
         [SerializeField] private Image checkImage;
         [Tooltip("Image displayed with the check box is OFF")]
         [SerializeField] private Image unCheckImage;
-        [Tooltip("Image displayed with the check box is OFF")]
 
         private void Start()
         {
