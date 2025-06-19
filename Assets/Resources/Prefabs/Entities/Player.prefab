@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1017991242927176037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8000991329860645031}
+  m_Layer: 0
+  m_Name: Projectile Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8000991329860645031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017991242927176037}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.28, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5690833098748839317}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3152204949516468035
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5690833098748839317}
   - component: {fileID: 1340390992370131382}
+  - component: {fileID: 2590692267078070718}
   - component: {fileID: 78446576417048164}
   - component: {fileID: 2577108809818548305}
   m_Layer: 0
@@ -33,6 +65,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7483435857986333897}
+  - {fileID: 8000991329860645031}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1340390992370131382
@@ -48,6 +81,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingPosition: {x: 0, y: 0}
+--- !u!114 &2590692267078070718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3152204949516468035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cb2527c51c338849b59d140dcdda313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectiles: []
+  templateInace: {fileID: 0}
+  referenceToPlayer: {fileID: 1340390992370131382}
+  spawnPoint: {fileID: 0}
 --- !u!114 &78446576417048164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,7 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   cc: {fileID: 0}
-  referenceToPlayer: {fileID: 0}
+  referenceToPlayer: {fileID: 1340390992370131382}
 --- !u!143 &2577108809818548305
 CharacterController:
   m_ObjectHideFlags: 0

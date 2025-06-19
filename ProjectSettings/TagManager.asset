@@ -5,11 +5,13 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - Projectile
+  - Boundary
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Boundary
   - Water
   - UI
   - 
