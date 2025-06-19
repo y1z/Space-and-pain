@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using Managers;
+
 
 namespace Entities
 {
+
     [SelectionBase]
     public sealed class Player : MonoBehaviour
     {
@@ -10,6 +13,8 @@ namespace Entities
         public int maxShots { get; set; } = 2;
 
         public Vector2 startingPosition;
+
+        public GameStates currentGameState { get; private set; }
 
         private void Start()
         {
@@ -31,6 +36,24 @@ namespace Entities
             gameObject.SetActive(false);
         }
 
+        #region GameManagerBoilerPlate
+        private void OnEnable()
+        {
+            SingletonManager.inst.gameManager.subscribe(setState);
+            setState(SingletonManager.inst.gameManager.gameState);
+        }
+
+        private void OnDisable()
+        {
+            SingletonManager.inst.gameManager.unSubscribe(setState);
+        }
+
+        private void setState(GameStates state)
+        {
+            currentGameState = state;
+        }
+
+        #endregion 
 
     }
 

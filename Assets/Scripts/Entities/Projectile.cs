@@ -11,6 +11,8 @@ namespace Entities
         GameStates gameStates;
 
         public float speed = 1.0f;
+        [SerializeField] private float distanceTraveled = 0.0f;
+        [SerializeField] private float maxDistanced = 10.0f;
         public Vector2 direction = Vector2.up;
 
         /// <summary>
@@ -21,26 +23,40 @@ namespace Entities
 
         private void Awake()
         {
-            if (cc == null)
-            {
-                cc = GetComponent<CharacterController>();
-                EDebug.Assert(cc != null, $"This script needs and instance of {typeof(CharacterController)} to work", this);
-            }
+            setUp();
         }
 
         private void Update()
         {
             if (gameStates != GameStates.PLAYING) { return; }
 
+            Vector3 starting = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
             cc.Move((speed * Time.deltaTime) * direction);
+
+            Vector3 ending = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
+            distanceTraveled += (starting - ending).magnitude;
+
+            if(distanceTraveled > maxDistanced)
+            {
+                distanceTraveled = 0.0f;
+                gameObject.SetActive(false);
+            }
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
         {
+            EDebug.Log($"{nameof(OnControllerColliderHit)}");
             if (hit.gameObject.CompareTag("Projectile"))
             {
                 StartCoroutine(deathAnimation());
                 return;
+            }
+
+            if (hit.gameObject.CompareTag("Boundary"))
+            {
+                gameObject.SetActive(false);
             }
 
             bool isEnemy = hit.gameObject.CompareTag("Enemy");
@@ -58,6 +74,18 @@ namespace Entities
             }
 
         }
+
+
+        public void setUp()
+        {
+            if (cc == null)
+            {
+                cc = GetComponent<CharacterController>();
+                EDebug.Assert(cc != null, $"This script needs and instance of {typeof(CharacterController)} to work", this);
+            }
+            distanceTraveled = 0.0f;
+        }
+
 
         #region GameManagerBoilerPlate
         private void OnEnable()
