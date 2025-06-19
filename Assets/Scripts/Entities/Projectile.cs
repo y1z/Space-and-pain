@@ -56,6 +56,7 @@ namespace Entities
 
             if (hit.gameObject.CompareTag("Boundary"))
             {
+                setUp();
                 gameObject.SetActive(false);
             }
 
@@ -63,6 +64,8 @@ namespace Entities
             if (isEnemy && isPlayerProjectile)
             {
                 hit.gameObject.GetComponent<Enemy>().dies();
+                setUp();
+                gameObject.SetActive(false);
                 return;
             }
 
@@ -70,11 +73,12 @@ namespace Entities
             if (isPlayer && !isPlayerProjectile)
             {
                 hit.gameObject.GetComponent<Player>().dies();
+                setUp();
+                gameObject.SetActive(false);
                 return;
             }
 
         }
-
 
         public void setUp()
         {
@@ -86,6 +90,17 @@ namespace Entities
             distanceTraveled = 0.0f;
         }
 
+        public void teleport(Transform _transform)
+        {
+            teleport(_transform.position);
+        }
+
+        public void teleport(Vector3 vector3)
+        {
+            cc.enabled = false;
+            transform.position = vector3;
+            cc.enabled = true;
+        }
 
         #region GameManagerBoilerPlate
         private void OnEnable()
