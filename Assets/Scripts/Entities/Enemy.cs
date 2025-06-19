@@ -1,3 +1,4 @@
+using System.Collections;
 using Managers;
 using UnityEngine;
 
@@ -31,6 +32,22 @@ namespace Entities
         }
 
         #endregion
+
+
+        /// <summary>
+        /// TODO : PLAY DEATH ANIMATION WITH THIS FUNCTION
+        /// </summary>
+        /// <returns></returns>
+        public void dies()
+        {
+            StartCoroutine(deathAnmation());
+        }
+
+        private IEnumerator deathAnmation()
+        {
+            yield return null;
+            gameObject.SetActive(false);
+        }
 
     }
 

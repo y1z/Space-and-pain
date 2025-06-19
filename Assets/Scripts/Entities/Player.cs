@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Entities
@@ -13,6 +14,21 @@ namespace Entities
         private void Start()
         {
             startingPosition = transform.position;
+        }
+
+        /// <summary>
+        /// TODO : PLAY DEATH ANIMATION WITH THIS FUNCTION
+        /// </summary>
+        /// <returns></returns>
+        public void dies()
+        {
+            StartCoroutine(deathAnmation());
+        }
+
+        private IEnumerator deathAnmation()
+        {
+            yield return null;
+            gameObject.SetActive(false);
         }
 
 
