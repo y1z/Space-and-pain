@@ -72,9 +72,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cc: {fileID: 5958998780406084579}
-  speed: 2
+  speed: 3
   distanceTraveled: 0
-  maxDistanced: 10
+  maxDistanced: 9
   direction: {x: 0, y: 1}
   isPlayerProjectile: 1
 --- !u!1 &8585608745458112646
