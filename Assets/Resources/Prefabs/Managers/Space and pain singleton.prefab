@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3365598251581274002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1646520509614652673}
+  - component: {fileID: 6090944471492691215}
+  m_Layer: 0
+  m_Name: Enemy Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1646520509614652673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3365598251581274002}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2242723157874201859}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6090944471492691215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3365598251581274002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc97c1c7998fe7c47b0a8dae9d65a660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemies: []
 --- !u!1 &5890880406048169634
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,6 +77,7 @@ Transform:
   m_Children:
   - {fileID: 197851047971607915}
   - {fileID: 8779777685062109647}
+  - {fileID: 1646520509614652673}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6267793223250411363
@@ -48,6 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <gameManager>k__BackingField: {fileID: 1980408273126507776}
   <inputManager>k__BackingField: {fileID: 928157349154569569}
+  <enemyManager>k__BackingField: {fileID: 6090944471492691215}
 --- !u!1001 &1002704998904363512
 PrefabInstance:
   m_ObjectHideFlags: 0
