@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Managers;
 using UnityEngine;
@@ -6,13 +7,21 @@ namespace Entities
 {
     public sealed class Enemy : MonoBehaviour
     {
-        public int id;
+        public const int DEFAULT_ID = -1337;
+
+        public int id = DEFAULT_ID;
         /// <summary>
         /// keeps track of how many enemies are in the scene
         /// </summary>
         public int enemyCount;
 
         public GameStates gameStates;
+
+        public EnemyMovement enemyMovement;
+
+        public SpriteRenderer enemySprite;
+
+        public Action<int> onDies;
 
         #region GameManagerBoilerPlate
 
@@ -33,13 +42,13 @@ namespace Entities
 
         #endregion
 
-
         /// <summary>
         /// TODO : PLAY DEATH ANIMATION WITH THIS FUNCTION
         /// </summary>
         /// <returns></returns>
         public void dies()
         {
+            onDies?.Invoke(id);
             StartCoroutine(deathAnmation());
         }
 

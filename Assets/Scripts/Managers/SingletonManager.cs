@@ -13,6 +13,7 @@ namespace Managers
 
         [field: SerializeField] public GameManager gameManager { get; private set; }
         [field: SerializeField] public InputManager inputManager { get; private set; }
+        [field: SerializeField] public EnemyManager enemyManager { get; private set; }
 
         private void Awake()
         {
@@ -30,13 +31,19 @@ namespace Managers
             if (gameManager == null)
             {
                 gameManager = GetComponentInChildren<GameManager>();
-                EDebug.Assert(gameManager != null, $"Game Manager Not attached to {typeof(SingletonManager)}", this);
+                EDebug.Assert(gameManager != null, $"{typeof(GameManager)} Not attached to {typeof(SingletonManager)}", this);
             }
 
             if (inputManager == null)
             {
                 inputManager = GetComponentInChildren<InputManager>();
-                EDebug.Assert(inputManager != null, $"Game Manager Not attached to {typeof(SingletonManager)}", this);
+                EDebug.Assert(inputManager != null, $"{typeof(InputManager)} Not attached to {typeof(SingletonManager)}", this);
+            }
+
+            if (enemyManager == null) 
+            {
+                enemyManager = GetComponentInChildren<EnemyManager>();
+                EDebug.Assert(enemyManager != null, $"{typeof(EnemyManager)} Not attached to {typeof(SingletonManager)}", this);
             }
 
         }
