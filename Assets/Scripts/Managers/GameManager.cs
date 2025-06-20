@@ -9,6 +9,7 @@ namespace Managers
     /// </summary>
 
     using Utility;
+    [DefaultExecutionOrder(-1)]
     public sealed class GameManager : MonoBehaviour
     {
         [field: SerializeField] public GameStates gameState { get; private set; } = GameStates.IDLE;
@@ -106,6 +107,7 @@ namespace Managers
     public enum GameStates : byte
     {
         IDLE = 0,
+        INIT_ENEMYS,
         UI,
         PAUSE,
         PLAYING,

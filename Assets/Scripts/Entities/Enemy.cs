@@ -6,13 +6,19 @@ namespace Entities
 {
     public sealed class Enemy : MonoBehaviour
     {
-        public int id;
+        public const int DEFAULT_ID = -1337;
+
+        public int id = DEFAULT_ID;
         /// <summary>
         /// keeps track of how many enemies are in the scene
         /// </summary>
         public int enemyCount;
 
         public GameStates gameStates;
+
+        public EnemyMovement enemyMovement;
+
+        public SpriteRenderer enemySprite;
 
         #region GameManagerBoilerPlate
 

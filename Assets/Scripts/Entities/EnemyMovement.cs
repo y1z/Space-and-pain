@@ -129,7 +129,7 @@ namespace Entities
             }
             else
             {
-                Vector2 delta = direction * teleportDownAmount;
+                Vector2 delta = direction * distance;
                 transform.position += new Vector3(delta.x, delta.y, 0.0f);
             }
 
@@ -156,7 +156,7 @@ namespace Entities
             }
             else
             {
-                Vector2 delta = direction * teleportDistance;
+                Vector2 delta = Vector2.left * distance;
                 transform.position += new Vector3(delta.x, delta.y, 0.0f);
             }
             cc.enabled = true;

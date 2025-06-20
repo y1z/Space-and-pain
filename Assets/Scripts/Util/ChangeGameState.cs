@@ -1,4 +1,4 @@
-// Ignore Spelling: Util
+﻿// Ignore Spelling: Util
 
 using Managers;
 using UnityEngine;
@@ -11,8 +11,12 @@ namespace Util
         [Tooltip("Change this to change the game state ")]
         public GameStates desiredGameState;
 
+        [Tooltip("✅ = change state to  desired Game State.\n 𐄂 = do nothing ")]
+        public bool isON = false;
+
         private void Update()
         {
+            if (!isON) { return; }
             if (currentGameState == desiredGameState) { return; }
 
             SingletonManager.inst.gameManager.setState(desiredGameState);
