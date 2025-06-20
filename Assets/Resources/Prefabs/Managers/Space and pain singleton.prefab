@@ -45,6 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemies: []
+  <aliveEnemies>k__BackingField: 0
+  teleportDistance: 0.2
+  howLongUntilNextMove: 0.1
+  moveEnemiesToTheRight: 1
 --- !u!1 &5890880406048169634
 GameObject:
   m_ObjectHideFlags: 0
