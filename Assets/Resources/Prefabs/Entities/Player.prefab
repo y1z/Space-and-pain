@@ -94,9 +94,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectiles: []
-  templateInace: {fileID: 0}
+  templateInstance: {fileID: 862604015693494857, guid: 37515d3cafb97264293fa0a4e5a3ca4e, type: 3}
   referenceToPlayer: {fileID: 1340390992370131382}
-  spawnPoint: {fileID: 0}
+  spawnPoint: {fileID: 8000991329860645031}
 --- !u!114 &78446576417048164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  cc: {fileID: 0}
+  cc: {fileID: 2577108809818548305}
   referenceToPlayer: {fileID: 1340390992370131382}
 --- !u!143 &2577108809818548305
 CharacterController:
