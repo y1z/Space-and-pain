@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Managers;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace Entities
 
         public SpriteRenderer enemySprite;
 
+        public Action<int> onDies;
+
         #region GameManagerBoilerPlate
 
         private void OnEnable()
@@ -39,13 +42,13 @@ namespace Entities
 
         #endregion
 
-
         /// <summary>
         /// TODO : PLAY DEATH ANIMATION WITH THIS FUNCTION
         /// </summary>
         /// <returns></returns>
         public void dies()
         {
+            onDies?.Invoke(id);
             StartCoroutine(deathAnmation());
         }
 

@@ -60,6 +60,7 @@ namespace Entities
         private void Update()
         {
             if (referenceToEnemy.gameStates != GameStates.PLAYING) { return; }
+            if (state != EnemyMovementState.SINGLE) { return; }
 
             if (currentTeleportDistance > teleportDistance || currentTeleportDistance < teleportDistance)
             {
@@ -166,7 +167,14 @@ namespace Entities
         // TODO : for testing reasons this function will always assume the enemy is going alone for now
         private void determineIfEnemyIsInGroup()
         {
-            this.state = EnemyMovementState.SINGLE;
+            if (SingletonManager.inst.enemyManager.areInAGroup)
+            {
+                state = EnemyMovementState.GROUP;
+            }
+            else
+            {
+                state = EnemyMovementState.SINGLE;
+            }
         }
 
         private void calculateTeleportDown()
@@ -175,6 +183,11 @@ namespace Entities
             // 100% - 16 (teleportDistance)
             // 56.25% - ? 
             teleportDistanceDown = 56.25f * teleportDistance * 0.01f;
+        }
+
+        public void setMovementStateToGroup()
+        {
+            state = EnemyMovementState.GROUP;
         }
 
     }
