@@ -54,6 +54,11 @@ namespace Entities
                 transform.position = referenceToPlayer.startingPosition;
                 cc.enabled = true;
             }
+            if (hit.gameObject.CompareTag("Enemy Projectile"))
+            {
+                referenceToPlayer.gameObject.SetActive(false);
+            }
+
             EDebug.Log($"{nameof(OnControllerColliderHit)}");
         }
 
