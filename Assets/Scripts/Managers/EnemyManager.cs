@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Entities;
+using UnityEngine.Diagnostics;
 
 namespace Managers
 {
     public sealed class EnemyManager : MonoBehaviour
     {
         const string PATH_TO_PROJECTILE = "Prefabs/Entities/Enemy Projectile";
+        const int MAX_PROJECTILES = 3;
         internal enum EnemyManagerState
         {
             INIT_ENEMIES,
@@ -18,32 +20,52 @@ namespace Managers
         }
 
         private int currentId = 0;
+
         private GameStates gameStates;
+
         private EnemyManagerState enemyManagerState;
 
         [Header("Data for shooting")]
         [SerializeField] Projectile projectileTemplate;
+        [field: SerializeField] public Projectile[] projectiles { get; private set; } = new Projectile[MAX_PROJECTILES];
 
         [Header("Signals")]
         public Action onInitFinish;
 
         [Header("enemy data ")]
         public List<Enemy> enemies;
+
         [field: SerializeField] public int aliveEnemies { get; private set; } = 0;
+
         public bool areInAGroup { get; private set; } = false;
 
         [Header("enemy controls")]
         [SerializeField] float teleportDistance = 1.0f;
+
         public float howLongUntilNextMove = 0.1f;
+
         private float currentHowLongUntilNextMove = 0.0f;
+
         [Range(0.0001f, 1.0f), Tooltip("Controls how fast the enemies go down when 1 hits the edge (lower number is faster)")]
         private float moveDownFactorSpeedUp = 0.3f;
+
         private int enemyToMoveIndex = 0;
+
         private int enemyToMoveDownIndex = 0;
+
         [SerializeField] private bool moveEnemiesToTheRight = true;
+
+        [Header("Cool down")]
+        [SerializeField, Range(0.001f, 1.0f)] private float minimumCoolDown = 1.0f;
+        [SerializeField, Range(1.0f, 10.0f)] private float maximumCoolDown = 2.0f;
+
+        Util.CoolDownInRange enemyShootCoolDown = null;
 
         private void Start()
         {
+            enemyShootCoolDown = new Util.CoolDownInRange(minimumCoolDown, maximumCoolDown);
+            enemyShootCoolDown.onCoolDownReach += randomEnemyShoot;
+
             projectileTemplate = Resources.Load<Projectile>(PATH_TO_PROJECTILE);
             EDebug.Assert(projectileTemplate != null, $"This scripts expected a prefab at the resources folder =|{PATH_TO_PROJECTILE}| fix that please", this);
         }
@@ -54,6 +76,7 @@ namespace Managers
 
             currentHowLongUntilNextMove += Time.deltaTime;
 
+            enemyShootCoolDown.Update(Time.deltaTime);
 
             if (enemyToMoveIndex > enemies.Count)
             {
@@ -73,6 +96,16 @@ namespace Managers
             }
 
         }
+
+
+        private void OnDestroy()
+        {
+            if (enemyShootCoolDown.onCoolDownReach != null)
+            {
+                enemyShootCoolDown.onCoolDownReach -= randomEnemyShoot;
+            }
+        }
+
 
         #region ControlsEnemies
 
@@ -136,7 +169,7 @@ namespace Managers
 
             enemies[enemyToMoveDownIndex].enemyMovement.nTeleport(Vector2.down, teleportDistance);
 
-            if(enemyToMoveDownIndex + 1 >= enemies.Count)
+            if (enemyToMoveDownIndex + 1 >= enemies.Count)
             {
                 enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;
                 return;
@@ -147,6 +180,8 @@ namespace Managers
 
         #endregion
 
+
+        #region Initialize
         private void initalizeEnemies()
         {
             EnemySpawner[] spawners = GameObject.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
@@ -171,9 +206,25 @@ namespace Managers
 
             enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;
 
+            initalizeProjectile();
+
             onInitFinish?.Invoke();
             //StartCoroutine(testMoveEnemeies());
         }
+
+        private void initalizeProjectile()
+        {
+            Vector3 defaultProjectilPos = new Vector3(-1337.0f, -1337.0f);
+            for (int i = 0; i < this.projectiles.Length; ++i)
+            {
+                this.projectiles[i] = Instantiate<Projectile>(projectileTemplate);
+                this.projectiles[i].gameObject.transform.position = defaultProjectilPos;
+            }
+
+
+        }
+
+        #endregion
 
         private void onEnemyDies(int id)
         {
@@ -285,6 +336,12 @@ namespace Managers
 
         #endregion
 
+
+        private void randomEnemyShoot()
+        {
+            int index = UnityEngine.Random.Range(0, enemies.Count);
+            enemies[index].enemyShoot.shoot();
+        }
     }
 
     #region ComparerClases
