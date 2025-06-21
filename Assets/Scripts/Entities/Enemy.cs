@@ -21,6 +21,8 @@ namespace Entities
 
         public SpriteRenderer enemySprite;
 
+        public EnemyShoot enemyShoot;
+
         public Action<int> onDies;
 
         #region GameManagerBoilerPlate
