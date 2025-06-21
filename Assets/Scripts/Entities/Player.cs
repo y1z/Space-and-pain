@@ -18,6 +18,8 @@ namespace Entities
 
         public PlayerShoot playerShoot;
 
+        public PlayerPause playerPause;
+
         public GameStates currentGameState { get; private set; }
 
         private void Start()
