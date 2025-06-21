@@ -749,6 +749,7 @@ Transform:
   m_Children:
   - {fileID: 2043186952}
   - {fileID: 1205714910}
+  - {fileID: 2088512883}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1171496582
@@ -1268,7 +1269,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2084078783168448029, guid: bfd23e5a29b9da748ac7d8839f1568fb, type: 3}
       propertyPath: gameStateToStartOn
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2499595526925638262, guid: bfd23e5a29b9da748ac7d8839f1568fb, type: 3}
       propertyPath: m_Name
@@ -1284,6 +1285,60 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1660413400359568040, guid: bfd23e5a29b9da748ac7d8839f1568fb, type: 3}
   m_PrefabInstance: {fileID: 2043186951}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2088512882
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2088512883}
+  - component: {fileID: 2088512884}
+  m_Layer: 0
+  m_Name: State Sequencer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2088512883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088512882}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1139252411}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2088512884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088512882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85732779f276c445bbe7ba85cc10b27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequence:
+  - stateToBeSet: 1
+    eventsToBeCalled:
+      m_PersistentCalls:
+        m_Calls: []
+  - stateToBeSet: 4
+    eventsToBeCalled:
+      m_PersistentCalls:
+        m_Calls: []
+  is_ON: 1
 --- !u!1 &2123161627
 GameObject:
   m_ObjectHideFlags: 0
