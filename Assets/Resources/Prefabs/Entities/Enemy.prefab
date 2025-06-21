@@ -54,6 +54,7 @@ MonoBehaviour:
   gameStates: 0
   enemyMovement: {fileID: 4352383549930590260}
   enemySprite: {fileID: 6664358090523110049}
+  enemyShoot: {fileID: 4493143995358786091}
 --- !u!114 &4352383549930590260
 MonoBehaviour:
   m_ObjectHideFlags: 0
