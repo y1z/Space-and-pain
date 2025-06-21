@@ -17,6 +17,7 @@ namespace Managers
             INIT_ENEMIES,
             MOVE_GROUP_HORIZONTALY,
             MOVE_GROUP_VERTICALLY,
+            MOVE_NONE,
         }
 
         private int currentId = 0;
@@ -76,7 +77,10 @@ namespace Managers
 
             currentHowLongUntilNextMove += Time.deltaTime;
 
-            enemyShootCoolDown.Update(Time.deltaTime);
+            if (enemyManagerState != EnemyManagerState.MOVE_NONE)
+            {
+                enemyShootCoolDown.Update(Time.deltaTime);
+            }
 
             if (enemyToMoveIndex > enemies.Count)
             {
@@ -111,6 +115,7 @@ namespace Managers
 
         private void moveEnemies()
         {
+            enemyToMoveIndex = enemyToMoveIndex % enemies.Count;
             bool shouldFindNewIndex = !enemies[enemyToMoveIndex].gameObject.activeInHierarchy;
             if (shouldFindNewIndex)
             {
@@ -152,6 +157,7 @@ namespace Managers
 
         private void moveEnemiesDown()
         {
+            enemyToMoveIndex = enemyToMoveIndex % enemies.Count;
             currentHowLongUntilNextMove = 0.0f;
             bool shouldFindNewIndex = !enemies[enemyToMoveDownIndex].gameObject.activeInHierarchy;
             if (shouldFindNewIndex)
@@ -232,6 +238,10 @@ namespace Managers
             int index = enemies.FindIndex(e => e.id == id);
             enemies.RemoveAt(index);
             aliveEnemies--;
+            if (aliveEnemies < 1)
+            {
+                enemyManagerState = EnemyManagerState.MOVE_NONE;
+            }
         }
 
         #region GameManagerBoilerPlate
