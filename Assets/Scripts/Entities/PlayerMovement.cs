@@ -26,6 +26,8 @@ namespace Entities
 
         void Update()
         {
+            if (referenceToPlayer.currentGameState != GameStates.PLAYING) { return; }
+
             InputManager im = SingletonManager.inst.inputManager;
 
             InputInfo info = im.getInputedDirection();

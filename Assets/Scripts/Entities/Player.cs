@@ -14,6 +14,12 @@ namespace Entities
 
         public Vector2 startingPosition;
 
+        public PlayerMovement PlayerMovement;
+
+        public PlayerShoot playerShoot;
+
+        public PlayerPause playerPause;
+
         public GameStates currentGameState { get; private set; }
 
         private void Start()
@@ -21,15 +27,14 @@ namespace Entities
             startingPosition = transform.position;
         }
 
-        /// <summary>
-        /// TODO : PLAY DEATH ANIMATION WITH THIS FUNCTION
-        /// </summary>
-        /// <returns></returns>
         public void dies()
         {
             StartCoroutine(deathAnmation());
         }
 
+        /// <summary>
+        /// TODO : PLAY DEATH ANIMATION WITH THIS FUNCTION
+        /// </summary>
         private IEnumerator deathAnmation()
         {
             yield return null;
