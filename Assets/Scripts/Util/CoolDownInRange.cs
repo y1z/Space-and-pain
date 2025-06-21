@@ -23,13 +23,7 @@ namespace Util
             calculateCoolDown();
         }
 
-        private void calculateCoolDown()
-        {
-            currentCoolDown = Mathf.Lerp(minimumCoolDownRange, maximumCoolDownRange, UnityEngine.Random.value);
-        }
-
-
-        private void Update(float deltaTime)
+        public void Update(float deltaTime)
         {
             currentCoolDown += deltaTime;
 
@@ -40,6 +34,10 @@ namespace Util
                 onCoolDownReach?.Invoke();
             }
 
+        }
+        private void calculateCoolDown()
+        {
+            currentCoolDown = Mathf.Lerp(minimumCoolDownRange, maximumCoolDownRange, UnityEngine.Random.value);
         }
 
 
