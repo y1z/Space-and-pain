@@ -1,16 +1,28 @@
-using UnityEngine;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using Entities;
+using System;
 using System.Collections;
-using UnityEngine.Rendering;
+using System.Collections.Generic;
+using UnityEngine;
+
+using Entities;
 
 namespace Managers
 {
     public sealed class EnemyManager : MonoBehaviour
     {
+        internal enum EnemyManagerState
+        {
+            INIT_ENEMIES,
+            MOVE_GROUP_HORIZONTALY,
+            MOVE_GROUP_VERTICALLY,
+        }
+
         private int currentId = 0;
         private GameStates gameStates;
+        private EnemyManagerState enemyManagerState;
+
+        [Header("Signals")]
+        public Action onInitFinish;
+
         [Header("enemy data ")]
         public List<Enemy> enemies;
         [field: SerializeField] public int aliveEnemies { get; private set; } = 0;
@@ -20,50 +32,110 @@ namespace Managers
         [SerializeField] float teleportDistance = 1.0f;
         public float howLongUntilNextMove = 0.1f;
         private float currentHowLongUntilNextMove = 0.0f;
+        [Range(0.0001f, 1.0f), Tooltip("Controls how fast the enemies go down when 1 hits the edge (lower number is faster)")]
+        private float moveDownFactorSpeedUp = 0.3f;
         private int enemyToMoveIndex = 0;
+        private int enemyToMoveDownIndex = 0;
         [SerializeField] private bool moveEnemiesToTheRight = true;
 
         private void Update()
         {
             if (gameStates != GameStates.PLAYING) { return; }
 
+            currentHowLongUntilNextMove += Time.deltaTime;
+
+
             if (enemyToMoveIndex > enemies.Count)
             {
                 enemyToMoveIndex = enemyToMoveIndex % enemies.Count;
             }
 
-            if (currentHowLongUntilNextMove > howLongUntilNextMove)
+            switch (enemyManagerState)
             {
-
-                bool shouldFindNewIndex = !enemies[enemyToMoveIndex].gameObject.activeInHierarchy;
-                if (shouldFindNewIndex)
-                {
-                    for (int i = 0; i < enemies.Count; i++)
-                    {
-                        int possibleNewIndex = (enemyToMoveIndex + i) % enemies.Count;
-
-                        if (enemies[possibleNewIndex].gameObject.activeInHierarchy)
-                        {
-                            enemyToMoveIndex = possibleNewIndex;
-                        }
-                    }
-                }
-
-                if (moveEnemiesToTheRight)
-                {
-                    enemies[enemyToMoveIndex].enemyMovement.teleportRight(teleportDistance);
-                }
-                else
-                {
-                    enemies[enemyToMoveIndex].enemyMovement.teleportLeft(teleportDistance);
-                }
-
-                enemyToMoveIndex = (enemyToMoveIndex + 1) % enemies.Count;
-                currentHowLongUntilNextMove = 0.0f;
+                case EnemyManagerState.MOVE_GROUP_HORIZONTALY:
+                    if (!(currentHowLongUntilNextMove > howLongUntilNextMove)) { return; }
+                    moveEnemies();
+                    break;
+                case EnemyManagerState.MOVE_GROUP_VERTICALLY:
+                    if (!(currentHowLongUntilNextMove > (howLongUntilNextMove * moveDownFactorSpeedUp))) { return; }
+                    moveEnemiesDown();
+                    break;
             }
 
-            currentHowLongUntilNextMove += Time.deltaTime;
         }
+
+        #region ControlsEnemies
+
+        private void moveEnemies()
+        {
+            bool shouldFindNewIndex = !enemies[enemyToMoveIndex].gameObject.activeInHierarchy;
+            if (shouldFindNewIndex)
+            {
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    int possibleNewIndex = (enemyToMoveIndex + i) % enemies.Count;
+
+                    if (enemies[possibleNewIndex].gameObject.activeInHierarchy)
+                    {
+                        enemyToMoveIndex = possibleNewIndex;
+                    }
+                }
+            }
+
+            bool canTeleport = false;
+            if (moveEnemiesToTheRight)
+            {
+                canTeleport = enemies[enemyToMoveIndex].enemyMovement.nTeleport(Vector2.right, teleportDistance);
+            }
+            else
+            {
+                canTeleport = enemies[enemyToMoveIndex].enemyMovement.nTeleport(Vector2.left, teleportDistance);
+            }
+
+            if (!canTeleport)
+            {
+                enemyManagerState = EnemyManagerState.MOVE_GROUP_VERTICALLY;
+                enemyToMoveIndex = 0;
+                currentHowLongUntilNextMove = 0.0f;
+                moveEnemiesToTheRight = !moveEnemiesToTheRight;
+                enemyToMoveDownIndex = 0;
+                return;
+            }
+
+
+            enemyToMoveIndex = (enemyToMoveIndex + 1) % enemies.Count;
+            currentHowLongUntilNextMove = 0.0f;
+        }
+
+        private void moveEnemiesDown()
+        {
+            currentHowLongUntilNextMove = 0.0f;
+            bool shouldFindNewIndex = !enemies[enemyToMoveDownIndex].gameObject.activeInHierarchy;
+            if (shouldFindNewIndex)
+            {
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    int possibleNewIndex = (enemyToMoveDownIndex + i) % enemies.Count;
+
+                    if (enemies[possibleNewIndex].gameObject.activeInHierarchy)
+                    {
+                        enemyToMoveDownIndex = possibleNewIndex;
+                    }
+                }
+            }
+
+            enemies[enemyToMoveDownIndex].enemyMovement.nTeleport(Vector2.down, teleportDistance);
+
+            if(enemyToMoveDownIndex + 1 >= enemies.Count)
+            {
+                enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;
+                return;
+            }
+
+            enemyToMoveDownIndex = (enemyToMoveDownIndex + 1) % enemies.Count;
+        }
+
+        #endregion
 
         private void initalizeEnemies()
         {
@@ -87,6 +159,9 @@ namespace Managers
                 enemies[i].enemyMovement.setMovementStateToGroup();
             }
 
+            enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;
+
+            onInitFinish?.Invoke();
             //StartCoroutine(testMoveEnemeies());
         }
 
@@ -118,6 +193,7 @@ namespace Managers
             switch (gameStates)
             {
                 case GameStates.INIT_ENEMYS:
+                    enemyManagerState = EnemyManagerState.INIT_ENEMIES;
                     initalizeEnemies();
                     break;
             }
