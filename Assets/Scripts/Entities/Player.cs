@@ -14,6 +14,10 @@ namespace Entities
 
         public Vector2 startingPosition;
 
+        public PlayerMovement PlayerMovement;
+
+        public PlayerShoot playerShoot;
+
         public GameStates currentGameState { get; private set; }
 
         private void Start()
