@@ -1,4 +1,5 @@
 using Managers;
+using TreeEditor;
 using UnityEngine;
 using Util;
 
@@ -84,6 +85,33 @@ namespace Entities
             }
 
         }
+
+        #region newTeleport
+        public bool nTeleport(Vector2 direction, float distance)
+        {
+            cc.enabled = false;
+
+            Vector3 delta = new Vector3(direction.x * distance, direction.y * distance, 0.0f);
+            transform.position = transform.position + delta;
+
+            if (transform.position.x > horizontalMax)
+            {
+                transform.position = new Vector3(horizontalMax, transform.position.y, transform.position.z);
+                cc.enabled = true;
+                return false;
+            }
+            if (transform.position.x < horizontalMin)
+            {
+                transform.position = new Vector3(horizontalMin, transform.position.y, transform.position.z);
+                cc.enabled = true;
+                return false;
+            }
+
+            cc.enabled = true;
+
+            return true;
+        }
+        #endregion
 
         public void teleport()
         {
