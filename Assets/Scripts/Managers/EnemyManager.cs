@@ -9,6 +9,7 @@ namespace Managers
 {
     public sealed class EnemyManager : MonoBehaviour
     {
+        const string PATH_TO_PROJECTILE = "Prefabs/Entities/Enemy Projectile";
         internal enum EnemyManagerState
         {
             INIT_ENEMIES,
@@ -19,6 +20,9 @@ namespace Managers
         private int currentId = 0;
         private GameStates gameStates;
         private EnemyManagerState enemyManagerState;
+
+        [Header("Data for shooting")]
+        [SerializeField] Projectile projectileTemplate;
 
         [Header("Signals")]
         public Action onInitFinish;
@@ -37,6 +41,12 @@ namespace Managers
         private int enemyToMoveIndex = 0;
         private int enemyToMoveDownIndex = 0;
         [SerializeField] private bool moveEnemiesToTheRight = true;
+
+        private void Start()
+        {
+            projectileTemplate = Resources.Load<Projectile>(PATH_TO_PROJECTILE);
+            EDebug.Assert(projectileTemplate != null, $"This scripts expected a prefab at the resources folder =|{PATH_TO_PROJECTILE}| fix that please", this);
+        }
 
         private void Update()
         {
