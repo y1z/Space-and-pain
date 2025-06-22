@@ -13,7 +13,6 @@ namespace Entities
         /// <summary>
         /// keeps track of how many enemies are in the scene
         /// </summary>
-        public int enemyCount;
 
         public GameStates gameStates;
 
