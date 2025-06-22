@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Entities
 {
+    [RequireComponent (typeof (Player))]
     public sealed class PlayerMovement : MonoBehaviour
     {
         [SerializeField] float speed = 1.0f;
@@ -58,7 +59,7 @@ namespace Entities
             }
             if (hit.gameObject.CompareTag("Enemy Projectile"))
             {
-                referenceToPlayer.gameObject.SetActive(false);
+                referenceToPlayer.dies();
             }
 
             EDebug.Log($"{nameof(OnControllerColliderHit)}");
