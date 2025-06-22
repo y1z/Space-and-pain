@@ -9,10 +9,18 @@ namespace Entities
     [SelectionBase]
     public sealed class Player : MonoBehaviour
     {
+        public enum PlayerState
+        {
+            ALIVE,
+            DEAD,
+        }
+
         public int live { get; set; } = 3;
         public int maxShots { get; set; } = 2;
 
         public Vector2 startingPosition;
+
+        public PlayerState playerState;
 
         public PlayerMovement PlayerMovement;
 
@@ -20,16 +28,19 @@ namespace Entities
 
         public PlayerPause playerPause;
 
+        public PlayerLiveSystem playerLiveSystem;
+
         public GameStates currentGameState { get; private set; }
 
         private void Start()
         {
             startingPosition = transform.position;
+            playerState = PlayerState.ALIVE;
         }
 
         public void dies()
         {
-            StartCoroutine(deathAnmation());
+            StartCoroutine(playerLiveSystem.dies());
         }
 
         /// <summary>
@@ -38,7 +49,7 @@ namespace Entities
         private IEnumerator deathAnmation()
         {
             yield return null;
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
         }
 
         #region GameManagerBoilerPlate
