@@ -51,7 +51,7 @@ namespace Entities
                 activeProjectile = projectiles[i].gameObject.activeInHierarchy ? activeProjectile + 1 : activeProjectile;
             }
             EDebug.Log("Active Projectiles =" + activeProjectile);
-            if (activeProjectile > referenceToPlayer.maxShots) { return; }
+            if (activeProjectile >= referenceToPlayer.maxShots) { return; }
 
             Projectile futureProjectile = recycle();
 
