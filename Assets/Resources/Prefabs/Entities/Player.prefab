@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 2590692267078070718}
   - component: {fileID: 78446576417048164}
   - component: {fileID: 3342352833795182346}
+  - component: {fileID: 3282589708804581763}
   - component: {fileID: 2577108809818548305}
   m_Layer: 0
   m_Name: Player
@@ -85,6 +86,7 @@ MonoBehaviour:
   PlayerMovement: {fileID: 78446576417048164}
   playerShoot: {fileID: 2590692267078070718}
   playerPause: {fileID: 3342352833795182346}
+  playerLiveSystem: {fileID: 3282589708804581763}
 --- !u!114 &2590692267078070718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,6 +131,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceToPlayer: {fileID: 1340390992370131382}
+--- !u!114 &3282589708804581763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3152204949516468035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a545aba8860070148923d8f5aaa0d8fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lives: 3
+  timeUntilRespawn: 1
+  spriteRenderer: {fileID: 7862352517325518130}
+  cc: {fileID: 2577108809818548305}
 --- !u!143 &2577108809818548305
 CharacterController:
   m_ObjectHideFlags: 0
@@ -258,3 +276,4 @@ MonoBehaviour:
   PlayerMovement: {fileID: 0}
   playerShoot: {fileID: 0}
   playerPause: {fileID: 0}
+  playerLiveSystem: {fileID: 0}
