@@ -1,4 +1,5 @@
 // Ignore Spelling: Respawn
+// Ignore Spelling: Respawns
 
 using System;
 using System.Collections;
@@ -10,11 +11,18 @@ namespace Entities
     [RequireComponent(typeof(Player))]
     public sealed class PlayerLiveSystem : MonoBehaviour
     {
-        public int lives = 3;
+        public int lives { get; private set; } = 3;
+
         public float timeUntilRespawn = 1.0f;
+
         public SpriteRenderer spriteRenderer;
+
         public CharacterController cc;
+
+        [Tooltip("Gets called when the player Respawns ")]
         public Action onRespawn;
+        [Tooltip("gets called everything the amount of live the player has changes")]
+        public Action<int> onLivesChanged;
         public Player referenceToPlayer;
 
         private void Start()
@@ -39,22 +47,36 @@ namespace Entities
 
         }
 
+        public void giveExtraLive(int amount = 1)
+        {
+            lives += amount;
+            onLivesChanged?.Invoke(lives);
+        }
+
+        #region Coroutines
         public IEnumerator dies()
         {
+            referenceToPlayer.playerState = Player.PlayerState.DEAD;
+
             cc.enabled = false;
             spriteRenderer.gameObject.SetActive(false);
             lives -= 1;
-            EDebug.Log($"Live=|{lives}|");
+            onLivesChanged?.Invoke(lives);
+
             if (lives < 0)
             {
                 SingletonManager.inst.gameManager.setState(GameStates.GAME_OVER);
             }
+
             yield return new WaitForSeconds(timeUntilRespawn);
             cc.enabled = true;
             spriteRenderer.gameObject.SetActive(true);
             onRespawn?.Invoke();
+
+            referenceToPlayer.playerState = Player.PlayerState.ALIVE;
         }
 
+        #endregion
 
     }
 
