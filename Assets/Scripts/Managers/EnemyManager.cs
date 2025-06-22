@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Entities;
-using UnityEngine.Diagnostics;
 
 namespace Managers
 {
@@ -241,6 +240,7 @@ namespace Managers
             if (aliveEnemies < 1)
             {
                 enemyManagerState = EnemyManagerState.MOVE_NONE;
+                SingletonManager.inst.gameManager.setState(GameStates.WON);
             }
         }
 
