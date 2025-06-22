@@ -14,8 +14,6 @@ namespace Entities
             ALIVE,
             DEAD,
         }
-
-        public int live { get; set; } = 3;
         public int maxShots { get; set; } = 2;
 
         public Vector2 startingPosition;
