@@ -28,6 +28,7 @@ namespace Entities
         void Update()
         {
             if (referenceToPlayer.currentGameState != GameStates.PLAYING) { return; }
+            if (referenceToPlayer.playerState != Player.PlayerState.ALIVE) { return; }
 
             InputManager im = SingletonManager.inst.inputManager;
 
