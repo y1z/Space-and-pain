@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Entities;
+using UnityEngine.SceneManagement;
 
 namespace Managers
 {
@@ -73,6 +74,8 @@ namespace Managers
         private void Update()
         {
             if (gameStates != GameStates.PLAYING) { return; }
+
+            if (enemies.Count < 1) { return; }
 
             currentHowLongUntilNextMove += Time.deltaTime;
 
@@ -244,12 +247,13 @@ namespace Managers
             }
         }
 
-        #region GameManagerBoilerPlate
+        #region GameManagerAndSceneManagerBoilerPlate
 
         private void OnEnable()
         {
             SingletonManager.inst.gameManager.subscribe(setState);
             setState(SingletonManager.inst.gameManager.gameState);
+            SceneManager.activeSceneChanged += onActiveSceneChanged;
         }
 
         private void OnDisable()
@@ -270,7 +274,14 @@ namespace Managers
             }
         }
 
+        private void onActiveSceneChanged(Scene current, Scene next)
+        {
+            enemies.Clear();
+        }
+
         #endregion
+
+
 
         #region Coroutines
 
@@ -349,6 +360,8 @@ namespace Managers
 
         private void randomEnemyShoot()
         {
+            if (enemies.Count < 1) { return; }
+
             int index = UnityEngine.Random.Range(0, enemies.Count);
             enemies[index].enemyShoot.shoot();
         }
