@@ -53,6 +53,12 @@ namespace Entities
             onLivesChanged?.Invoke(lives);
         }
 
+        public void setLivesAmount(int amount)
+        {
+            lives = amount;
+            onLivesChanged?.Invoke(lives);
+        }
+
         #region Coroutines
         public IEnumerator dies()
         {
