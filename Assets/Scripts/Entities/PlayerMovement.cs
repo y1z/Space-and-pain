@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Entities
 {
+    [RequireComponent (typeof (Player))]
     public sealed class PlayerMovement : MonoBehaviour
     {
         [SerializeField] float speed = 1.0f;
@@ -27,6 +28,7 @@ namespace Entities
         void Update()
         {
             if (referenceToPlayer.currentGameState != GameStates.PLAYING) { return; }
+            if (referenceToPlayer.playerState != Player.PlayerState.ALIVE) { return; }
 
             InputManager im = SingletonManager.inst.inputManager;
 
@@ -58,7 +60,7 @@ namespace Entities
             }
             if (hit.gameObject.CompareTag("Enemy Projectile"))
             {
-                referenceToPlayer.gameObject.SetActive(false);
+                referenceToPlayer.dies();
             }
 
             EDebug.Log($"{nameof(OnControllerColliderHit)}");
