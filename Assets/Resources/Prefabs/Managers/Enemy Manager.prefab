@@ -44,8 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc97c1c7998fe7c47b0a8dae9d65a660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileTemplate: {fileID: 0}
+  <projectiles>k__BackingField:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   enemies: []
   <aliveEnemies>k__BackingField: 0
   teleportDistance: 0.6
   howLongUntilNextMove: 0.09
-  moveEnemiesToTheRight: 1
+  moveEnemiesToTheRight: 0
+  minimumCoolDown: 1
+  maximumCoolDown: 2

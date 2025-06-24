@@ -50,6 +50,7 @@ public sealed class ResetOnGameWonOrGameOver : MonoBehaviour
 
     private IEnumerator reload()
     {
+        EDebug.Log($"<color=magenta>{nameof(reload)} function called</color>", this);
         yield return new WaitForSeconds(delay);
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.buildIndex);
