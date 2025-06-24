@@ -1,7 +1,7 @@
 using System.Collections;
-using Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Managers;
 
 public sealed class ResetOnGameWonOrGameOver : MonoBehaviour
 {
@@ -11,7 +11,6 @@ public sealed class ResetOnGameWonOrGameOver : MonoBehaviour
     private void FixedUpdate()
     {
         if (gameState != GameStates.GAME_OVER || gameState != GameStates.WON) { return; }
-
     }
 
     #region GameManagerBoilerPlate
