@@ -5,14 +5,18 @@ using UnityEngine;
 namespace Entities
 {
     [RequireComponent(typeof(CharacterController))]
-    public class Projectile : MonoBehaviour
+    public sealed class Projectile : MonoBehaviour
     {
         [SerializeField] CharacterController cc;
         GameStates gameStates;
 
         public float speed = 1.0f;
         [SerializeField] private float distanceTraveled = 0.0f;
+        [Header("Calculate Speed")]
         [SerializeField] private float maxDistanced = 10.0f;
+        [SerializeField, Range(0.01f, 5.0f)] private float timeToReachMaxDistance = 1.0f;
+
+        [Header("Direction to move")]
         public Vector2 direction = Vector2.up;
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace Entities
 
             distanceTraveled += (starting - ending).magnitude;
 
-            if(distanceTraveled > maxDistanced)
+            if (distanceTraveled > maxDistanced)
             {
                 distanceTraveled = 0.0f;
                 gameObject.SetActive(false);
@@ -48,11 +52,12 @@ namespace Entities
         void OnControllerColliderHit(ControllerColliderHit hit)
         {
             EDebug.Log($"{nameof(OnControllerColliderHit)}");
-            if (hit.gameObject.CompareTag("Projectile"))
+            if (hit.gameObject.CompareTag("Projectile") || hit.gameObject.CompareTag("Enemy Projectile"))
             {
                 StartCoroutine(deathAnimation());
                 return;
             }
+
 
             if (hit.gameObject.CompareTag("Boundary"))
             {
@@ -88,6 +93,9 @@ namespace Entities
                 EDebug.Assert(cc != null, $"This script needs and instance of {typeof(CharacterController)} to work", this);
             }
             distanceTraveled = 0.0f;
+
+            speed = maxDistanced / timeToReachMaxDistance;
+
         }
 
         public void teleport(Transform _transform)
