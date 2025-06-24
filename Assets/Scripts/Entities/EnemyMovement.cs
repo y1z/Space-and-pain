@@ -95,13 +95,11 @@ namespace Entities
 
             if (transform.position.x > horizontalMax)
             {
-                transform.position = new Vector3(horizontalMax, transform.position.y, transform.position.z);
                 cc.enabled = true;
                 return false;
             }
             if (transform.position.x < horizontalMin)
             {
-                transform.position = new Vector3(horizontalMin, transform.position.y, transform.position.z);
                 cc.enabled = true;
                 return false;
             }
