@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Entities;
+using UnityEngine.SceneManagement;
 
 namespace Managers
 {
@@ -51,9 +52,7 @@ namespace Managers
 
         private int enemyToMoveIndex = 0;
 
-        private int enemyToMoveDownIndex = 0;
-
-        [SerializeField] private bool moveEnemiesToTheRight = true;
+        [SerializeField] private bool moveEnemiesToTheRight = false;
 
         [Header("Cool down")]
         [SerializeField, Range(0.001f, 1.0f)] private float minimumCoolDown = 1.0f;
@@ -73,6 +72,8 @@ namespace Managers
         private void Update()
         {
             if (gameStates != GameStates.PLAYING) { return; }
+
+            if (enemies.Count < 1) { return; }
 
             currentHowLongUntilNextMove += Time.deltaTime;
 
@@ -114,19 +115,12 @@ namespace Managers
 
         private void moveEnemies()
         {
-            enemyToMoveIndex = enemyToMoveIndex % enemies.Count;
+            if (enemyToMoveIndex > enemies.Count) { enemyToMoveIndex = 0; }
+
             bool shouldFindNewIndex = !enemies[enemyToMoveIndex].gameObject.activeInHierarchy;
             if (shouldFindNewIndex)
             {
-                for (int i = 0; i < enemies.Count; i++)
-                {
-                    int possibleNewIndex = (enemyToMoveIndex + i) % enemies.Count;
-
-                    if (enemies[possibleNewIndex].gameObject.activeInHierarchy)
-                    {
-                        enemyToMoveIndex = possibleNewIndex;
-                    }
-                }
+                enemyToMoveIndex = findNextActiveEnemyIndex(enemyToMoveIndex);
             }
 
             bool canTeleport = false;
@@ -142,10 +136,9 @@ namespace Managers
             if (!canTeleport)
             {
                 enemyManagerState = EnemyManagerState.MOVE_GROUP_VERTICALLY;
-                enemyToMoveIndex = 0;
                 currentHowLongUntilNextMove = 0.0f;
                 moveEnemiesToTheRight = !moveEnemiesToTheRight;
-                enemyToMoveDownIndex = 0;
+                enemyToMoveIndex = 0;
                 return;
             }
 
@@ -156,31 +149,43 @@ namespace Managers
 
         private void moveEnemiesDown()
         {
-            enemyToMoveIndex = enemyToMoveIndex % enemies.Count;
-            currentHowLongUntilNextMove = 0.0f;
-            bool shouldFindNewIndex = !enemies[enemyToMoveDownIndex].gameObject.activeInHierarchy;
+            bool shouldFindNewIndex = !enemies[enemyToMoveIndex].gameObject.activeInHierarchy;
+            bool searchedAllEnemies = true;
             if (shouldFindNewIndex)
             {
-                for (int i = 0; i < enemies.Count; i++)
+                for (int i = enemyToMoveIndex; i < enemies.Count; ++i)
                 {
-                    int possibleNewIndex = (enemyToMoveDownIndex + i) % enemies.Count;
-
-                    if (enemies[possibleNewIndex].gameObject.activeInHierarchy)
+                    if (enemies[i].gameObject.activeInHierarchy)
                     {
-                        enemyToMoveDownIndex = possibleNewIndex;
+                        searchedAllEnemies = false;
+                        enemyToMoveIndex = i;
+                        break;
                     }
                 }
+
+                if (searchedAllEnemies)
+                {
+                    enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;
+
+                    enemyToMoveIndex = 0;
+                    return;
+                }
+
             }
 
-            enemies[enemyToMoveDownIndex].enemyMovement.nTeleport(Vector2.down, teleportDistance);
+            enemies[enemyToMoveIndex].enemyMovement.nTeleport(Vector2.down, teleportDistance);
 
-            if (enemyToMoveDownIndex + 1 >= enemies.Count)
+            enemyToMoveIndex++;
+
+            if (enemyToMoveIndex >= enemies.Count)
             {
                 enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;
+
+                enemyToMoveIndex = 0;
                 return;
             }
 
-            enemyToMoveDownIndex = (enemyToMoveDownIndex + 1) % enemies.Count;
+
         }
 
         #endregion
@@ -234,8 +239,6 @@ namespace Managers
         private void onEnemyDies(int id)
         {
             EDebug.Log($"enemy |{id}| dies");
-            int index = enemies.FindIndex(e => e.id == id);
-            enemies.RemoveAt(index);
             aliveEnemies--;
             if (aliveEnemies < 1)
             {
@@ -244,12 +247,13 @@ namespace Managers
             }
         }
 
-        #region GameManagerBoilerPlate
+        #region GameManagerAndSceneManagerBoilerPlate
 
         private void OnEnable()
         {
             SingletonManager.inst.gameManager.subscribe(setState);
             setState(SingletonManager.inst.gameManager.gameState);
+            SceneManager.activeSceneChanged += onActiveSceneChanged;
         }
 
         private void OnDisable()
@@ -270,7 +274,14 @@ namespace Managers
             }
         }
 
+        private void onActiveSceneChanged(Scene current, Scene next)
+        {
+            enemies.Clear();
+            aliveEnemies = 0;
+        }
+
         #endregion
+
 
         #region Coroutines
 
@@ -349,8 +360,33 @@ namespace Managers
 
         private void randomEnemyShoot()
         {
+            if (enemies.Count < 1) { return; }
+
             int index = UnityEngine.Random.Range(0, enemies.Count);
+            if (!enemies[index].gameObject.activeInHierarchy)
+            {
+                int activeEnemyIndex = findNextActiveEnemyIndex(index);
+                index = activeEnemyIndex;
+            }
+
             enemies[index].enemyShoot.shoot();
+        }
+
+
+        private int findNextActiveEnemyIndex(int startingIndex)
+        {
+            int result = -1;
+            for (int i = 1; i < enemies.Count; i++)
+            {
+                int temp = (startingIndex + i) % enemies.Count;
+
+                if (enemies[temp].gameObject.activeInHierarchy)
+                {
+                    result = temp;
+                    break;
+                }
+            }
+            return result;
         }
     }
 

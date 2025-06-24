@@ -102,6 +102,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 6304418055829041172, guid: a343186188c80404eb43244d6497b6c3, type: 3}
+      propertyPath: moveEnemiesToTheRight
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
