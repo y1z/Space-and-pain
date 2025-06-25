@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04b590a0d6a206246a917659403f546a, type: 3}
   m_Name: Beep
   m_EditorClassIdentifier: 
-  <audioType>k__BackingField: 0
-  <audioClip>k__BackingField: {fileID: 0}
-  <audioName>k__BackingField: 
+  <audioType>k__BackingField: 1
+  <audioClip>k__BackingField: {fileID: 8300000, guid: 9ebaf7498f190c540825cdf396eebb5f, type: 3}
+  <audioName>k__BackingField: beep
