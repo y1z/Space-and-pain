@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Managers
 {
     [DefaultExecutionOrder(-30)]
-    public class SingletonManager : MonoBehaviour
+    public sealed class SingletonManager : MonoBehaviour
     {
         public static SingletonManager inst
         {
@@ -14,6 +14,7 @@ namespace Managers
         [field: SerializeField] public GameManager gameManager { get; private set; }
         [field: SerializeField] public InputManager inputManager { get; private set; }
         [field: SerializeField] public EnemyManager enemyManager { get; private set; }
+        [field: SerializeField] public SoundManager soundManager { get; private set; }
 
         private void Awake()
         {
@@ -40,10 +41,16 @@ namespace Managers
                 EDebug.Assert(inputManager != null, $"{typeof(InputManager)} Not attached to {typeof(SingletonManager)}", this);
             }
 
-            if (enemyManager == null) 
+            if (enemyManager == null)
             {
                 enemyManager = GetComponentInChildren<EnemyManager>();
                 EDebug.Assert(enemyManager != null, $"{typeof(EnemyManager)} Not attached to {typeof(SingletonManager)}", this);
+            }
+
+            if (soundManager == null)
+            {
+                soundManager = GetComponentInChildren<SoundManager>();
+                EDebug.Assert(soundManager != null, $"{nameof(soundManager)} needs a {typeof(SoundManager)} to work.", this);
             }
 
         }
