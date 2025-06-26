@@ -184,7 +184,8 @@ MonoBehaviour:
   musicSource: {fileID: 5562746283482200343}
   voiceSource: {fileID: 9155175054725576824}
   sfxAudio: []
-  musicAudio: []
+  musicAudio:
+  - {fileID: 11400000, guid: 871cffec52d80c941a56ae707fbfd56e, type: 2}
   voiceAudio: []
   lastUsedAudio: {fileID: 0}
 --- !u!1 &7840137798793951359

@@ -21,5 +21,10 @@ namespace Test
         {
             SingletonManager.inst.soundManager.playAudio(GameAudioType.SFX, "good beep");
         }
+
+        public void testAmbience()
+        {
+            SingletonManager.inst.soundManager.playAudio(GameAudioType.MUSIC, "ambience");
+        }
     }
 }
