@@ -186,7 +186,8 @@ MonoBehaviour:
   sfxAudio: []
   musicAudio:
   - {fileID: 11400000, guid: 871cffec52d80c941a56ae707fbfd56e, type: 2}
-  voiceAudio: []
+  voiceAudio:
+  - {fileID: 11400000, guid: 5fde140594650004492c6a491d98ae9a, type: 2}
   lastUsedAudio: {fileID: 0}
 --- !u!1 &7840137798793951359
 GameObject:

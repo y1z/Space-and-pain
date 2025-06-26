@@ -26,5 +26,11 @@ namespace Test
         {
             SingletonManager.inst.soundManager.playAudio(GameAudioType.MUSIC, "ambience");
         }
+
+        public void testGameOver()
+        {
+            SingletonManager.inst.soundManager.playAudio(GameAudioType.VOICE, "game over");
+        }
+
     }
 }

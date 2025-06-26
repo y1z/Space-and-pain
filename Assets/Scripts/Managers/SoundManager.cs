@@ -183,6 +183,9 @@ namespace Managers
                 case GameAudioType.MUSIC:
                     result = findGameAudioSearch(musicAudio, _audioName);
                     break;
+                case GameAudioType.VOICE:
+                    result = findGameAudioSearch(voiceAudio, _audioName);
+                    break;
             }
 
 
