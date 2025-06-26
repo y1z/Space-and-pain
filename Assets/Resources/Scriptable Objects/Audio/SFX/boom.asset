@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04b590a0d6a206246a917659403f546a, type: 3}
-  m_Name: beep
+  m_Name: boom
   m_EditorClassIdentifier: 
   <audioType>k__BackingField: 1
-  <audioClip>k__BackingField: {fileID: 8300000, guid: 9ebaf7498f190c540825cdf396eebb5f, type: 3}
-  <audioName>k__BackingField: beep
+  <audioClip>k__BackingField: {fileID: 8300000, guid: 276b48d9b840ebf43afd7afc8aa85c4b, type: 3}
+  <audioName>k__BackingField: boom
