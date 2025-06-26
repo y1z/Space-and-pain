@@ -59,11 +59,13 @@ namespace Entities
             {
                 futureProjectile.setUp();
                 futureProjectile.teleport(spawnPoint);
+                SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "beep");
                 return;
             }
 
             futureProjectile = create();
             futureProjectile.teleport(spawnPoint);
+            SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "beep");
             projectiles.Add(futureProjectile);
         }
 
