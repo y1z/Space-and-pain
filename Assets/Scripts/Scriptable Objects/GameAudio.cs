@@ -9,7 +9,8 @@ namespace Scriptable_Objects
     {
         NONE = 0,
         SFX,
-        MUSIC
+        MUSIC,
+        VOICE,
     }
 
     [CreateAssetMenu(fileName = "GameAudio", menuName = "Scriptable Objects/GameAudio")]
@@ -23,6 +24,10 @@ namespace Scriptable_Objects
         public bool isSameAudioName(string name) => audioName == name;
 
         public bool isSameAudioClipName(string name) => audioClip.name == name;
+
+        public bool isSameGameAudio(GameAudioType _audioType,string _audioName) => audioType == _audioType && audioName == _audioName;
+
+        public bool isSameGameAudio(GameAudio otherGameAudio) => isSameGameAudio(otherGameAudio.audioType, otherGameAudio.audioName);
 
     }
 
