@@ -56,6 +56,18 @@ namespace Entities
         private void onBlockHit(int _health, BlockState _blockState, SpriteRenderer _sr)
         {
 
+            switch (_blockState)
+            {
+                case BlockState.FULL_HEALTH:
+                    _sr.sprite = halfHealthSprite.sprite;
+                    break;
+                case BlockState.HALF_HEALTH:
+                    Color finalColor = _sr.color;
+                    finalColor.a = 0;
+                    _sr.color = finalColor;
+                    break;
+            }
+
         }
 
     }
