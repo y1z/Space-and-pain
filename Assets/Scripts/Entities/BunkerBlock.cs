@@ -10,13 +10,13 @@ namespace Entities
         DEAD,
     }
 
+    [RequireComponent(typeof(CharacterController))]
     public sealed class BunkerBlock : MonoBehaviour
     {
+
         const int DEFAULT_BLOCK_HEALTH = 2;
         [Tooltip("The collider used for the individual bunker blocks")]
         [SerializeField] public CharacterController blockController;
-
-        public Collider2D col;
 
         [Tooltip("the sprite used to represent the collider")]
         [SerializeField] public SpriteRenderer blockSprite;
@@ -30,30 +30,25 @@ namespace Entities
 
         private void Start()
         {
-            /*
             if (blockController == null)
             {
                 blockController = GetComponent<CharacterController>();
-                EDebug.Assert(blockController != null, $"{blockController} needs an array of type {typeof(CharacterController)} to work", this);
-            }*/
-            col = GetComponent<Collider2D>();
-            EDebug.Assert(col != null, $"{nameof(col)} needs a {typeof(Collider2D)} to work.", this);
+                EDebug.Assert(blockController != null, $"{nameof(blockController)} needs a {typeof(CharacterController)} to work.", this);
+            }
+
             if (blockSprite == null)
             {
                 blockSprite = GetComponent<SpriteRenderer>();
-                EDebug.Assert(blockSprite != null, $"{blockSprite} needs an array of type {typeof(SpriteRenderer)} to work", this);
+                EDebug.Assert(blockSprite != null, $"{nameof(blockSprite)} needs a {typeof(SpriteRenderer)} to work.", this);
             }
 
         }
 
-        void OnControllerColliderHit(ControllerColliderHit hit)
+        public void hitBlock()
         {
-            EDebug.Log($"{hit}", this);
-            if (hit.gameObject.CompareTag("Projectile") || hit.gameObject.CompareTag("Enemy Projectile"))
-            {
-                blockHealth = blockHealth - 1;
-                blockHit?.Invoke(blockHealth, state, blockSprite);
-            }
+            blockHealth = blockHealth - 1;
+            blockHit?.Invoke(blockHealth, state, blockSprite);
+            EDebug.Log($"blockHealth = |{blockHealth}|", this);
 
             if (blockHealth < 1)
             {
@@ -61,18 +56,5 @@ namespace Entities
             }
         }
 
-        private void OnCollisionEnter(Collision collision)
-        {
-            EDebug.Log($"{nameof(OnCollisionEnter)} entered");
-
-        }
-
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-
-            EDebug.Log($"{nameof(OnCollisionEnter2D)} entered");
-        }
-
     }
-
 }
