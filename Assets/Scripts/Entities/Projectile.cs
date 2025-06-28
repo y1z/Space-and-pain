@@ -1,5 +1,6 @@
 using System.Collections;
 using Managers;
+using Unity.Profiling;
 using UnityEngine;
 
 namespace Entities
@@ -7,6 +8,9 @@ namespace Entities
     [RequireComponent(typeof(CharacterController))]
     public sealed class Projectile : MonoBehaviour
     {
+
+        static readonly ProfilerMarker marker = new ProfilerMarker("MARKER.PROJECTILE");
+
         [SerializeField] CharacterController cc;
         GameStates gameStates;
 
@@ -33,6 +37,7 @@ namespace Entities
         private void Update()
         {
             if (gameStates != GameStates.PLAYING) { return; }
+            using var _ = marker.Auto();
 
             Vector3 starting = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 
@@ -52,37 +57,38 @@ namespace Entities
         void OnControllerColliderHit(ControllerColliderHit hit)
         {
             EDebug.Log($"{nameof(OnControllerColliderHit)}");
-            if (hit.gameObject.CompareTag("Projectile") || hit.gameObject.CompareTag("Enemy Projectile"))
-            {
-                StartCoroutine(deathAnimation());
-                return;
-            }
 
 
-            if (hit.gameObject.CompareTag("Boundary"))
+            if (isPlayerProjectile && hit.gameObject.TryGetComponent(out Enemy _enemy))
             {
+                _enemy.dies();
                 setUp();
                 gameObject.SetActive(false);
             }
 
-            bool isEnemy = hit.gameObject.CompareTag("Enemy");
-            if (isEnemy && isPlayerProjectile)
-            {
-                hit.gameObject.GetComponent<Enemy>().dies();
-                setUp();
-                gameObject.SetActive(false);
-                return;
-            }
-
-            bool isPlayer = hit.gameObject.CompareTag("Player");
-            if (isPlayer && !isPlayerProjectile)
+            else if (!isPlayerProjectile && hit.gameObject.TryGetComponent(out Player _player))
             {
                 hit.gameObject.GetComponent<Player>().dies();
                 setUp();
                 gameObject.SetActive(false);
-                return;
             }
 
+            else if (hit.gameObject.CompareTag("Boundary"))
+            {
+                setUp();
+                gameObject.SetActive(false);
+            }
+
+            else if (hit.gameObject.TryGetComponent(out Projectile _projectile))
+            {
+                StartCoroutine(deathAnimation());
+            }
+
+            else if (hit.gameObject.TryGetComponent(out BunkerBlock _bunkerBlock))
+            {
+                _bunkerBlock.hitBlock();
+                gameObject.SetActive(false);
+            }
         }
 
         public void setUp()
