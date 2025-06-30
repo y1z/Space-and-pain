@@ -46,7 +46,7 @@ namespace Managers
                     return;
                 }
 
-                for (int i = invokeList.Length; i >= 0; i--)
+                for (int i = invokeList.Length - 1; i >= 0; i--)
                 {
                     System.Delegate.Remove(scoreChange, invokeList[i]);
                 }
