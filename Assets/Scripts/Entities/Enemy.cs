@@ -61,6 +61,7 @@ namespace Entities
         /// <returns></returns>
         public void dies()
         {
+            SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "boom");
             onDies?.Invoke(id);
             StartCoroutine(deathAnmation());
         }
