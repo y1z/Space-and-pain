@@ -17,6 +17,8 @@ namespace UI
                 scoreText = GetComponent<TextMeshProUGUI>();
                 EDebug.Assert(scoreText != null, $"{nameof(scoreText)} needs a {typeof(TextMeshProUGUI)} to work.", this);
             }
+
+            scoreText.text = SingletonManager.inst.scoreManager.scoreString();
             yield break;
         }
 
