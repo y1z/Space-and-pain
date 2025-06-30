@@ -372,7 +372,6 @@ namespace Managers
         {
             if (enemies.Count < 1) { return; }
 
-            SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "enemy shoot");
             int index = UnityEngine.Random.Range(0, enemies.Count);
             if (!enemies[index].gameObject.activeInHierarchy)
             {
@@ -381,6 +380,7 @@ namespace Managers
             }
 
             enemies[index].enemyShoot.shoot();
+            SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "enemy shoot");
         }
 
 

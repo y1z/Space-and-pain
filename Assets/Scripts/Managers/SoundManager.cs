@@ -1,4 +1,5 @@
 using Scriptable_Objects;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -24,9 +25,8 @@ namespace Managers
         [SerializeField] AudioMixer mixer;
 
         [Header("Audio sources")]
-        [SerializeField] private AudioSource sfxSource;
+        [SerializeField] private AudioSource[] sfxSources;
         [Tooltip("this exist so sounds don't cancel each other out")]
-        [SerializeField] private AudioSource sfxSource2;
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource voiceSource;
 
@@ -45,10 +45,9 @@ namespace Managers
                 EDebug.Assert(mixer != null, $"{nameof(mixer)} needs a {typeof(AudioMixer)} to work.", this);
             }
 
-            if (sfxSource == null)
+            if (sfxSources == null)
             {
-                sfxSource = GetComponentInChildren<AudioSource>();
-                EDebug.Assert(sfxSource != null, $"{nameof(sfxSource)} needs a {typeof(AudioSource)} to work.", this);
+                EDebug.Assert(sfxSources != null, $"{nameof(sfxSources)} needs a array of type {typeof(AudioSource)} to work.", this);
             }
 
             if (musicSource == null)
@@ -73,66 +72,77 @@ namespace Managers
         }
 
 
+        #region PlayFunctions
+
         public void playAudio(GameAudioType audioType, string _audioName)
         {
-            bool shouldPlayLastUsedAudio = lastUsedAudio.isSameGameAudio(audioType, _audioName);
-
-            if (shouldPlayLastUsedAudio)
-            {
-
-                switch (lastUsedAudio.audioType)
-                {
-                    case GameAudioType.SFX:
-                        sfxSource.clip = lastUsedAudio.audioClip;
-                        sfxSource.Play();
-                        break;
-                    case GameAudioType.MUSIC:
-                        musicSource.clip = lastUsedAudio.audioClip;
-                        musicSource.Play();
-                        break;
-                    case GameAudioType.VOICE:
-                        voiceSource.clip = lastUsedAudio.audioClip;
-                        voiceSource.Play();
-                        break;
-                }
-                return;
-            }
-
-            GameAudio audioToPlay = null;
-            audioToPlay = findGameAudio(audioType, _audioName);
-            if (audioToPlay == null)
-            {
-                DDebug.LogError($"Could not find |{_audioName}| of type |{audioType}|", this);
-                return;
-            }
 
             switch (audioType)
             {
                 case GameAudioType.SFX:
-                    sfxSource.clip = audioToPlay.audioClip;
-                    sfxSource.Play();
+                    playSFX(_audioName);
                     break;
                 case GameAudioType.MUSIC:
-                    musicSource.clip = audioToPlay.audioClip;
-                    musicSource.Play();
+                    playMusic(_audioName);
                     break;
                 case GameAudioType.VOICE:
-                    voiceSource.clip = audioToPlay.audioClip;
-                    voiceSource.Play();
+                    playVoice(_audioName);
                     break;
-                case GameAudioType.NONE:
-                default:
-                    DDebug.LogWarning($"NOT handled case ={audioType}", this);
-                    break;
+
             }
 
-
         }
 
-        private void playSFX(string audio_name)
+        public void playSFX(string _audioName)
         {
+            bool shouldPlayLastUsedAudio = lastUsedAudio.isSameGameAudio(GameAudioType.SFX, _audioName);
+
+            GameAudio audioToPlay = null;
+            if (shouldPlayLastUsedAudio)
+            {
+                audioToPlay = lastUsedAudio;
+            }
+            else
+            {
+                audioToPlay = findGameAudio(GameAudioType.SFX, _audioName);
+            }
+
+            lastUsedAudio = audioToPlay;
+
+            for (int i = 0; i < sfxSources.Length; ++i)
+            {
+                if (!sfxSources[i].isPlaying)
+                {
+                    sfxSources[i].clip = audioToPlay.audioClip;
+                    sfxSources[i].Play();
+                    //EDebug.Log($"<color=green> played sfx Source {i}  </color>", this);
+                    break;
+                }
+
+            }
 
         }
+
+        public void playMusic(string _audioName, bool looping = false)
+        {
+            GameAudio audioToPlay = findGameAudio(GameAudioType.MUSIC, _audioName);
+            DDebug.Assert(audioToPlay != null, $"Could not find audio |{_audioName}| of type |{GameAudioType.MUSIC}|", this);
+
+            musicSource.loop = looping;
+            musicSource.clip = audioToPlay.audioClip;
+            musicSource.Play();
+        }
+
+        public void playVoice(string _audioName)
+        {
+            GameAudio audioToPlay = findGameAudio(GameAudioType.VOICE, _audioName);
+            DDebug.Assert(audioToPlay != null, $"Could not find audio |{_audioName}| of type |{GameAudioType.VOICE}|", this);
+
+            voiceSource.clip = audioToPlay.audioClip;
+            voiceSource.Play();
+        }
+
+        #endregion
 
         public void setMasterVolume(float newVolume)
         {
