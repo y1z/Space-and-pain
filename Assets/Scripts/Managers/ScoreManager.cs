@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Entities;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
