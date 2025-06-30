@@ -240,6 +240,16 @@ namespace Managers
         {
             EDebug.Log($"enemy |{id}| dies");
             aliveEnemies--;
+
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (enemies[i].id == id)
+                {
+                    SingletonManager.inst.scoreManager.AddScore(enemies[i].enemyPointsAmount);
+                }
+            }
+
             if (aliveEnemies < 1)
             {
                 enemyManagerState = EnemyManagerState.MOVE_NONE;
