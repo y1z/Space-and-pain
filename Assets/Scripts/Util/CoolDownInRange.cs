@@ -8,7 +8,7 @@ namespace Util
     /// </summary>
     public sealed class CoolDownInRange
     {
-        public float currentTime;
+        public float timeUntilNextExecution;
         public float minimumCoolDownRange;
         public float maximumCoolDownRange;
         private float currentCoolDown;
@@ -17,7 +17,7 @@ namespace Util
 
         public CoolDownInRange(float _minimumCoolDownRange, float _maximumCoolDownRange)
         {
-            currentTime = 0.0f;
+            timeUntilNextExecution = 0.0f;
             maximumCoolDownRange = _maximumCoolDownRange;
             minimumCoolDownRange = _minimumCoolDownRange;
             calculateCoolDown();
@@ -27,7 +27,7 @@ namespace Util
         {
             currentCoolDown += deltaTime;
 
-            if (currentCoolDown > currentTime)
+            if (currentCoolDown > timeUntilNextExecution)
             {
                 currentCoolDown = 0.0f;
                 calculateCoolDown();
@@ -37,7 +37,7 @@ namespace Util
         }
         private void calculateCoolDown()
         {
-            currentCoolDown = Mathf.Lerp(minimumCoolDownRange, maximumCoolDownRange, UnityEngine.Random.value);
+            timeUntilNextExecution = Mathf.Lerp(minimumCoolDownRange, maximumCoolDownRange, UnityEngine.Random.value);
         }
 
 
