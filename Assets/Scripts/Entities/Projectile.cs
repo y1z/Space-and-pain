@@ -68,7 +68,7 @@ namespace Entities
 
             else if (!isPlayerProjectile && hit.gameObject.TryGetComponent(out Player _player))
             {
-                hit.gameObject.GetComponent<Player>().dies();
+                _player.dies();
                 setUp();
                 gameObject.SetActive(false);
             }
