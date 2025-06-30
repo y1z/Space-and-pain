@@ -5,6 +5,16 @@ using UnityEngine;
 
 namespace Entities
 {
+    public enum EnemyPointsAmount : int
+    {
+        MINIMUM_POINTS = 50,
+        MIDDLE_ENEMIE_POINTS = MINIMUM_POINTS * 2,
+        TOP_ENEMIE_POINTS = MINIMUM_POINTS * 4,
+
+        UFO_SHIP_LOWEST = MINIMUM_POINTS * 5,
+        UFO_SHIP_MAXIMUM = UFO_SHIP_LOWEST * 3,
+    }
+
     public sealed class Enemy : MonoBehaviour
     {
         public const int DEFAULT_ID = -1337;
@@ -23,6 +33,8 @@ namespace Entities
         public EnemyShoot enemyShoot;
 
         public Action<int> onDies;
+
+        public EnemyPointsAmount enemyPointsAmount = EnemyPointsAmount.MINIMUM_POINTS;
 
         #region GameManagerBoilerPlate
 
