@@ -38,12 +38,17 @@ namespace Managers
         private void OnDisable()
         {
             SceneManager.activeSceneChanged -= onActiveSceneChange;
-
             if (scoreChange != null)
             {
                 var invokeList = scoreChange.GetInvocationList();
+                int invokeListLenght = invokeList.Length;
 
-                for (int i = invokeList.Length; i > -1; i--)
+                if (invokeListLenght < 1)
+                {
+                    return;
+                }
+
+                for (int i = invokeList.Length; i >= 0; i--)
                 {
                     System.Delegate.Remove(scoreChange, invokeList[i]);
                 }
