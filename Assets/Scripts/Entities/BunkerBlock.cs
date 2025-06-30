@@ -1,3 +1,4 @@
+using Managers;
 using UnityEngine;
 
 namespace Entities
@@ -48,8 +49,7 @@ namespace Entities
         {
             blockHealth = blockHealth - 1;
             blockHit?.Invoke(blockHealth, state, blockSprite);
-            EDebug.Log($"blockHealth = |{blockHealth}|", this);
-
+            SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "boom");
             if (blockHealth < 1)
             {
                 gameObject.SetActive(false);

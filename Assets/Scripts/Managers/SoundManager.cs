@@ -1,10 +1,12 @@
 using Scriptable_Objects;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Rendering;
 
 namespace Managers
 {
+    /// <summary>
+    /// TODO : Change SoundManager to be able to play 2 sounds a the same time
+    /// </summary>
     public sealed class SoundManager : MonoBehaviour
     {
         public const string MATER_VOLUME_KEY = "master_volume";
@@ -23,6 +25,8 @@ namespace Managers
 
         [Header("Audio sources")]
         [SerializeField] private AudioSource sfxSource;
+        [Tooltip("this exist so sounds don't cancel each other out")]
+        [SerializeField] private AudioSource sfxSource2;
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource voiceSource;
 
@@ -122,6 +126,11 @@ namespace Managers
                     break;
             }
 
+
+        }
+
+        private void playSFX(string audio_name)
+        {
 
         }
 

@@ -38,6 +38,7 @@ namespace Entities
 
         public void dies()
         {
+            SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "boom");
             StartCoroutine(playerLiveSystem.dies());
         }
 
