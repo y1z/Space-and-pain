@@ -1,0 +1,33 @@
+using UnityEngine;
+
+
+namespace Scriptable_Objects
+{
+    [CreateAssetMenu(fileName = "GeneratorLevelData", menuName = "Scriptable Objects/GeneratorLevelData")]
+    public sealed class GeneratorLevelData : ScriptableObject
+    {
+        
+        [Header("Grid of enemies")]
+        [Tooltip("How many columns of enemies the level has")] 
+        public int enemiesColumnCount = 6;
+        [Tooltip("How many rows of enemies the level has")] 
+        public int enemiesRowsCount = 6;
+
+        [Header("Enemy Movement")]
+        [Tooltip("[lower is faster] How long it take to move 1 enemy")] 
+        [Range(0f, 1f)]
+        public float howLongUntilNextEnemyMovementRateStart = 0.12f;
+        [Tooltip("[lower is faster] How long does it take to move enemies down (relative to howLongUntilNextEnemyMovementRateStart) ")]
+        [Range(0f, 1f)]
+        public float moveDownFactorSpeedUpRateStart = 0.4f;
+
+        [Header("Next Round Speed up")]
+        [Tooltip("[Lower is faster]How much to speed up enemy movement the next round ")]
+        [Range(0f, 1f)]
+        public float howLongUntilNextEnemyMovementSpeedUpRate = 0.95f;
+        [Tooltip("[Lower is faster]How much to speed up the enemy movement when going down next round")]
+        [Range(0f, 1f)]
+        public float moveDownFactorSpeedUpSpeedUpRate = 1.0f;
+    }
+
+}
