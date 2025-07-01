@@ -36,6 +36,7 @@ namespace Entities
         private void Update()
         {
             if (referenceToPlayer.currentGameState != GameStates.PLAYING) { return; }
+            if (referenceToPlayer.playerState != Player.PlayerState.ALIVE) { return; }
 
             if (SingletonManager.inst.inputManager.isShootActionPressedThisFrame())
             {
