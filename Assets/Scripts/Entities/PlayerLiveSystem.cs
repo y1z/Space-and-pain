@@ -71,6 +71,8 @@ namespace Entities
 
             if (lives < 0)
             {
+                SingletonManager.inst.soundManager.playVoice("game over");
+                SingletonManager.inst.gameManager.printSubscribers();
                 SingletonManager.inst.gameManager.setState(GameStates.GAME_OVER);
             }
 
