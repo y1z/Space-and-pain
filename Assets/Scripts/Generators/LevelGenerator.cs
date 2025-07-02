@@ -86,6 +86,21 @@ namespace Generators
         {
             Bunker bunkerTemplate = Resources.Load<Bunker>(PATH_TO_BUNKER);
             Rect afterOffSet = generatorData.bunkerArea;
+            afterOffSet.position += _offset;
+
+            float distance_x = afterOffSet.width / (float)generatorData.bunkerAmount;
+            Vector2 startPos = new Vector2(afterOffSet.xMin, afterOffSet.center.y);
+
+
+            GameObject bunkersPivot = new GameObject("_Bunkers");
+
+            for (int i = 0; i < generatorData.bunkerAmount; ++i)
+            {
+                Bunker bunker = Instantiate<Bunker>(bunkerTemplate);
+                bunker.transform.position = startPos + (Vector2.right * (distance_x * i));
+                bunker.transform.SetParent(bunkersPivot.transform);
+            }
+
         }
 
         #endregion
