@@ -18,13 +18,13 @@ MonoBehaviour:
   moveDownFactorSpeedUpRateStart: 0.4
   howLongUntilNextEnemyMovementSpeedUpRate: 0.95
   moveDownFactorSpeedUpSpeedUpRate: 1
-  bunkersAmount: 0
-  bunkerArea:
+  bunkerAmount: 4
+  <bunkerArea>k__BackingField:
     serializedVersion: 2
-    x: 0
-    y: 0
+    x: -6
+    y: -4
     width: 16
-    height: 100
+    height: 2
   <enemySpawnArea>k__BackingField:
     serializedVersion: 2
     x: -8
