@@ -10,16 +10,14 @@ namespace Generators
     {
         const string PATH_TO_SPAWNER = "Prefabs/Entities/Enemy spawner";
         const string PATH_TO_BUNKER = "Prefabs/Entities/Bunker";
+        const string PATH_TO_PLAYER= "Prefabs/Entities/Player";
 
         [SerializeField] Managers.GameStates gameStates;
 
         [SerializeField] LevelGeneratorData generatorData = null;
 
-        [Tooltip("[optional] The offset from the coordinate (0,0)")]
-        [SerializeField] Transform optionalEnemyAreaOffset;
-
-        [Tooltip("[optional] The offset from the coordinate (0,0)")]
-        [SerializeField] Transform optionalBunkerAreaOffset;
+        [Tooltip("[optional] The offset from the coordinate for everything generated (0,0)")]
+        [SerializeField] Transform optionalOffsetForGeneration;
 
         private void Start()
         {
@@ -37,19 +35,14 @@ namespace Generators
             DDebug.Assert(generatorData != null, "generatorData == null; FIX THAT", this);
             Vector2 offset = Vector2.zero;
             Vector2 finalPos = generatorData.enemySpawnArea.position;
-            if (optionalEnemyAreaOffset != null)
+            if (optionalOffsetForGeneration != null)
             {
-                offset = optionalEnemyAreaOffset.position;
+                offset = optionalOffsetForGeneration.position;
             }
 
             createEnemySpawners(offset);
-
-            if (optionalBunkerAreaOffset != null)
-            {
-                offset = optionalBunkerAreaOffset.position;
-            }
-
             createBunkers(offset);
+            createPlayer(offset);
         }
 
         private void createEnemySpawners(Vector2 _offset)
@@ -101,6 +94,15 @@ namespace Generators
                 bunker.transform.SetParent(bunkersPivot.transform);
             }
 
+        }
+
+        private void createPlayer(Vector2 _offset)
+        {
+            Vector3 finalPlayerPosition = generatorData.playerStartPosition + _offset;
+            Player pl = Resources.Load<Player>(PATH_TO_PLAYER);
+            Player finalPlayer = Instantiate(pl, finalPlayerPosition, Quaternion.identity);
+            finalPlayer.playerLiveSystem.setLivesAmount(generatorData.playerLives);
+            finalPlayer.playerShoot.setMaxShots(generatorData.playerMaxShots);
         }
 
         #endregion

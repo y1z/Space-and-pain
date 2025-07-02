@@ -5,21 +5,23 @@ using UnityEngine;
 namespace Entities
 {
 
-
     public sealed class PlayerShoot : MonoBehaviour
     {
-        [SerializeField] private List<Projectile> projectiles = new();
-        /// <summary>
-        /// The Projectile instance that all projectiles will be base off 
-        /// </summary>
-        [SerializeField] private Projectile templateInstance;
+        private List<Projectile> projectiles = new();
 
         [SerializeField] private Player referenceToPlayer;
+
+        [Tooltip("The Projectile instance that all projectiles will be base off")]
+        [SerializeField] private Projectile templateInstance;
 
         [Tooltip("This controls were the projectile will spawn at")]
         [SerializeField] private Transform spawnPoint;
 
         const string pathToProjectileResource = "Prefabs/Entities/Player Projectile";
+
+        [Tooltip("The max amount of shots the player can have active in the scene")]
+        [field: SerializeField] public int maxShots { get; private set; } = 1;
+
 
         private void Start()
         {
@@ -52,7 +54,7 @@ namespace Entities
                 activeProjectile = projectiles[i].gameObject.activeInHierarchy ? activeProjectile + 1 : activeProjectile;
             }
             EDebug.Log("Active Projectiles =" + activeProjectile);
-            if (activeProjectile >= referenceToPlayer.maxShots) { return; }
+            if (activeProjectile >= maxShots) { return; }
 
             Projectile futureProjectile = recycle();
 
@@ -90,5 +92,11 @@ namespace Entities
 
             return result;
         }
+
+        public void setMaxShots(int _maxShots)
+        {
+            maxShots = Mathf.Clamp(_maxShots, 0, 1337);
+        }
+
     }
 }
