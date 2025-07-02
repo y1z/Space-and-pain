@@ -32,7 +32,7 @@ namespace Scriptable_Objects
 
         [Header("Bunkers ")]
         [Tooltip("The amount of bunkers"), Min(0)]
-        public int bunkersAmount;
+        public int bunkerAmount;
         [field: SerializeField, Tooltip("Controls were the bunker will be located")]
         public Rect bunkerArea { get; private set; }
 
