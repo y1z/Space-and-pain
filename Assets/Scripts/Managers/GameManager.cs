@@ -107,6 +107,7 @@ namespace Managers
     public enum GameStates : byte
     {
         IDLE = 0,
+        INIT_LEVEL,
         INIT_ENEMYS,
         UI,
         PAUSE,
