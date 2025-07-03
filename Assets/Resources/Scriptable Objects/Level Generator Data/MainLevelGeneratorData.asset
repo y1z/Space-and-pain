@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2891786528187394eac6cb46a59f4162, type: 3}
   m_Name: MainLevelGeneratorData
   m_EditorClassIdentifier: 
-  enemiesColumnCount: 6
-  enemiesRowsCount: 5
-  howLongUntilNextEnemyMovementRateStart: 0.12
-  moveDownFactorSpeedUpRateStart: 0.4
-  howLongUntilNextEnemyMovementSpeedUpRate: 0.95
-  moveDownFactorSpeedUpSpeedUpRate: 1
+  <playerLives>k__BackingField: 3
+  <playerMaxShots>k__BackingField: 4
+  <playerStartPosition>k__BackingField: {x: 0, y: -4}
+  <enemiesColumnCount>k__BackingField: 7
+  <enemiesRowsCount>k__BackingField: 5
+  <howLongUntilNextEnemyMovementRateStart>k__BackingField: 0.06
+  <moveDownFactorSpeedUpRateStart>k__BackingField: 0.4
+  <howLongUntilNextEnemyMovementSpeedUpRate>k__BackingField: 0.95
+  <moveDownFactorSpeedUpSpeedUpRate>k__BackingField: 1
   bunkerAmount: 4
   <bunkerArea>k__BackingField:
     serializedVersion: 2
@@ -30,4 +33,10 @@ MonoBehaviour:
     x: -8
     y: 4
     width: 16
-    height: 7
+    height: 5
+  <scoreOffsetFromTopLeft>k__BackingField: {x: 500, y: -100}
+  <scoreSizeDelta>k__BackingField: {x: 500, y: 100}
+  <scoreAlignment>k__BackingField: 513
+  <liveOffsetFromTopLeft>k__BackingField: {x: 1000, y: -100}
+  <livesSizeDelta>k__BackingField: {x: 500, y: 100}
+  <livesAlignment>k__BackingField: 513
