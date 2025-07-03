@@ -8,7 +8,7 @@ namespace UI
 
     public sealed class TextThatDisplaysGameState : MonoBehaviour
     {
-        [Tooltip("The text that will display the current game state")]
+        [Tooltip("The text that will displayText the current game state")]
         public TextMeshProUGUI text;
         public GameStates gameState;
         private GameStates textGameState = GameStates.GAME_OVER;
