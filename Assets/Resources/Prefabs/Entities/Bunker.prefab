@@ -1104,8 +1104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocks: []
-  fullHealthSprite: {fileID: 0}
-  halfHealthSprite: {fileID: 0}
+  fullHealthSprite: {fileID: 4670302440455550003, guid: 1c752a6f64d03514d803423b7c5e5565, type: 3}
+  halfHealthSprite: {fileID: 2034487286742819677, guid: e74f16a9c7e85af40a2c9afcc1fc6389, type: 3}
 --- !u!1 &5556138289137529689
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2891786528187394eac6cb46a59f4162, type: 3}
+  m_Name: MainLevelGeneratorData
+  m_EditorClassIdentifier: 
+  <playerLives>k__BackingField: 3
+  <playerMaxShots>k__BackingField: 4
+  <playerStartPosition>k__BackingField: {x: 0, y: -4}
+  <enemiesColumnCount>k__BackingField: 7
+  <enemiesRowsCount>k__BackingField: 5
+  <howLongUntilNextEnemyMovementRateStart>k__BackingField: 0.06
+  <moveDownFactorSpeedUpRateStart>k__BackingField: 0.4
+  <howLongUntilNextEnemyMovementSpeedUpRate>k__BackingField: 0.95
+  <moveDownFactorSpeedUpSpeedUpRate>k__BackingField: 1
+  bunkerAmount: 4
+  <bunkerArea>k__BackingField:
+    serializedVersion: 2
+    x: -6
+    y: -4
+    width: 16
+    height: 2
+  <enemySpawnArea>k__BackingField:
+    serializedVersion: 2
+    x: -8
+    y: 4
+    width: 16
+    height: 5
+  <scoreOffsetFromTopLeft>k__BackingField: {x: 500, y: -100}
+  <scoreSizeDelta>k__BackingField: {x: 500, y: 100}
+  <scoreAlignment>k__BackingField: 513
+  <liveOffsetFromTopLeft>k__BackingField: {x: 1000, y: -100}
+  <livesSizeDelta>k__BackingField: {x: 500, y: 100}
+  <livesAlignment>k__BackingField: 513
