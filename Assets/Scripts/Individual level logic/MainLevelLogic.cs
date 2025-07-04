@@ -2,6 +2,7 @@ using Managers;
 using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Scriptable_Objects;
 
 public sealed class MainLevelLogic : MonoBehaviour
 {
@@ -50,6 +51,45 @@ public sealed class MainLevelLogic : MonoBehaviour
     public void quitToStartScreen()
     {
         SceneManager.LoadSceneAsync("Scenes/Game/StartScreen", LoadSceneMode.Single);
+    }
+
+    // volume 
+    public void masterVolumeSlider(SliderEventData data)
+    {
+        EDebug.Log($"{nameof(masterVolumeSlider)} was called", this);
+        EDebug.Log($"percent = %{data.percentOfTurnOnUnits} was called", this);
+
+        SingletonManager.inst.soundManager.setMasterVolume(data.percentOfTurnOnUnits);
+    }
+
+    public void musicVolumeSlider(SliderEventData data)
+    {
+        EDebug.Log($"{nameof(musicVolumeSlider)} was called", this);
+        EDebug.Log($"percent = %{data.percentOfTurnOnUnits} was called", this);
+        SingletonManager.inst.soundManager.setVolume(GameAudioType.MUSIC, data.percentOfTurnOnUnits);
+    }
+
+    public void sfxVolumeSlider(SliderEventData data)
+    {
+        EDebug.Log($"{nameof(sfxVolumeSlider)} was called", this);
+        EDebug.Log($"percent = %{data.percentOfTurnOnUnits} was called", this);
+        SingletonManager.inst.soundManager.setVolume(GameAudioType.SFX, data.percentOfTurnOnUnits);
+    }
+
+    public void voiceVolumeSlider(SliderEventData data)
+    {
+        EDebug.Log($"{nameof(voiceVolumeSlider)} was called", this);
+        EDebug.Log($"percent = %{data.percentOfTurnOnUnits} was called", this);
+        SingletonManager.inst.soundManager.setVolume(GameAudioType.VOICE, data.percentOfTurnOnUnits);
+    }
+
+    /// <summary>
+    /// TODO: Implement function for changing to full screen
+    /// </summary>
+    /// <param name="checkThing"></param>
+    public void onFullScreenChange(bool checkThing)
+    {
+        EDebug.Log($"{nameof(onFullScreenChange)} was called", this);
     }
 
     #region GameManagerBoilerPlate

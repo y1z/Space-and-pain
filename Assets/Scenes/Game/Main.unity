@@ -1072,6 +1072,30 @@ PrefabInstance:
       propertyPath: 'sliderUnits.Array.data[9]'
       value: 
       objectReference: {fileID: 1309346236}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 871471043}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: voiceVolumeSlider
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainLevelLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2606113113674869068, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1214,7 +1238,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4513463612837353672, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_Name
-      value: Slider (3)
+      value: Voice Slider
       objectReference: {fileID: 0}
     - target: {fileID: 4940058037674819020, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2857,6 +2881,30 @@ PrefabInstance:
       propertyPath: 'sliderUnits.Array.data[9]'
       value: 
       objectReference: {fileID: 861012203}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 871471043}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: masterVolumeSlider
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainLevelLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2606113113674869068, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2999,7 +3047,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4513463612837353672, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_Name
-      value: Slider
+      value: Master Slider
       objectReference: {fileID: 0}
     - target: {fileID: 4940058037674819020, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3986,6 +4034,30 @@ PrefabInstance:
       propertyPath: 'sliderUnits.Array.data[9]'
       value: 
       objectReference: {fileID: 1629030410}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 871471043}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: sfxVolumeSlider
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainLevelLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2606113113674869068, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4128,7 +4200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4513463612837353672, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_Name
-      value: Slider (2)
+      value: 'SFX Slider '
       objectReference: {fileID: 0}
     - target: {fileID: 4940058037674819020, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4594,7 +4666,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1785205856289436880, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
       propertyPath: m_Name
-      value: CheckBox
+      value: Full Screen CheckBox
       objectReference: {fileID: 0}
     - target: {fileID: 1809243922644506205, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
       propertyPath: m_Pivot.x
@@ -4680,6 +4752,30 @@ PrefabInstance:
       propertyPath: rectTransform
       value: 
       objectReference: {fileID: 1601468704}
+    - target: {fileID: 2536855084020841024, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536855084020841024, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 871471043}
+    - target: {fileID: 2536855084020841024, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536855084020841024, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: onFullScreenChange
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536855084020841024, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainLevelLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536855084020841024, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3878682421059236092, guid: b6ff7b69133d1334697fe297a902d81c, type: 3}
       propertyPath: m_text
       value: Full Screen
@@ -5397,6 +5493,30 @@ PrefabInstance:
       propertyPath: 'sliderUnits.Array.data[9]'
       value: 
       objectReference: {fileID: 206341475}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 871471043}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: musicVolumeSlider
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainLevelLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2007433709221370361, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
+      propertyPath: sliderUnitChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2606113113674869068, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5539,7 +5659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4513463612837353672, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_Name
-      value: Slider (1)
+      value: 'Music Slider '
       objectReference: {fileID: 0}
     - target: {fileID: 4940058037674819020, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       propertyPath: m_AnchorMax.y

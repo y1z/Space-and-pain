@@ -7,7 +7,7 @@ namespace UI
 {
     public sealed class SelectableSlider : SelectableBase
     {
-        [Tooltip("Sends a signal every-time the slider changes")]
+        [Tooltip("Sends a signal every-time the slider changes"), Space(30.0f)]
         public UnityEvent<SliderEventData> sliderUnitChange;
 
         [Tooltip("This is the container of the slider Units (aka the objects need for the slider to work)")]
@@ -94,7 +94,7 @@ namespace UI
 
         public override float getValue()
         {
-            return ((float)sliderUnits.Length / (float)turnOnCount);
+            return ((float)turnOnCount / (float)sliderUnits.Length);
         }
 
         public override void setValue(float newValue)
