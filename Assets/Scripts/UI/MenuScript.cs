@@ -22,7 +22,7 @@ namespace UI
         private GameStates currentGameState;
 
         [Header("Selector controls")]
-        [SerializeField] private int selectorIndex;
+        [SerializeField] private int selectorIndex = 0;
         [SerializeField] private RectTransform selectorObject;
         [SerializeField] private Vector3 distanceFromSelectedObject = Vector3.left * 10.0f;
 

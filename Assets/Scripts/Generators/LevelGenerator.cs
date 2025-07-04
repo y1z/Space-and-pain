@@ -139,6 +139,9 @@ namespace Generators
             scoreInstance.rectTrans.localPosition += new Vector3(generatorData.scoreOffsetFromTopLeft.x, generatorData.scoreOffsetFromTopLeft.y, 0.0f);
             livesInstance.rectTrans.localPosition += new Vector3(generatorData.liveOffsetFromTopLeft.x, generatorData.liveOffsetFromTopLeft.y, 0.0f);
 
+            scoreInstance.rectTrans.SetSiblingIndex(0);
+            livesInstance.rectTrans.SetSiblingIndex(1);
+
             livesInstance.Init(referenceToPlayer);
         }
 
