@@ -1,12 +1,15 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using System;
 
 namespace UI
 {
     public sealed class SelectableSlider : SelectableBase
     {
+        [Tooltip("Sends a signal every-time the slider changes")]
+        public UnityEvent<SliderEventData> sliderUnitChange;
+
         [Tooltip("This is the container of the slider Units (aka the objects need for the slider to work)")]
         [SerializeField] private HorizontalOrVerticalLayoutGroup sliderContainer;
 
@@ -20,6 +23,7 @@ namespace UI
         [Tooltip("The color for the slider unit that is off")]
         [ColorUsage(true, true)]
         [SerializeField] private Color offColor;
+
 
         public int turnOnCount { get; private set; } = 0;
 
@@ -44,6 +48,7 @@ namespace UI
         public override UiResult executeAction(UiAction action)
         {
 
+            SliderEventData eventData;
             switch (action)
             {
                 case UiAction.MAIN_ACTION:
@@ -54,6 +59,9 @@ namespace UI
                     }
                     drawSliderUnits();
 
+                    eventData = SliderEventData.create(turnOnCount, sliderUnits.Length, getValue());
+                    sliderUnitChange?.Invoke(eventData);
+
                     break;
                 case UiAction.ALT_ACTION:
                     turnOnCount -= 1;
@@ -63,6 +71,8 @@ namespace UI
                     }
                     drawSliderUnits();
 
+                    eventData = SliderEventData.create(turnOnCount, sliderUnits.Length, getValue());
+                    sliderUnitChange?.Invoke(eventData);
                     break;
             }
             return UiResult.SUCCESS;
@@ -146,5 +156,29 @@ namespace UI
             removeAllTheBlocks();
         }
 
+    }
+
+    [Serializable]
+    public struct SliderEventData
+    {
+        public SliderEventData(int _turnOnUnits, int _totalUnits, float _percentOfTurnOnUnits)
+        {
+            turnOnUnits = _turnOnUnits;
+            totalUnits = _totalUnits;
+            percentOfTurnOnUnits = _percentOfTurnOnUnits;
+        }
+
+        static public SliderEventData create(int _turnOnUnits, int _totalUnits, float _percentOfTurnOnUnits)
+        {
+            SliderEventData eventData;
+            eventData.totalUnits = _totalUnits;
+            eventData.turnOnUnits = _turnOnUnits;
+            eventData.percentOfTurnOnUnits = _percentOfTurnOnUnits;
+            return eventData;
+        }
+
+        public int turnOnUnits;
+        public int totalUnits;
+        public float percentOfTurnOnUnits;
     }
 }
