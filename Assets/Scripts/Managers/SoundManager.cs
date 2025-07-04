@@ -14,8 +14,8 @@ namespace Managers
         public const string MUSIC_VOLUME_KEY = "music_volume";
         public const string VOICE_VOLUME_KEY = "voice_volume";
 
-        public const float MAX_VOLUME = 10.0f;
-        public const float MIN_VOLUME = -80.0f;
+        public const float LOWEST_DECIBELS_POSSIBLE = 40.0F;
+        // decibels 
 
         const string SFX_FOLDER = "Scriptable Objects/Audio/SFX";
 
@@ -148,7 +148,7 @@ namespace Managers
 
         public void setMasterVolume(float newVolumePercent)
         {
-            mixer.SetFloat(MATER_VOLUME_KEY, Mathf.Lerp(MIN_VOLUME, MAX_VOLUME, newVolumePercent));
+            mixer.SetFloat(MATER_VOLUME_KEY, calculateVolume(newVolumePercent));
         }
 
         public void setVolume(GameAudioType gameAudioType, float newVolumePercent)
@@ -156,13 +156,13 @@ namespace Managers
             switch (gameAudioType)
             {
                 case GameAudioType.SFX:
-                    mixer.SetFloat(SFX_VOLUME_KEY, Mathf.Lerp(MIN_VOLUME, MAX_VOLUME, newVolumePercent));
+                    mixer.SetFloat(SFX_VOLUME_KEY, calculateVolume(newVolumePercent));
                     break;
                 case GameAudioType.MUSIC:
-                    mixer.SetFloat(MUSIC_VOLUME_KEY, Mathf.Lerp(MIN_VOLUME, MAX_VOLUME, newVolumePercent));
+                    mixer.SetFloat(MUSIC_VOLUME_KEY, calculateVolume(newVolumePercent));
                     break;
                 case GameAudioType.VOICE:
-                    mixer.SetFloat(VOICE_VOLUME_KEY, Mathf.Lerp(MIN_VOLUME, MAX_VOLUME, newVolumePercent));
+                    mixer.SetFloat(VOICE_VOLUME_KEY, calculateVolume(newVolumePercent));
                     break;
                 case GameAudioType.NONE:
                 default:
@@ -229,5 +229,10 @@ namespace Managers
         }
 
         #endregion
+
+        private float calculateVolume(float volume)
+        {
+            return Mathf.Log10(Mathf.Max(volume, 0.000001f)) * LOWEST_DECIBELS_POSSIBLE;
+        }
     }
 }
