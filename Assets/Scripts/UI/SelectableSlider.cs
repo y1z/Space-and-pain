@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 namespace UI
@@ -13,9 +14,13 @@ namespace UI
         [SerializeField] private Image[] sliderUnits;
 
         [Tooltip("The color for the slider unit that is on")]
+        [ColorUsage(true, true)]
         [SerializeField] private Color onColor;
+
         [Tooltip("The color for the slider unit that is off")]
+        [ColorUsage(true, true)]
         [SerializeField] private Color offColor;
+
         public int turnOnCount { get; private set; } = 0;
 
         public float separationBetweenSliderUnits = 0.2f;
@@ -88,6 +93,58 @@ namespace UI
             drawSliderUnits();
         }
 
+        [ContextMenu("get all the blocks")]
+        private void getAllTheBlocks()
+        {
+            sliderUnits = sliderContainer.GetComponentsInChildren<Image>();
+        }
+
+        [ContextMenu("remove all the block")]
+        private void removeAllTheBlocks()
+        {
+            sliderUnits = null;
+        }
+
+        [ContextMenu("Color the blocks")]
+        private void devColorTheBlocks()
+        {
+            if (sliderUnits == null)
+            {
+                getAllTheBlocks();
+            }
+            int halfSliders = sliderUnits.Length / 2;
+
+            for (int i = 0; i < sliderUnits.Length; ++i)
+            {
+                if (i < halfSliders)
+                {
+                    sliderUnits[i].color = onColor;
+                }
+                else
+                {
+                    sliderUnits[i].color = offColor;
+                }
+
+            }
+
+            removeAllTheBlocks();
+        }
+
+        [ContextMenu("reset color")]
+        private void devResetColor()
+        {
+            if (sliderUnits == null)
+            {
+                getAllTheBlocks();
+            }
+
+            for (int i = 0; i < sliderUnits.Length; ++i)
+            {
+                sliderUnits[i].color = Color.white;
+            }
+
+            removeAllTheBlocks();
+        }
 
     }
 }

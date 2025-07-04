@@ -1,26 +1,53 @@
 using Managers;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public sealed class MainLevelLogic : MonoBehaviour
 {
-    /// <summary>
-    /// TODO : REMOVE THIS FUNCTION
-    /// </summary>
-    public void loadStartScreen()
+    private GameStates gameStates;
+    [field: SerializeField, Tooltip("The pause menu")] MenuScript pauseMenu;
+    [field: SerializeField, Tooltip("The settings menu")] MenuScript settingsMenu;
+
+
+    public void resumeGame()
     {
-        SceneManager.LoadScene("Scenes/Game/StartScreen");
+        SingletonManager.inst.gameManager.setState(GameStates.PLAYING);
     }
 
-    /// <summary>
-    /// TODO : REMOVE THIS UPDATE
-    /// </summary>
-    public void Update()
+
+    #region GameManagerBoilerPlate
+
+    private void setState(GameStates _gameStates)
     {
-        if (SingletonManager.inst.inputManager.isPauseActionPressedThisFrame())
+        gameStates = _gameStates;
+        switch (gameStates)
         {
-            loadStartScreen();
+            case GameStates.PAUSE:
+                pauseMenu.gameObject.SetActive(true);
+                settingsMenu.gameObject.SetActive(false);
+                pauseMenu.isOn = true;
+                settingsMenu.isOn = false;
+                break;
+            default:
+                pauseMenu.gameObject.SetActive(false);
+                settingsMenu.gameObject.SetActive(false);
+                pauseMenu.isOn = false;
+                settingsMenu.isOn = false;
+                break;
         }
     }
+
+    private void OnEnable()
+    {
+        Managers.SingletonManager.inst.gameManager.subscribe(setState);
+    }
+
+    private void OnDisable()
+    {
+        Managers.SingletonManager.inst.gameManager.unSubscribe(setState);
+    }
+
+    #endregion
 
 }
