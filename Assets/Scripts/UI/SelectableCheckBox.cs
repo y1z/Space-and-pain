@@ -1,11 +1,14 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UI
 {
     using UnityEngine.UI;
     public sealed class SelectableCheckBox : SelectableBase
     {
-
+        [Header("Events")]
+        [Tooltip("Image displayed with the check box is ON")]
+        public UnityEvent<bool> checkedEvent;
         [Header("Logic")]
         public bool isChecked = false;
         private bool privousIsChecked;
@@ -39,16 +42,17 @@ namespace UI
                     {
                         if (checkImage == null)
                         {
-                            EDebug.LogError($"|{nameof(checkImage)}| is null please fix that", this);
+                            DDebug.LogError($"|{nameof(checkImage)}| is null please fix that", this);
                             return UiResult.ERROR;
                         }
                         if (unCheckImage == null)
                         {
-                            EDebug.LogError($"|{nameof(unCheckImage)}| is null please fix that", this);
+                            DDebug.LogError($"|{nameof(unCheckImage)}| is null please fix that", this);
                             return UiResult.ERROR;
                         }
                     }
                     isChecked = !isChecked;
+                    checkedEvent?.Invoke(isChecked);
                     break;
                 case UiAction.ALT_ACTION:
                     EDebug.LogWarning($"Check box does not have an {UiAction.ALT_ACTION}", this);
