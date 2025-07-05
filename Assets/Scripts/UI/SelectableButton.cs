@@ -27,7 +27,7 @@ namespace UI
 
         public void defaultButtonFunction()
         {
-            EDebug.Log($"Default Button Function Please reassign the function on the variable {nameof(buttonClickEvent)} if this was not intended", this);
+            EDebug.Log($"Default Button Function Please reassign the function on the variable |{nameof(buttonClickEvent)}| if this was not intended", this);
         }
     }
 

@@ -10,7 +10,7 @@ namespace UI
         [Tooltip("Image displayed with the check box is ON")]
         public UnityEvent<bool> checkedEvent;
         [Header("Logic")]
-        public bool isChecked = false;
+        [field: SerializeField] public bool isChecked = false;
         private bool privousIsChecked;
 
         [Header("Visuals")]

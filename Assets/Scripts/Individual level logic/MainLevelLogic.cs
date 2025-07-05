@@ -14,6 +14,12 @@ public sealed class MainLevelLogic : MonoBehaviour
     [field: SerializeField, Tooltip("The settings menu")]
     MenuScript settingsMenu;
 
+    [field: SerializeField, Tooltip("The menu used to confirm options")]
+    ConfirmationMenu confirmationMenu;
+
+    bool isConfirmationMenuOn = false;
+
+
     public void resumeGame()
     {
         SingletonManager.inst.gameManager.setState(GameStates.PLAYING);
@@ -39,10 +45,38 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     public void goBackToMenu()
     {
-        pauseMenu.gameObject.SetActive(true);
-        settingsMenu.gameObject.SetActive(false);
-        pauseMenu.isOn = true;
-        settingsMenu.isOn = false;
+        if (!isConfirmationMenuOn)
+        {
+            confirmationMenu.confirmationEvent += confirmGoBackToMenu;
+            confirmationMenu.turnOn();
+            settingsMenu.isOn = false;
+            settingsMenu.gameObject.SetActive(false);
+            isConfirmationMenuOn = true;
+            showConfirmationMenu();
+        }
+    }
+
+    private void confirmGoBackToMenu(bool confirm)
+    {
+        settingsMenu.isOn = true;
+        confirmationMenu.turnOff();
+        if (confirm)
+        {
+            pauseMenu.gameObject.SetActive(true);
+            settingsMenu.gameObject.SetActive(false);
+            pauseMenu.isOn = true;
+            settingsMenu.isOn = false;
+        }
+        else
+        {
+            pauseMenu.gameObject.SetActive(false);
+            settingsMenu.gameObject.SetActive(true);
+            settingsMenu.isOn = true;
+
+        }
+        confirmationMenu.confirmationEvent -= confirmGoBackToMenu;
+        hideConfdirmationMenu();
+        isConfirmationMenuOn = false;
     }
 
     /// <summary>
@@ -92,6 +126,20 @@ public sealed class MainLevelLogic : MonoBehaviour
         EDebug.Log($"{nameof(onFullScreenChange)} was called", this);
     }
 
+    private void showConfirmationMenu()
+    {
+        confirmationMenu.gameObject.SetActive(true);
+        confirmationMenu.transform.localPosition = Vector3.zero;
+        confirmationMenu.transform.SetAsLastSibling();
+    }
+
+    private void hideConfdirmationMenu()
+    {
+        confirmationMenu.transform.localPosition = new Vector3(1337, 1337);
+        confirmationMenu.transform.SetAsFirstSibling();
+        confirmationMenu.gameObject.SetActive(false);
+    }
+
     #region GameManagerBoilerPlate
 
     private void setState(GameStates _gameStates)
@@ -100,12 +148,18 @@ public sealed class MainLevelLogic : MonoBehaviour
         switch (gameStates)
         {
             case GameStates.PAUSE:
+                confirmationMenu.gameObject.SetActive(true);
+                confirmationMenu.transform.localPosition = new Vector3(1337, 1337);
+                confirmationMenu.turnOff();
                 pauseMenu.gameObject.SetActive(true);
                 settingsMenu.gameObject.SetActive(false);
                 pauseMenu.isOn = true;
                 settingsMenu.isOn = false;
                 break;
             default:
+                confirmationMenu.gameObject.SetActive(true);
+                confirmationMenu.transform.localPosition = new Vector3(1337, 1337);
+                confirmationMenu.turnOff();
                 pauseMenu.gameObject.SetActive(false);
                 settingsMenu.gameObject.SetActive(false);
                 pauseMenu.isOn = false;
