@@ -8,15 +8,15 @@ namespace UI
     /// </summary>
     public sealed class ConfirmationMenu : MonoBehaviour
     {
-        [SerializeField] MenuScript logic;
+        [SerializeField] MenuScript menuScript;
         [SerializeField] SelectableButton yesButton;
         [SerializeField] SelectableButton noButton;
 
-        [field: SerializeField] public System.Action<bool> confirmationEvent;
+        [field: SerializeField] public System.Action<bool> confirmationEvent = null;
 
         private void Awake()
         {
-            DDebug.Assert(logic != null, "(logic == null) fix that", this);
+            DDebug.Assert(menuScript != null, "(menuScript == null) fix that", this);
             DDebug.Assert(yesButton != null, "(yesButton != null) fix that", this);
             DDebug.Assert(noButton != null, "(noButton != null) fix that", this);
         }
@@ -31,6 +31,16 @@ namespace UI
         {
             yesButton.buttonClickEvent.RemoveListener(onYesButtonPress);
             noButton.buttonClickEvent.RemoveListener(onNoButtonPress);
+        }
+
+        public void turnOn()
+        {
+            menuScript.isOn = true;
+        }
+
+        public void turnOff()
+        {
+            menuScript.isOn = true;
         }
 
         public void subscribe(Action<bool> func)

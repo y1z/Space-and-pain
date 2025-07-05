@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 883bf58bf8c7e1440836c7bbd0b59f68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logic: {fileID: 6581693282803689517}
+  menuScript: {fileID: 6581693282803689517}
   yesButton: {fileID: 6256442366026293524}
   noButton: {fileID: 6771542294386324012}
 --- !u!114 &6581693282803689517
