@@ -14,6 +14,9 @@ public sealed class MainLevelLogic : MonoBehaviour
     [field: SerializeField, Tooltip("The settings menu")]
     MenuScript settingsMenu;
 
+    [field: SerializeField, Tooltip("The menu used to confirm options")]
+    ConfirmationMenu confirmationMenu;
+
     public void resumeGame()
     {
         SingletonManager.inst.gameManager.setState(GameStates.PLAYING);
