@@ -12,8 +12,8 @@ namespace Generators
         const string PATH_TO_SPAWNER = "Prefabs/Entities/Enemy spawner";
         const string PATH_TO_BUNKER = "Prefabs/Entities/Bunker";
         const string PATH_TO_PLAYER = "Prefabs/Entities/Player";
-        const string PATH_TO_LIVES_DISPLAY = "Prefabs/UI/Lives Display";
-        const string PATH_TO_SCORE_DISPLAY = "Prefabs/UI/Score Display";
+        //        const string PATH_TO_LIVES_DISPLAY = "Prefabs/UI/Lives Display";
+        const string PATH_TO_SCORE_DISPLAY = "Prefabs/UI/Canvases/Score Canvas";
 
         [SerializeField] Managers.GameStates gameStates;
 
@@ -114,18 +114,15 @@ namespace Generators
 
         private void createUI(Vector2 _offset)
         {
-            TextThatDisplaysScore scoreTemplate = Resources.Load<TextThatDisplaysScore>(PATH_TO_SCORE_DISPLAY);
-            PlayerLivesDisplay livesDisplayTemplate = Resources.Load<PlayerLivesDisplay>(PATH_TO_LIVES_DISPLAY);
+            GameObject scoreCanvas = Resources.Load<GameObject>(PATH_TO_SCORE_DISPLAY);
 
-            TextThatDisplaysScore scoreInstance = Instantiate(scoreTemplate);
-            PlayerLivesDisplay livesInstance = Instantiate(livesDisplayTemplate);
+            GameObject instanceScoreCanvas = Instantiate(scoreCanvas);
 
+            TextThatDisplaysScore scoreInstance = instanceScoreCanvas.GetComponentInChildren<TextThatDisplaysScore>();
+            PlayerLivesDisplay livesInstance = instanceScoreCanvas.GetComponentInChildren<PlayerLivesDisplay>();
 
-            GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
-            RectTransform canvasRectTrans = canvas.GetComponent<RectTransform>();
-
-            scoreInstance.rectTrans.SetParent(canvasRectTrans);
-            livesInstance.rectTrans.SetParent(canvasRectTrans);
+            //scoreInstance.rectTrans.SetParent(scoreLocation.gameObject.transform);
+            //livesInstance.rectTrans.SetParent(livesLocation.gameObject.transform);
 
             scoreInstance.rectTrans.anchoredPosition = (Vector2.left + Vector2.up);
             livesInstance.rectTrans.anchoredPosition = (Vector2.left + Vector2.up);
@@ -139,8 +136,8 @@ namespace Generators
             scoreInstance.rectTrans.localPosition += new Vector3(generatorData.scoreOffsetFromTopLeft.x, generatorData.scoreOffsetFromTopLeft.y, 0.0f);
             livesInstance.rectTrans.localPosition += new Vector3(generatorData.liveOffsetFromTopLeft.x, generatorData.liveOffsetFromTopLeft.y, 0.0f);
 
-            scoreInstance.rectTrans.SetSiblingIndex(0);
-            livesInstance.rectTrans.SetSiblingIndex(1);
+            scoreInstance.scoreText.autoSizeTextContainer = true;
+            livesInstance.displayText.autoSizeTextContainer = true;
 
             livesInstance.Init(referenceToPlayer);
         }

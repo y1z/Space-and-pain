@@ -9,6 +9,9 @@ TagManager:
   - Boundary
   - Enemy Projectile
   - Canvas
+  - Score Canvas
+  - Score Location
+  - Lives Location
   layers:
   - Default
   - TransparentFX

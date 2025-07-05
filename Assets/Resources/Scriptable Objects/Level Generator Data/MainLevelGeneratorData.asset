@@ -34,9 +34,9 @@ MonoBehaviour:
     y: 4
     width: 16
     height: 5
-  <scoreOffsetFromTopLeft>k__BackingField: {x: 500, y: -100}
-  <scoreSizeDelta>k__BackingField: {x: 500, y: 100}
+  <scoreOffsetFromTopLeft>k__BackingField: {x: 0, y: 0}
+  <scoreSizeDelta>k__BackingField: {x: 600, y: 100}
   <scoreAlignment>k__BackingField: 513
-  <liveOffsetFromTopLeft>k__BackingField: {x: 1000, y: -100}
+  <liveOffsetFromTopLeft>k__BackingField: {x: 0, y: 0}
   <livesSizeDelta>k__BackingField: {x: 500, y: 100}
   <livesAlignment>k__BackingField: 513
