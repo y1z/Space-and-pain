@@ -1371,6 +1371,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 250
       objectReference: {fileID: 0}
+    - target: {fileID: 5061826823508037832, guid: 355981cc987f0b6469fa3b807a433d8c, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6990142363709222199, guid: 355981cc987f0b6469fa3b807a433d8c, type: 3}
       propertyPath: m_SizeDelta.x
       value: 250
@@ -1672,9 +1676,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4513463612837353672, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 4513463612837353672, guid: b8f74e925dfabc3498772382728b3a74, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1418195523}
@@ -2372,7 +2373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2543,6 +2544,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1167591071875083310, guid: 9be1a8756c66e514eb30de743ff5870a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2779479824473754419, guid: 9be1a8756c66e514eb30de743ff5870a, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8989024698568281577, guid: 9be1a8756c66e514eb30de743ff5870a, type: 3}
