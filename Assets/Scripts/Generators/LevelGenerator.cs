@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Generators
 {
     using Entities;
+    using Managers;
     using Scriptable_Objects;
     using UI;
 
@@ -49,6 +50,7 @@ namespace Generators
             createBunkers(offset);
             createPlayer(offset);
             createUI(offset);
+            setUpVariableForNextRound();
         }
 
         private void createEnemySpawners(Vector2 _offset)
@@ -64,8 +66,8 @@ namespace Generators
             GameObject spawnersPivot = new GameObject("_Spawners");
             spawnersPivot.transform.position = new Vector3(top, left, 0);
 
-            float horzontalDistance = afterOffSet.width / (float)generatorData.enemiesColumnCount;
-            float verticalDistance = afterOffSet.height / (float)generatorData.enemiesRowsCount;
+            float horzontalDistance = afterOffSet.width / (float) generatorData.enemiesColumnCount;
+            float verticalDistance = afterOffSet.height / (float) generatorData.enemiesRowsCount;
 
 
             for (int i = 0; i < generatorData.enemiesRowsCount; ++i)
@@ -87,7 +89,7 @@ namespace Generators
             Rect afterOffSet = generatorData.bunkerArea;
             afterOffSet.position += _offset;
 
-            float distance_x = afterOffSet.width / (float)generatorData.bunkerAmount;
+            float distance_x = afterOffSet.width / (float) generatorData.bunkerAmount;
             Vector2 startPos = new Vector2(afterOffSet.xMin, afterOffSet.center.y);
 
 
@@ -143,6 +145,13 @@ namespace Generators
         }
 
         #endregion
+
+        private void setUpVariableForNextRound()
+        {
+            EnemyManager em = SingletonManager.inst.enemyManager;
+            em.howLongUntilNextEnemyMovementSpeedUpRate = generatorData.howLongUntilNextEnemyMovementSpeedUpRate;
+            em.moveDownFactorSpeedUpSpeedUpRate = generatorData.moveDownFactorSpeedUpSpeedUpRate;
+        }
 
         #region GameManagerBoilerPlate
 
