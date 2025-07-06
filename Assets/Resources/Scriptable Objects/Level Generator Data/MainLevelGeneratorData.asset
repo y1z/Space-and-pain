@@ -19,7 +19,7 @@ MonoBehaviour:
   <enemiesRowsCount>k__BackingField: 5
   <howLongUntilNextEnemyMovementRateStart>k__BackingField: 0.06
   <moveDownFactorSpeedUpRateStart>k__BackingField: 0.4
-  <howLongUntilNextEnemyMovementSpeedUpRate>k__BackingField: 0.95
+  <howLongUntilNextEnemyMovementSpeedUpRate>k__BackingField: 0.92
   <moveDownFactorSpeedUpSpeedUpRate>k__BackingField: 1
   bunkerAmount: 4
   <bunkerArea>k__BackingField:
