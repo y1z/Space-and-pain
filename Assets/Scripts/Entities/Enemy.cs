@@ -41,6 +41,7 @@ namespace Entities
         private void OnEnable()
         {
             SingletonManager.inst.gameManager.subscribe(onStateChange);
+            onStateChange(SingletonManager.inst.gameManager.gameState);
         }
 
         private void OnDisable()
@@ -62,14 +63,14 @@ namespace Entities
         public void dies()
         {
             SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "boom");
-            onDies?.Invoke(id);
             StartCoroutine(deathAnmation());
+            onDies?.Invoke(id);
         }
 
         private IEnumerator deathAnmation()
         {
-            yield return null;
             gameObject.SetActive(false);
+            yield return null;
         }
 
     }

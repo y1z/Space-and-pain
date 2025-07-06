@@ -27,36 +27,55 @@ namespace Managers
         private EnemyManagerState enemyManagerState;
 
         [Header("Data for shooting")]
-        [SerializeField] Projectile projectileTemplate;
-        [field: SerializeField] public Projectile[] projectiles { get; private set; } = new Projectile[MAX_PROJECTILES];
+
+        [SerializeField]
+        Projectile projectileTemplate;
+        [field: SerializeField]
+        public Projectile[] projectiles { get; private set; } = new Projectile[MAX_PROJECTILES];
 
         [Header("Signals")]
-        public Action onInitFinish;
 
+        public Action onInitFinish;
         [Header("enemy data ")]
         public List<Enemy> enemies;
+        private EnemySpawner[] enemySpawners = null;
 
-        [field: SerializeField] public int aliveEnemies { get; private set; } = 0;
+        [field: SerializeField]
+        public int aliveEnemies { get; private set; } = 0;
 
         public bool areInAGroup { get; private set; } = false;
 
         [Header("enemy controls")]
-        [SerializeField] float teleportDistance = 1.0f;
+        [SerializeField]
+        float teleportDistance = 1.0f;
 
         public float howLongUntilNextMove = 0.1f;
 
         private float currentHowLongUntilNextMove = 0.0f;
 
+        [SerializeField]
         [Range(0.0001f, 1.0f), Tooltip("Controls how fast the enemies go down when 1 hits the edge (lower number is faster)")]
         private float moveDownFactorSpeedUp = 0.3f;
 
         private int enemyToMoveIndex = 0;
 
-        [SerializeField] private bool moveEnemiesToTheRight = false;
+        [Header("Enemy next round controls")]
+        [Tooltip("[Lower is faster]How much to speed up enemy movement the next round ")]
+        public float howLongUntilNextEnemyMovementSpeedUpRate = 0.95f;
+
+        [Tooltip("[Lower is faster]How much to speed up the enemy movement when going down next round")]
+        public float moveDownFactorSpeedUpSpeedUpRate = 1.0f;
+
+        [SerializeField]
+        private bool moveEnemiesToTheRight = false;
 
         [Header("Cool down")]
-        [SerializeField, Range(0.001f, 1.0f)] private float minimumCoolDown = 1.0f;
-        [SerializeField, Range(1.0f, 10.0f)] private float maximumCoolDown = 2.0f;
+
+        [SerializeField, Range(0.001f, 1.0f)]
+        private float minimumCoolDown = 1.0f;
+
+        [SerializeField, Range(1.0f, 10.0f)]
+        private float maximumCoolDown = 2.0f;
 
         Util.CoolDownInRange enemyShootCoolDown = null;
 
@@ -115,6 +134,7 @@ namespace Managers
 
         private void moveEnemies()
         {
+            if (enemyToMoveIndex < 0) { return; }
             if (enemyToMoveIndex > enemies.Count) { enemyToMoveIndex = 0; }
 
             bool shouldFindNewIndex = !enemies[enemyToMoveIndex].gameObject.activeInHierarchy;
@@ -122,6 +142,9 @@ namespace Managers
             {
                 enemyToMoveIndex = findNextActiveEnemyIndex(enemyToMoveIndex);
             }
+
+            if (enemyToMoveIndex < 0) { return; }
+
 
             bool canTeleport = false;
             if (moveEnemiesToTheRight)
@@ -136,7 +159,7 @@ namespace Managers
             if (!canTeleport)
             {
                 enemyManagerState = EnemyManagerState.MOVE_GROUP_VERTICALLY;
-                currentHowLongUntilNextMove = 0.0f;
+                currentHowLongUntilNextMove -= howLongUntilNextMove;
                 moveEnemiesToTheRight = !moveEnemiesToTheRight;
                 enemyToMoveIndex = 0;
                 return;
@@ -144,7 +167,7 @@ namespace Managers
 
 
             enemyToMoveIndex = (enemyToMoveIndex + 1) % enemies.Count;
-            currentHowLongUntilNextMove = 0.0f;
+            currentHowLongUntilNextMove -= howLongUntilNextMove;
         }
 
         private void moveEnemiesDown()
@@ -194,14 +217,14 @@ namespace Managers
         #region Initialize
         private void initalizeEnemies()
         {
-            EnemySpawner[] spawners = GameObject.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
+            enemySpawners = GameObject.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
 
-            areInAGroup = spawners.Length > 1;
+            areInAGroup = enemySpawners.Length > 1;
 
-            enemies.Capacity = spawners.Length;
-            for (int i = 0; i < spawners.Length; i++)
+            enemies.Capacity = enemySpawners.Length;
+            for (int i = 0; i < enemySpawners.Length; i++)
             {
-                enemies.Add(spawners[i].Spawn());
+                enemies.Add(enemySpawners[i].Spawn());
                 aliveEnemies++;
             }
 
@@ -234,13 +257,14 @@ namespace Managers
 
         }
 
+
+
         #endregion
 
         private void onEnemyDies(int id)
         {
-            EDebug.Log($"enemy |{id}| dies");
             aliveEnemies--;
-
+            EDebug.Log("Alive Enemies = " + aliveEnemies, this);
 
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -269,6 +293,7 @@ namespace Managers
         private void OnDisable()
         {
             SingletonManager.inst.gameManager.unSubscribe(setState);
+            SceneManager.activeSceneChanged -= onActiveSceneChanged;
         }
 
         private void setState(GameStates newStates)
@@ -379,6 +404,8 @@ namespace Managers
                 index = activeEnemyIndex;
             }
 
+            if (index < 0) { return; }
+
             enemies[index].enemyShoot.shoot();
             SingletonManager.inst.soundManager.playAudio(Scriptable_Objects.GameAudioType.SFX, "enemy shoot");
         }
@@ -398,6 +425,29 @@ namespace Managers
                 }
             }
             return result;
+        }
+
+        public void prepareNextRound()
+        {
+            recylcleEnemies();
+            enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;
+            howLongUntilNextMove *= howLongUntilNextEnemyMovementSpeedUpRate;
+            moveDownFactorSpeedUp *= moveDownFactorSpeedUpSpeedUpRate;
+        }
+
+        private void recylcleEnemies()
+        {
+            aliveEnemies = 0;
+            for (int i = 0; i < enemySpawners.Length; ++i)
+            {
+                enemies[i].gameObject.SetActive(true);
+                enemies[i].transform.position = enemySpawners[i].transform.position;
+                aliveEnemies++;
+            }
+
+
+            sortEnemies();
+
         }
     }
 
