@@ -1,13 +1,14 @@
 using System.Collections;
 using UnityEngine;
 using Managers;
+using interfaces;
 
 
 namespace Entities
 {
 
     [SelectionBase]
-    public sealed class Player : MonoBehaviour
+    public sealed class Player : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         public enum PlayerState
         {
@@ -66,7 +67,21 @@ namespace Entities
             currentGameState = state;
         }
 
-        #endregion 
+        #endregion
+
+
+        #region IntefacesImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public void loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+        #endregion
 
     }
 

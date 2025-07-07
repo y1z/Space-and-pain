@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using interfaces;
 using Managers;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Entities
         UFO_SHIP_MAXIMUM = UFO_SHIP_LOWEST * 3,
     }
 
-    public sealed class Enemy : MonoBehaviour
+    public sealed class Enemy : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         public const int DEFAULT_ID = -1337;
 
@@ -72,6 +73,20 @@ namespace Entities
             gameObject.SetActive(false);
             yield return null;
         }
+
+        #region InterafacesImpl
+
+        string ISaveGameData.getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        void ILoadGameData.loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        #endregion
 
     }
 

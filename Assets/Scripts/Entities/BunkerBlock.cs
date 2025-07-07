@@ -1,3 +1,4 @@
+using interfaces;
 using Managers;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace Entities
     }
 
     [RequireComponent(typeof(CharacterController))]
-    public sealed class BunkerBlock : MonoBehaviour
+    public sealed class BunkerBlock : MonoBehaviour, ISaveGameData, ILoadGameData
     {
 
         const int DEFAULT_BLOCK_HEALTH = 2;
@@ -56,5 +57,18 @@ namespace Entities
             }
         }
 
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public void loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        #endregion
     }
 }

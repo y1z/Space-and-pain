@@ -1,8 +1,10 @@
+using System.Text;
+using interfaces;
 using UnityEngine;
 
 namespace Entities
 {
-    public sealed class Bunker : MonoBehaviour
+    public sealed class Bunker : MonoBehaviour, ISaveGameData, ILoadGameData
     {
 
         [field: SerializeField] BunkerBlock[] blocks;
@@ -70,6 +72,24 @@ namespace Entities
 
         }
 
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            StringBuilder sb = new();
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                sb.AppendLine(blocks[i].getSaveData());
+            }
+            return sb.ToString();
+        }
+
+        public void loadData(string data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion
     }
 
 }
