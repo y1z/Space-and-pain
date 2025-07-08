@@ -46,6 +46,7 @@ namespace Managers
         {
             PlayerPrefs.SetString(SAVE_KEY + saveIndex, saveData.ToString());
             PlayerPrefs.Save();
+            DDebug.Log("<color=green> SAVE WAS FINALIZED </color>", this);
         }
 
         public void clear()

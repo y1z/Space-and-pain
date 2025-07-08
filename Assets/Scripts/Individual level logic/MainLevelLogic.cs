@@ -89,6 +89,8 @@ public sealed class MainLevelLogic : MonoBehaviour
 
         sm.printSaveDataDebug();
 
+        sm.finalizeSave();
+
         SingletonManager.inst.soundManager.playSFX("deny beep");
     }
 
