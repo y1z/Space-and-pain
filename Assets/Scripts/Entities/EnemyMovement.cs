@@ -1,3 +1,4 @@
+using interfaces;
 using Managers;
 using UnityEngine;
 using Util;
@@ -13,7 +14,7 @@ namespace Entities
 
     [RequireComponent(typeof(Enemy))]
     [RequireComponent(typeof(CharacterController))]
-    public sealed class EnemyMovement : MonoBehaviour
+    public sealed class EnemyMovement : MonoBehaviour, ISaveGameData, ILoadGameData
     {
 
         [SerializeField] CharacterController cc;
@@ -26,10 +27,10 @@ namespace Entities
         EnemyMovementState state;
         [Header("Movement controls")]
         [SerializeField] Vector2 direction = Vector2.right;
-        [SerializeField] float teleportDistance = .05f;
-        float currentTeleportDistance = 0.05f;
+        [field: SerializeField] public float teleportDistance { get; private set; } = .05f;
+        [SerializeField] float currentTeleportDistance = 0.05f;
         // Controls how much the enemy moves when going down 
-        float teleportDistanceDown;
+        [SerializeField] float teleportDistanceDown;
 
         [Header("Controls how the enemy moves when they are the only one left")]
         [SerializeField] float currentTimeUntilNextTeleport = 0.0f;
@@ -207,6 +208,7 @@ namespace Entities
             // rule of 3
             // 100% - 16 (teleportDistance)
             // 56.25% - ? 
+            // if 100% is 16 56.25% is 9
             teleportDistanceDown = 56.25f * teleportDistance * 0.01f;
         }
 
@@ -215,5 +217,29 @@ namespace Entities
             state = EnemyMovementState.GROUP;
         }
 
+        #region InterfaceImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(EnemyMovement)));
+        }
+
+        public void loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            teleportDistance = data.speed.x;
+            calculateTeleportDown();
+        }
+
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using interfaces;
 using Managers;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Entities
         UFO_SHIP_MAXIMUM = UFO_SHIP_LOWEST * 3,
     }
 
-    public sealed class Enemy : MonoBehaviour
+    public sealed class Enemy : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         public const int DEFAULT_ID = -1337;
 
@@ -35,6 +36,8 @@ namespace Entities
         public Action<int> onDies;
 
         public EnemyPointsAmount enemyPointsAmount = EnemyPointsAmount.MINIMUM_POINTS;
+
+        public StandardEntitySaveData standardEntitySaveData;
 
         #region GameManagerBoilerPlate
 
@@ -72,6 +75,36 @@ namespace Entities
             gameObject.SetActive(false);
             yield return null;
         }
+
+        #region InterfacesImpl
+
+        string ISaveGameData.getSaveData()
+        {
+            standardEntitySaveData.position = transform.position;
+            return $"{{" +
+                $"\"{nameof(StandardEntitySaveData)}\" : {JsonUtility.ToJson(standardEntitySaveData)}" +
+                $"\"{nameof(EnemyMovement)}\" : {enemyMovement.getSaveData()}" +
+                $"}}";
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(Enemy)));
+        }
+
+        void ILoadGameData.loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            transform.position = data.position;
+            enemyMovement.loadData(data);
+        }
+
+
+        #endregion
 
     }
 

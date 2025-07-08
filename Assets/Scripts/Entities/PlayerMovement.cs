@@ -1,14 +1,18 @@
+using System;
+using interfaces;
 using Managers;
 using UnityEngine;
 
 namespace Entities
 {
-    [RequireComponent (typeof (Player))]
-    public sealed class PlayerMovement : MonoBehaviour
+
+    [Serializable]
+    [RequireComponent(typeof(Player))]
+    public sealed class PlayerMovement : MonoBehaviour , ISaveGameData , ILoadGameData
     {
-        [SerializeField] float speed = 1.0f;
+        [SerializeField] public float speed = 1.0f;
         [SerializeField] CharacterController cc;
-        [SerializeField] private Player referenceToPlayer;
+        [SerializeField] public Player referenceToPlayer;
 
         void Start()
         {
@@ -66,5 +70,28 @@ namespace Entities
             EDebug.Log($"{nameof(OnControllerColliderHit)}");
         }
 
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(PlayerMovement)));
+        }
+
+        public void loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            speed = data.speed.x;
+        }
+
+        #endregion
     }
 }

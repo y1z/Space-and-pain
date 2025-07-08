@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+using interfaces;
 using Managers;
 using UnityEngine;
 
@@ -12,7 +14,7 @@ namespace Entities
     }
 
     [RequireComponent(typeof(CharacterController))]
-    public sealed class BunkerBlock : MonoBehaviour
+    public sealed class BunkerBlock : MonoBehaviour, ISaveGameData, ILoadGameData
     {
 
         const int DEFAULT_BLOCK_HEALTH = 2;
@@ -28,6 +30,8 @@ namespace Entities
         public System.Action<int, BlockState, SpriteRenderer> blockHit;
 
         public BlockState state = BlockState.FULL_HEALTH;
+
+        public StandardEntitySaveData standardEntitySaveData;
 
         private void Start()
         {
@@ -56,5 +60,29 @@ namespace Entities
             }
         }
 
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            standardEntitySaveData.position = transform.position;
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(BunkerBlock)));
+        }
+
+        public void loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            transform.position = data.position;
+        }
+
+        #endregion
     }
 }

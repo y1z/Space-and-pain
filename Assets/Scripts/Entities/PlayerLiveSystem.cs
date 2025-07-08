@@ -3,14 +3,16 @@
 
 using System;
 using System.Collections;
+using interfaces;
 using Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Entities
 {
+    [Serializable]
     [RequireComponent(typeof(Player))]
-    public sealed class PlayerLiveSystem : MonoBehaviour
+    public sealed class PlayerLiveSystem : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         public int lives { get; private set; } = 3;
 
@@ -84,6 +86,31 @@ namespace Entities
             onRespawn?.Invoke();
 
             referenceToPlayer.playerState = Player.PlayerState.ALIVE;
+        }
+
+        #endregion
+
+
+        #region InterfaceImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(PlayerLiveSystem)));
+        }
+
+        public void loadData(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

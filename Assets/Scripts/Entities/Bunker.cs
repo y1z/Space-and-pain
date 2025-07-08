@@ -1,8 +1,11 @@
+using System.Text;
+using interfaces;
+using Managers;
 using UnityEngine;
 
 namespace Entities
 {
-    public sealed class Bunker : MonoBehaviour
+    public sealed class Bunker : MonoBehaviour, ISaveGameData, ILoadGameData
     {
 
         [field: SerializeField] BunkerBlock[] blocks;
@@ -12,6 +15,8 @@ namespace Entities
 
         [Tooltip("The Sprite used for when a block is at half health")]
         [field: SerializeField] private SpriteRenderer halfHealthSprite;
+
+        public StandardEntitySaveData standardEntitySaveData;
 
         private void Awake()
         {
@@ -70,6 +75,40 @@ namespace Entities
 
         }
 
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            StringBuilder sb = new();
+            standardEntitySaveData.position = transform.position;
+
+            sb.Append(JsonUtility.ToJson(this));
+            sb.Append(SaveManager.DIVIDER);
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                sb.AppendLine(blocks[i].getSaveData());
+                sb.AppendLine(SaveManager.DIVIDER);
+            }
+
+            return sb.ToString();
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(Bunker)));
+        }
+
+        public void loadData(string data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            transform.position = data.position;
+        }
+
+        #endregion
     }
 
 }

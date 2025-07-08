@@ -1,18 +1,19 @@
 using Entities;
+using interfaces;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Managers
 {
-    public sealed class ScoreManager : MonoBehaviour
+    public sealed class ScoreManager : MonoBehaviour, ISaveGameData, ILoadGameData
     {
-        public int score { get; private set; } = 0;
+        [field: SerializeField] public int score { get; private set; } = 0;
 
         public System.Action<int> scoreChange;
 
         public void AddScore(EnemyPointsAmount points)
         {
-            score += (int)points;
+            score += (int) points;
             scoreChange?.Invoke(score);
         }
 
@@ -57,6 +58,31 @@ namespace Managers
         {
             resetScore();
         }
+
+        #endregion
+
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(ScoreManager)));
+        }
+
+        public void loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
     }
 
