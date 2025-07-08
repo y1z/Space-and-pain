@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using interfaces;
 using Managers;
 using UnityEngine;
 
 namespace Entities
 {
 
-    public sealed class PlayerShoot : MonoBehaviour
+    [System.Serializable]
+    public sealed class PlayerShoot : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         private List<Projectile> projectiles = new();
 
@@ -98,5 +100,29 @@ namespace Entities
             maxShots = Mathf.Clamp(_maxShots, 0, 1337);
         }
 
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+
+            return JsonUtility.ToJson(new Util.MetaData(nameof(PlayerShoot)));
+        }
+
+        public void loadData(string data)
+        {
+            JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion
     }
 }

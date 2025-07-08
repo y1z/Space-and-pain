@@ -4,13 +4,15 @@ using UnityEngine;
 
 namespace Managers
 {
+    using interfaces;
+
     /// <summary>
     /// Dictates the state of the game and let's other know what the current state is
     /// </summary>
 
     using Utility;
     [DefaultExecutionOrder(-1)]
-    public sealed class GameManager : MonoBehaviour
+    public sealed class GameManager : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         [field: SerializeField] public GameStates gameState { get; private set; } = GameStates.IDLE;
 
@@ -101,9 +103,32 @@ namespace Managers
             Debug.Log(StringUtil.addColorToString($"current State='{gameState}'", Color.green));
         }
 
+        #region InterfacesImpl
 
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(GameManager)));
+        }
+
+        public void loadData(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 
+    [System.Serializable]
     public enum GameStates : byte
     {
         IDLE = 0,

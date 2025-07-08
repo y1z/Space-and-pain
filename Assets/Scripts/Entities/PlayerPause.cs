@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Entities
 {
+
+    [System.Serializable]
     public sealed class PlayerPause : MonoBehaviour
     {
         public Player referenceToPlayer;

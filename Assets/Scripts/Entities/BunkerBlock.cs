@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using interfaces;
 using Managers;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace Entities
 
         public BlockState state = BlockState.FULL_HEALTH;
 
+        public StandardEntitySaveData standardEntitySaveData;
+
         private void Start()
         {
             if (blockController == null)
@@ -61,12 +64,23 @@ namespace Entities
 
         public string getSaveData()
         {
+            standardEntitySaveData.position = transform.position;
             return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(BunkerBlock)));
         }
 
         public void loadData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            transform.position = data.position;
         }
 
         #endregion

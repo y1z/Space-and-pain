@@ -37,6 +37,8 @@ namespace Entities
 
         public EnemyPointsAmount enemyPointsAmount = EnemyPointsAmount.MINIMUM_POINTS;
 
+        public StandardEntitySaveData standardEntitySaveData;
+
         #region GameManagerBoilerPlate
 
         private void OnEnable()
@@ -74,17 +76,33 @@ namespace Entities
             yield return null;
         }
 
-        #region InterafacesImpl
+        #region InterfacesImpl
 
         string ISaveGameData.getSaveData()
         {
-            return JsonUtility.ToJson(this);
+            standardEntitySaveData.position = transform.position;
+            return $"{{" +
+                $"\"{nameof(StandardEntitySaveData)}\" : {JsonUtility.ToJson(standardEntitySaveData)}" +
+                $"\"{nameof(EnemyMovement)}\" : {enemyMovement.getSaveData()}" +
+                $"}}";
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(Enemy)));
         }
 
         void ILoadGameData.loadData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
         }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            transform.position = data.position;
+            enemyMovement.loadData(data);
+        }
+
 
         #endregion
 

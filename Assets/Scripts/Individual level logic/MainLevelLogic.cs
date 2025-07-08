@@ -3,6 +3,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scriptable_Objects;
+using Entities;
 
 public sealed class MainLevelLogic : MonoBehaviour
 {
@@ -27,6 +28,67 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     public void save()
     {
+        SaveManager sm = SingletonManager.inst.saveManager;
+        sm.clear();
+
+        Player pl = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        EDebug.Assert(pl is not null, $"Could not find type of {typeof(Player)} in this scene", this);
+        sm.addToBeSaved(pl, true);
+
+
+        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        EDebug.Assert(enemies is not null, $"Could not find type of {typeof(Enemy)} in this scene", this);
+
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            if (i == 0)
+            {
+                sm.addToBeSaved(enemies[i], true);
+            }
+            sm.addToBeSaved(enemies[i], false);
+        }
+
+        EnemySpawner[] spawners = FindObjectsByType<EnemySpawner>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        EDebug.Assert(spawners is not null, $"Could not find type of {typeof(EnemySpawner)} in this scene", this);
+
+        for (int i = 0; i < spawners.Length; i++)
+        {
+            if (i == 0)
+            {
+                sm.addToBeSaved(spawners[i], true);
+            }
+            sm.addToBeSaved(spawners[i], false);
+        }
+
+        Bunker[] bunkers = FindObjectsByType<Bunker>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        for (int i = 0; i < bunkers.Length; i++)
+        {
+            if (i == 0)
+            {
+                sm.addToBeSaved(bunkers[i], true);
+            }
+            sm.addToBeSaved(bunkers[i], false);
+        }
+
+        Projectile[] projectiles = FindObjectsByType<Projectile>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        for (int i = 0; i < projectiles.Length; i++)
+        {
+            if (i == 0)
+            {
+                sm.addToBeSaved(projectiles[i], true);
+            }
+
+            sm.addToBeSaved(projectiles[i], false);
+        }
+
+        sm.addToBeSaved(SingletonManager.inst.scoreManager, true);
+        sm.addToBeSaved(SingletonManager.inst.gameManager, true);
+
+        sm.printSaveDataDebug();
+
         SingletonManager.inst.soundManager.playSFX("deny beep");
     }
 
@@ -119,9 +181,9 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     /// <summary>
     /// TODO: Implement function for changing to full screen
+    /// <para><param name="isChecked">true = go full screen, false = don't go full screen</param> </para>
     /// </summary>
-    /// <param name="checkThing"></param>
-    public void onFullScreenChange(bool checkThing)
+    public void onFullScreenChange(bool isChecked)
     {
         EDebug.Log($"{nameof(onFullScreenChange)} was called", this);
     }
@@ -179,5 +241,6 @@ public sealed class MainLevelLogic : MonoBehaviour
     }
 
     #endregion
+
 
 }

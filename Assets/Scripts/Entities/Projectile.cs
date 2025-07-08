@@ -1,4 +1,5 @@
 using System.Collections;
+using interfaces;
 using Managers;
 using Unity.Profiling;
 using UnityEngine;
@@ -6,15 +7,15 @@ using UnityEngine;
 namespace Entities
 {
     [RequireComponent(typeof(CharacterController))]
-    public sealed class Projectile : MonoBehaviour
+    public sealed class Projectile : MonoBehaviour, ISaveGameData, ILoadGameData
     {
 
         static readonly ProfilerMarker marker = new ProfilerMarker("MARKER.PROJECTILE");
 
         [SerializeField] CharacterController cc;
-        GameStates gameStates;
+        [SerializeField] GameStates gameStates;
 
-        public float speed = 1.0f;
+        [SerializeField] public float speed = 1.0f;
         [SerializeField] private float distanceTraveled = 0.0f;
         [Header("Calculate Speed")]
         [SerializeField] private float maxDistanced = 10.0f;
@@ -27,6 +28,8 @@ namespace Entities
         /// Used to know who's shooting who 
         /// </summary>
         public bool isPlayerProjectile = false;
+
+        public StandardEntitySaveData standardEntitySaveData;
 
 
         private void Awake()
@@ -145,5 +148,28 @@ namespace Entities
             gameObject.SetActive(false);
         }
 
+        #region InterfacesImpl
+
+        public string getSaveData()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
+        public string getMetaData()
+        {
+            return JsonUtility.ToJson(new Util.MetaData(nameof(Projectile)));
+        }
+
+        public void loadData(string data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion
     }
 }

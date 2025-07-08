@@ -14,21 +14,19 @@ namespace Managers
         const string SAVE_KEY = "save_key";
         public int saveIndex = 0;
 
+        static readonly Color DEFAULT_COLOR = Color.white;
+
         [field: SerializeField]
         public StringBuilder saveData { get; private set; } = new StringBuilder();
 
-        public void addToBeSaved(ISaveGameData thingToBeSaved)
+        public void addToBeSaved(ISaveGameData thingToBeSaved, bool shouldAddMetaData)
         {
+            if (shouldAddMetaData)
+            {
+                saveData.Append(thingToBeSaved.getMetaData());
+            }
             saveData.Append(thingToBeSaved.getSaveData());
             saveData.Append(DIVIDER);
-        }
-
-        public void addToBeSaved(ISaveGameData[] thingToBeSaved)
-        {
-            for (int i = 0; i < thingToBeSaved.Length; i++)
-            {
-                addToBeSaved(thingToBeSaved[i]);
-            }
         }
 
         public void addToBeSavedRaw(ISaveGameData thingToBeSaved)
@@ -55,13 +53,27 @@ namespace Managers
             saveData.Clear();
         }
 
-        public void printSaveData()
+        public void printSaveDataDebug(Color color = default)
         {
+            if (Debug.isDebugBuild)
+            {
+                printSaveData(color);
+            }
+
+        }
+
+        public void printSaveData(Color color = default)
+        {
+            if (color == default)
+            {
+                color = DEFAULT_COLOR;
+            }
+
             string[] dataToPrint = saveData.ToString().Split(DIVIDER);
 
             foreach (string data in dataToPrint)
             {
-                EDebug.Log(data);
+                EDebug.Log(Utility.StringUtil.addColorToString(data, color));
             }
 
         }
