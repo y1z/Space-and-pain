@@ -6,7 +6,7 @@ using Util;
 
 namespace Entities
 {
-    internal enum EnemyMovementState
+    public enum EnemyMovementState
     {
         SINGLE,
         GROUP,
@@ -19,24 +19,38 @@ namespace Entities
 
         [SerializeField] CharacterController cc;
         [Header("Movement Limits")]
+
         [Range(0.0f, 10.0f)]
         public float horizontalMax = 8.35f;
+
         [Range(-10.0f, 0.0f)]
         public float horizontalMin = -8.35f;
 
-        EnemyMovementState state;
+        public EnemyMovementState state { get; private set; }
+
         [Header("Movement controls")]
-        [field: SerializeField] public Vector2 direction = Vector2.right;
-        [field: SerializeField] public float teleportDistance { get; private set; } = .05f;
-        [SerializeField] float currentTeleportDistance = 0.05f;
+        [field: SerializeField]
+        public Vector2 direction = Vector2.right;
+
+        [field: SerializeField]
+        public float teleportDistance { get; private set; } = .05f;
+
+        [SerializeField]
+        float currentTeleportDistance = 0.05f;
+
         // Controls how much the enemy moves when going down 
-        [SerializeField] float teleportDistanceDown;
+        [SerializeField]
+        float teleportDistanceDown;
 
         [Header("Controls how the enemy moves when they are the only one left")]
-        [SerializeField] float currentTimeUntilNextTeleport = 0.0f;
-        [SerializeField] float timeUntilNextTeleport = 0.2f;
+        [SerializeField]
+        float currentTimeUntilNextTeleport = 0.0f;
 
-        [SerializeField] Enemy referenceToEnemy;
+        [SerializeField]
+        float timeUntilNextTeleport = 0.2f;
+
+        [SerializeField]
+        Enemy referenceToEnemy;
 
         void Start()
         {
