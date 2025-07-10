@@ -117,7 +117,7 @@ namespace Managers
 
         public void loadData(string data)
         {
-            throw new NotImplementedException();
+            JsonUtility.FromJsonOverwrite(data, this);
         }
 
         public void loadData(StandardEntitySaveData data)

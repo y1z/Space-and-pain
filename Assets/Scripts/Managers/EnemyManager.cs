@@ -38,7 +38,8 @@ namespace Managers
         public Action onInitFinish;
         [Header("enemy data ")]
         public List<Enemy> enemies;
-        private EnemySpawner[] enemySpawners = null;
+        [field: SerializeField]
+        public EnemySpawner[] enemySpawners { get; private set; } = null;
 
         [field: SerializeField]
         public int aliveEnemies { get; private set; } = 0;
@@ -448,6 +449,12 @@ namespace Managers
 
             sortEnemies();
 
+        }
+
+        public void loadSpawnerData(string data, int index)
+        {
+            DDebug.Assert(index >= 0 && (index < enemySpawners.Length), $"Index outside range = {index}", this);
+            enemySpawners[index].loadData(data);
         }
     }
 

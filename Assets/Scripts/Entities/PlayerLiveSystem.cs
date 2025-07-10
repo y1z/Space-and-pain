@@ -14,7 +14,7 @@ namespace Entities
     [RequireComponent(typeof(Player))]
     public sealed class PlayerLiveSystem : MonoBehaviour, ISaveGameData, ILoadGameData
     {
-        public int lives { get; private set; } = 3;
+        [field: SerializeField] public int lives { get; private set; } = 3;
 
         public float timeUntilRespawn = 1.0f;
 
@@ -105,7 +105,7 @@ namespace Entities
 
         public void loadData(string data)
         {
-            throw new NotImplementedException();
+            JsonUtility.ToJson(data);
         }
 
         public void loadData(StandardEntitySaveData data)

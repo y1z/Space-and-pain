@@ -1,6 +1,8 @@
 using System.Text;
+using System.Collections.Generic;
 using UnityEngine;
 using interfaces;
+using System.Linq;
 
 namespace Managers
 {
@@ -24,6 +26,7 @@ namespace Managers
             if (shouldAddMetaData)
             {
                 saveData.Append(thingToBeSaved.getMetaData());
+                saveData.Append(DIVIDER);
             }
             saveData.Append(thingToBeSaved.getSaveData());
             saveData.Append(DIVIDER);
@@ -34,19 +37,24 @@ namespace Managers
             saveData.Append(thingToBeSaved.getSaveData());
         }
 
-        public string[] loadSaveData()
-        {
-            string[] result = PlayerPrefs.GetString(SAVE_KEY + saveIndex, "ERROR : NO SAVE DATA FOUND" + DIVIDER).Split(DIVIDER);
-
-            return result;
-        }
-
 
         public void finalizeSave()
         {
             PlayerPrefs.SetString(SAVE_KEY + saveIndex, saveData.ToString());
             PlayerPrefs.Save();
             DDebug.Log("<color=green> SAVE WAS FINALIZED </color>", this);
+        }
+
+        public string[] loadSaveData()
+        {
+            List<string> result = PlayerPrefs.GetString(SAVE_KEY + saveIndex, "ERROR : NO SAVE DATA FOUND" + DIVIDER).Split(DIVIDER).ToList();
+
+            if (string.IsNullOrEmpty(result[result.Count - 1]))
+            {
+                result.RemoveAt(result.Count - 1);
+            }
+
+            return result.ToArray();
         }
 
         public void clear()

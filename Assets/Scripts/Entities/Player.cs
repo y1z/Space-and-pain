@@ -1,3 +1,5 @@
+// Ignore Spelling: Teleport
+
 using System.Collections;
 using UnityEngine;
 using Managers;
@@ -55,7 +57,43 @@ namespace Entities
             //gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// This function only exist because when loading a different scene and then coming back 
+        /// the variables playerMovement, playerShoot, playerPause and playerLiveSystem
+        /// are Null for some reason
+        /// </summary>
+        public void selfAssignComponents()
+        {
+            if (playerMovement is null)
+            {
+                playerMovement = GetComponent<PlayerMovement>();
+                DDebug.Assert(playerMovement is not null, $"Could not find {typeof(PlayerMovement)} script in {nameof(Player)}", this);
+            }
+
+            if (playerShoot is null)
+            {
+                playerShoot = GetComponent<PlayerShoot>();
+                DDebug.Assert(playerShoot is not null, $"Could not find {typeof(PlayerShoot)} script in {nameof(Player)}", this);
+
+            }
+
+            if (playerPause is null)
+            {
+                playerPause = GetComponent<PlayerPause>();
+                DDebug.Assert(playerPause is not null, $"Could not find {typeof(PlayerPause)} script in {nameof(Player)}", this);
+            }
+
+            if (playerLiveSystem is null)
+            {
+                playerLiveSystem = GetComponent<PlayerLiveSystem>();
+                DDebug.Assert(playerLiveSystem is not null, $"Could not find {typeof(PlayerLiveSystem)} script in {nameof(Player)}", this);
+            }
+
+        }
+
+
         #region GameManagerBoilerPlate
+
         private void OnEnable()
         {
             SingletonManager.inst.gameManager.subscribe(setState);
@@ -79,14 +117,12 @@ namespace Entities
 
         public string getSaveData()
         {
-            return $"{{ " +
-                $"\"{nameof(StandardEntitySaveData)}\" : {JsonUtility.ToJson(standardEntitySaveData)}, " +
-                $"\"{nameof(PlayerState)}\" : {JsonUtility.ToJson(playerState)}, " +
-                $"\"{nameof(GameStates)}\" : {JsonUtility.ToJson(currentGameState)}, " +
-                $"\"{nameof(PlayerMovement)}\" : {playerMovement.getSaveData()}, " +
-                $"\"{nameof(PlayerShoot)}\" : {playerShoot.getSaveData()}, " +
-                $"\"{nameof(PlayerLiveSystem)}\" : {playerLiveSystem.getSaveData()}, " +
-                $"}}";
+            standardEntitySaveData = StandardEntitySaveData.create(transform.position,
+                new Vector2(playerMovement.speed, 0.0f),
+                playerMovement.dir,
+                transform.gameObject.activeInHierarchy,
+                "Player");
+            return JsonUtility.ToJson(this);
         }
 
         public string getMetaData()
@@ -97,11 +133,15 @@ namespace Entities
         public void loadData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
+            selfAssignComponents();
+            playerMovement.speed = standardEntitySaveData.speed.x;
+            playerMovement.setDir(standardEntitySaveData.direction);
         }
 
         public void loadData(StandardEntitySaveData data)
         {
             playerMovement.speed = data.speed.x;
+            playerMovement.teleport(data.position);
         }
 
         #endregion

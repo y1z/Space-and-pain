@@ -8,7 +8,7 @@ namespace Entities
     public sealed class Bunker : MonoBehaviour, ISaveGameData, ILoadGameData
     {
 
-        [field: SerializeField] BunkerBlock[] blocks;
+        [field: SerializeField] public BunkerBlock[] blocks { get; private set; }
 
         [Tooltip("The sprite used for when a block has been hit 0 times")]
         [field: SerializeField] private SpriteRenderer fullHealthSprite;
@@ -80,13 +80,22 @@ namespace Entities
         public string getSaveData()
         {
             StringBuilder sb = new();
-            standardEntitySaveData.position = transform.position;
 
+            standardEntitySaveData = StandardEntitySaveData.create(transform.position,
+                Vector2.zero,
+                Vector2.zero,
+               _isActive: transform.gameObject.activeInHierarchy,
+               _prefabName: "Bunker");
+
+            sb.Append(this.getMetaData());
+            sb.AppendLine(SaveManager.DIVIDER);
             sb.Append(JsonUtility.ToJson(this));
-            sb.Append(SaveManager.DIVIDER);
+            sb.AppendLine(SaveManager.DIVIDER);
             for (int i = 0; i < blocks.Length; i++)
             {
-                sb.AppendLine(blocks[i].getSaveData());
+                sb.Append(blocks[i].getMetaData());
+                sb.AppendLine(SaveManager.DIVIDER);
+                sb.Append(blocks[i].getSaveData());
                 sb.AppendLine(SaveManager.DIVIDER);
             }
 
@@ -100,7 +109,9 @@ namespace Entities
 
         public void loadData(string data)
         {
-            throw new System.NotImplementedException();
+            JsonUtility.FromJsonOverwrite(data, this);
+            transform.gameObject.SetActive(standardEntitySaveData.isActive);
+            transform.position = standardEntitySaveData.position;
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -109,6 +120,34 @@ namespace Entities
         }
 
         #endregion
+
+
+        public void loadDataForBlock(string data, int index)
+        {
+            DDebug.Assert(index >= 0 && index < blocks.Length, $"OutSide Index range index=|{index}| in method{nameof(loadDataForBlock)}", this);
+            getBlocksIfThereAreNon();
+            blocks[index].loadData(data);
+        }
+
+        private void getBlocksIfThereAreNon()
+        {
+            bool areElementsNull = false;
+            for (int i = 0; i < blocks.Length; i++) 
+            {
+                if (blocks[i] is null)
+                {
+                    areElementsNull = true; 
+                    break;
+                }
+            }
+
+            if (areElementsNull)
+            {
+                blocks = GetComponentsInChildren<BunkerBlock>();
+            }
+
+        }
+
     }
 
 }

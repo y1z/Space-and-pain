@@ -1,6 +1,7 @@
 using System;
 using interfaces;
 using Managers;
+using TMPro;
 using UnityEngine;
 
 namespace Entities
@@ -8,11 +9,14 @@ namespace Entities
 
     [Serializable]
     [RequireComponent(typeof(Player))]
-    public sealed class PlayerMovement : MonoBehaviour , ISaveGameData , ILoadGameData
+    public sealed class PlayerMovement : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         [SerializeField] public float speed = 1.0f;
         [SerializeField] CharacterController cc;
+        [field: SerializeField] public Vector2 dir { get; private set; }
+
         [SerializeField] public Player referenceToPlayer;
+
 
         void Start()
         {
@@ -44,10 +48,15 @@ namespace Entities
             {
                 case InputInfo.LEFT:
                     cc.Move(final_movement * Time.deltaTime);
+                    dir = Vector2.left;
                     break;
 
                 case InputInfo.RIGHT:
                     cc.Move(final_movement * Time.deltaTime);
+                    dir = Vector2.right;
+                    break;
+                default:
+                    dir = Vector2.zero;
                     break;
             }
 
@@ -85,6 +94,18 @@ namespace Entities
         public void loadData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
+
+            if (referenceToPlayer is null)
+            {
+                referenceToPlayer = GetComponent<Player>();
+                DDebug.Assert(referenceToPlayer is not null, $"{nameof(PlayerMovement)} Can't find the {nameof(Player)}", this);
+            }
+
+            if(cc is null)
+            {
+                cc = GetComponent<CharacterController>();
+                DDebug.Assert(cc != null, $"{nameof(cc)} needs a {typeof(CharacterController)} to work." , this);
+            }
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -93,5 +114,18 @@ namespace Entities
         }
 
         #endregion
+
+
+        public void teleport(Vector2 wereToTeleport)
+        {
+            cc.enabled = false;
+            transform.position = wereToTeleport;
+            cc.enabled = true;
+        }
+
+        public void setDir(Vector2 _dir)
+        {
+            dir = _dir;
+        }
     }
 }
