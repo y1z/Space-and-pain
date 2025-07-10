@@ -1,6 +1,6 @@
 {
-    "name": "Scripts.Saving",
-    "rootNamespace": "Saving",
+    "name": "Script.Saving",
+    "rootNamespace": "",
     "references": [
         "GUID:7fba59bd1077b7447b0d02792f2b5b27"
     ],

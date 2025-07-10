@@ -6,7 +6,7 @@ namespace Saving
 
     using static SavingConstants;
 
-    public static class SaveStringifyer
+    public static partial class SaveStringifyer
     {
 
         public static string Stringify(StandardEntitySaveData _saveData)
@@ -44,12 +44,5 @@ namespace Saving
         }
 
     }
-    /**
-        public Vector2 position;
-        public Vector2 speed;
-        public Vector2 direction;
-        public bool isActive;
-        public string prefabName;
-     */
 
 }

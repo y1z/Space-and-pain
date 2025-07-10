@@ -148,4 +148,16 @@ namespace Entities
 
     }
 
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(Player pl)
+        {
+
+            return "";
+        }
+
+    }
+
 }
