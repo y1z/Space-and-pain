@@ -9,7 +9,7 @@ namespace Saving
     public static partial class SaveStringifyer
     {
 
-        public static string Stringify(StandardEntitySaveData _saveData)
+        public static string StringifyEntitySaveData(StandardEntitySaveData _saveData)
         {
             StringBuilder sb = new();
             sb.Append(STANDARD_ENTITY_SAVE_DATA_ID);
@@ -38,7 +38,6 @@ namespace Saving
 
             sb.Append(_saveData.prefabName);
             sb.Append(DIVIDER);
-            sb.AppendLine(SEGMENT_DIVIDER);
 
             return sb.ToString();
         }

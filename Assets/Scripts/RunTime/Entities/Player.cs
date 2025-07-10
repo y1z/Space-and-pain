@@ -4,6 +4,8 @@ using System.Collections;
 using UnityEngine;
 using Managers;
 using interfaces;
+using System.Text;
+using Saving;
 
 
 namespace Entities
@@ -151,11 +153,55 @@ namespace Entities
 
     public static partial class SaveStringifyer
     {
-
         public static string Stringify(Player pl)
         {
+            StringBuilder sb = new();
+            sb.Append(SavingConstants.PLAYER_ID);
+            sb.Append(SavingConstants.DIVIDER);
 
-            return "";
+            sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(pl.standardEntitySaveData));
+
+            sb.Append(pl.startingPosition.x);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.startingPosition.y);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int)pl.playerState);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerMovement.speed);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerMovement.dir.x);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerMovement.dir.y);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerShoot.spawnPoint.transform.position.x);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerShoot.spawnPoint.transform.position.y);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerShoot.spawnPoint.transform.position.z);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerShoot.maxShots);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerLiveSystem.lives);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(pl.playerLiveSystem.timeUntilRespawn);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int)pl.currentGameState);
+            sb.Append(SavingConstants.DIVIDER);
+
+
+            return sb.ToString();
         }
 
     }
