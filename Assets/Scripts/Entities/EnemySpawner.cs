@@ -32,13 +32,19 @@ namespace Entities
 
         public string getSaveData()
         {
-            standardEntitySaveData.position = transform.position;
+            standardEntitySaveData = StandardEntitySaveData.create(_position: transform.position,
+                _speed: Vector2.zero,
+                _direction: Vector2.zero,
+                transform.gameObject.activeInHierarchy,
+                "Enemy spawner");
             return JsonUtility.ToJson(this);
         }
 
         public void loadData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
+            transform.gameObject.SetActive(standardEntitySaveData.isActive);
+            transform.position = standardEntitySaveData.position;
         }
 
         public void loadData(StandardEntitySaveData data)

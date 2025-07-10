@@ -26,7 +26,7 @@ namespace Entities
 
         EnemyMovementState state;
         [Header("Movement controls")]
-        [SerializeField] Vector2 direction = Vector2.right;
+        [field: SerializeField] public Vector2 direction = Vector2.right;
         [field: SerializeField] public float teleportDistance { get; private set; } = .05f;
         [SerializeField] float currentTeleportDistance = 0.05f;
         // Controls how much the enemy moves when going down 
@@ -87,28 +87,29 @@ namespace Entities
         }
 
         #region newTeleport
+
         public bool nTeleport(Vector2 direction, float distance)
         {
             cc.enabled = false;
 
+            bool result = true;
             Vector3 delta = new Vector3(direction.x * distance, direction.y * distance, 0.0f);
             transform.position = transform.position + delta;
 
             if (transform.position.x > horizontalMax)
             {
-                cc.enabled = true;
-                return false;
+                result = false;
             }
             if (transform.position.x < horizontalMin)
             {
-                cc.enabled = true;
-                return false;
+                result = false;
             }
 
             cc.enabled = true;
 
-            return true;
+            return result;
         }
+
         #endregion
 
         public void teleport()
@@ -241,5 +242,10 @@ namespace Entities
         }
 
         #endregion
+
+        public void setTeleportDistance(float newDistance)
+        {
+
+        }
     }
 }

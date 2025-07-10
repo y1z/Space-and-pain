@@ -29,9 +29,9 @@ namespace Entities
 
         public EnemyMovement enemyMovement;
 
-        public SpriteRenderer enemySprite;
-
         public EnemyShoot enemyShoot;
+
+        public SpriteRenderer enemySprite;
 
         public Action<int> onDies;
 
@@ -76,15 +76,36 @@ namespace Entities
             yield return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void selfAssignComponents()
+        {
+
+            if (enemyMovement is null)
+            {
+                enemyMovement = GetComponent<EnemyMovement>();
+                DDebug.Assert(enemyMovement is not null, $"Could not find {typeof(EnemyMovement)} script in {nameof(Enemy)}", this);
+            }
+
+            if (enemyShoot is null)
+            {
+                enemyShoot = GetComponent<EnemyShoot>();
+                DDebug.Assert(enemyShoot is not null, $"Could not find {typeof(EnemyShoot)} script in {nameof(Enemy)}", this);
+            }
+
+        }
+
         #region InterfacesImpl
 
         string ISaveGameData.getSaveData()
         {
-            standardEntitySaveData.position = transform.position;
-            return $"{{" +
-                $"\"{nameof(StandardEntitySaveData)}\" : {JsonUtility.ToJson(standardEntitySaveData)}" +
-                $"\"{nameof(EnemyMovement)}\" : {enemyMovement.getSaveData()}" +
-                $"}}";
+            standardEntitySaveData = StandardEntitySaveData.create(transform.position,
+               new Vector2(enemyMovement.teleportDistance, 0.0f),
+               Vector2.zero,
+               transform.gameObject.activeInHierarchy,
+               "Enemy");
+            return JsonUtility.ToJson(this);
         }
 
         public string getMetaData()
@@ -92,9 +113,13 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Enemy)));
         }
 
-        void ILoadGameData.loadData(string data)
+        public void loadData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
+            selfAssignComponents();
+            this.gameObject.SetActive(standardEntitySaveData.isActive);
+            transform.position = standardEntitySaveData.position;
+            enemyMovement.setTeleportDistance(standardEntitySaveData.speed.x);
         }
 
         public void loadData(StandardEntitySaveData data)

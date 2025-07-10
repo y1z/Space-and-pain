@@ -64,7 +64,11 @@ namespace Entities
 
         public string getSaveData()
         {
-            standardEntitySaveData.position = transform.position;
+            standardEntitySaveData = StandardEntitySaveData.create(_position: transform.position,
+                _speed: Vector2.zero,
+                _direction: Vector2.zero,
+                _isActive: transform.gameObject.activeInHierarchy,
+                _prefabName: "BunkerBlock");
             return JsonUtility.ToJson(this);
         }
 

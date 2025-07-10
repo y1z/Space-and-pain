@@ -28,6 +28,7 @@ namespace Managers
         }
 
         #region SceneManagerBoilerPlate
+
         private void OnEnable()
         {
             SceneManager.activeSceneChanged += onActiveSceneChange;

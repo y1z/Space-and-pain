@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scriptable_Objects;
 using Entities;
+using System.Collections.Generic;
 
 public sealed class MainLevelLogic : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public sealed class MainLevelLogic : MonoBehaviour
     [field: SerializeField, Tooltip("The menu used to confirm options")]
     ConfirmationMenu confirmationMenu;
 
+    Player playerReference = null;
+
     bool isConfirmationMenuOn = false;
 
 
@@ -31,57 +34,41 @@ public sealed class MainLevelLogic : MonoBehaviour
         SaveManager sm = SingletonManager.inst.saveManager;
         sm.clear();
 
-        Player pl = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        EDebug.Assert(pl is not null, $"Could not find type of {typeof(Player)} in this scene", this);
-        sm.addToBeSaved(pl, true);
+        playerReference.selfAssignComponents();
 
+        sm.addToBeSaved(playerReference, true);
+        sm.addToBeSaved(playerReference.playerMovement, true);
 
-        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        Enemy[] enemies = SingletonManager.inst.enemyManager.enemies.ToArray(); //FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         EDebug.Assert(enemies is not null, $"Could not find type of {typeof(Enemy)} in this scene", this);
 
         for (int i = 0; i < enemies.Length; i++)
         {
-            if (i == 0)
-            {
-                sm.addToBeSaved(enemies[i], true);
-            }
-            sm.addToBeSaved(enemies[i], false);
+            sm.addToBeSaved(enemies[i], true);
         }
 
-        EnemySpawner[] spawners = FindObjectsByType<EnemySpawner>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        EnemySpawner[] spawners = SingletonManager.inst.enemyManager.enemySpawners;
         EDebug.Assert(spawners is not null, $"Could not find type of {typeof(EnemySpawner)} in this scene", this);
 
-        for (int i = 0; i < spawners.Length; i++)
+        foreach (EnemySpawner s in spawners)
         {
-            if (i == 0)
-            {
-                sm.addToBeSaved(spawners[i], true);
-            }
-            sm.addToBeSaved(spawners[i], false);
+            sm.addToBeSaved(s, true);
         }
+
 
         Bunker[] bunkers = FindObjectsByType<Bunker>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         for (int i = 0; i < bunkers.Length; i++)
         {
-            if (i == 0)
-            {
-                sm.addToBeSaved(bunkers[i], true);
-            }
-            sm.addToBeSaved(bunkers[i], false);
+            sm.addToBeSavedRaw(bunkers[i]);
         }
 
         Projectile[] projectiles = FindObjectsByType<Projectile>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         for (int i = 0; i < projectiles.Length; i++)
         {
-            if (i == 0)
-            {
-                sm.addToBeSaved(projectiles[i], true);
-            }
-
-            sm.addToBeSaved(projectiles[i], false);
+            sm.addToBeSaved(projectiles[i], true);
         }
 
         sm.addToBeSaved(SingletonManager.inst.scoreManager, true);
@@ -96,6 +83,84 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     public void load()
     {
+        string[] loadingData = SingletonManager.inst.saveManager.loadSaveData();
+
+        if (loadingData[0] == "ERROR : NO SAVE DATA FOUND")
+        {
+            EDebug.LogError(loadingData[0], this);
+            return;
+        }
+
+        Util.MetaData metaData = new("temp");
+
+        int enemyIndex = 0;
+        int enemySpanwerIndex = 0;
+        int bunkerIndex = -1; // yes this starting at -1 is intentional 
+        int blockIndex = 0;
+        int projectile = 0;
+
+        List<Enemy> enemies = SingletonManager.inst.enemyManager.enemies;
+
+        EnemyManager enemyManager = SingletonManager.inst.enemyManager;
+
+        Bunker[] bunkers = FindObjectsByType<Bunker>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        playerReference.selfAssignComponents();
+
+        for (int i = 0; i < enemies.Count; ++i)
+        {
+            enemies[i].selfAssignComponents();
+        }
+
+        for (int i = 0; i < loadingData.Length; ++i)
+        {
+            JsonUtility.FromJsonOverwrite(loadingData[i], metaData);
+
+            ++i;
+            switch (metaData.name)
+            {
+                case nameof(Player):
+                    playerReference.loadData(loadingData[i]);
+                    break;
+                case nameof(PlayerMovement):
+                    playerReference.playerMovement.loadData(loadingData[i]);
+                    break;
+                case nameof(PlayerLiveSystem):
+                    playerReference.playerLiveSystem.loadData(loadingData[i]);
+                    break;
+                case nameof(Enemy):
+                    enemies[enemyIndex].loadData(loadingData[i]);
+                    enemyIndex++;
+                    break;
+                case nameof(EnemySpawner):
+                    enemyManager.loadSpawnerData(loadingData[i], enemySpanwerIndex);
+                    enemySpanwerIndex++;
+                    break;
+                case nameof(Bunker):
+                    bunkerIndex++;
+                    bunkers[bunkerIndex].loadData(loadingData[i]);
+                    blockIndex = 0;
+                    break;
+                case nameof(BunkerBlock):
+                    bunkers[bunkerIndex].loadDataForBlock(loadingData[i], blockIndex);
+                    blockIndex++;
+                    break;
+                case nameof(Projectile):
+                    projectile++;
+                    break;
+                case nameof(ScoreManager):
+                    SingletonManager.inst.scoreManager.loadData(loadingData[i]);
+                    break;
+                case nameof(GameManager):
+                    SingletonManager.inst.gameManager.loadData(loadingData[i]);
+                    break;
+                default:
+                    DDebug.LogError($"un-handled case = {metaData.name}", this);
+                    break;
+
+            }
+        }
+
         SingletonManager.inst.soundManager.playSFX("deny beep");
     }
 
@@ -148,7 +213,7 @@ public sealed class MainLevelLogic : MonoBehaviour
     /// </summary>
     public void quitToStartScreen()
     {
-        SceneManager.LoadSceneAsync("Scenes/Game/StartScreen", LoadSceneMode.Single);
+        SceneManager.LoadScene("Scenes/Game/StartScreen");
     }
 
     // volume 
@@ -204,7 +269,20 @@ public sealed class MainLevelLogic : MonoBehaviour
         confirmationMenu.gameObject.SetActive(false);
     }
 
-    #region GameManagerBoilerPlate
+    #region GameManagerAndSceneManagerBoilerPlate
+
+    private void OnEnable()
+    {
+        Managers.SingletonManager.inst.gameManager.subscribe(setState);
+        SceneManager.activeSceneChanged += onActiveSceneChange;
+    }
+
+    private void OnDisable()
+    {
+        Managers.SingletonManager.inst.gameManager.unSubscribe(setState);
+
+        SceneManager.activeSceneChanged -= onActiveSceneChange;
+    }
 
     private void setState(GameStates _gameStates)
     {
@@ -219,6 +297,22 @@ public sealed class MainLevelLogic : MonoBehaviour
                 settingsMenu.gameObject.SetActive(false);
                 pauseMenu.isOn = true;
                 settingsMenu.isOn = false;
+
+                if (playerReference is null)
+                {
+                    playerReference = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                    EDebug.Assert(playerReference != null, $"{nameof(playerReference)} needs a {typeof(Player)} to work.", this);
+                }
+
+                break;
+            case GameStates.INIT_ENEMYS:
+
+                GameObject playerGameObject = GameObject.FindGameObjectWithTag("Player");
+                playerReference = playerGameObject.GetComponent<Player>();
+
+                // only exist because when loading the scene back it's variables are null
+                playerReference.selfAssignComponents();
+
                 break;
             default:
                 confirmationMenu.gameObject.SetActive(true);
@@ -229,17 +323,13 @@ public sealed class MainLevelLogic : MonoBehaviour
                 pauseMenu.isOn = false;
                 settingsMenu.isOn = false;
                 break;
+
         }
     }
 
-    private void OnEnable()
+    private void onActiveSceneChange(Scene prev, Scene next)
     {
-        Managers.SingletonManager.inst.gameManager.subscribe(setState);
-    }
-
-    private void OnDisable()
-    {
-        Managers.SingletonManager.inst.gameManager.unSubscribe(setState);
+        playerReference = null;
     }
 
     #endregion
