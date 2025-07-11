@@ -132,7 +132,7 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Player)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
             selfAssignComponents();

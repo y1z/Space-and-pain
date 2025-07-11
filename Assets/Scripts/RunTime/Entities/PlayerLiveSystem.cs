@@ -103,7 +103,7 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(PlayerLiveSystem)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             JsonUtility.ToJson(data);
         }

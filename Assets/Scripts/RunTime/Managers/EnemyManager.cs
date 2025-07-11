@@ -454,7 +454,7 @@ namespace Managers
         public void loadSpawnerData(string data, int index)
         {
             DDebug.Assert(index >= 0 && (index < enemySpawners.Length), $"Index outside range = {index}", this);
-            enemySpawners[index].loadData(data);
+            enemySpawners[index].loadSaveData(data);
         }
     }
 

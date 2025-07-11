@@ -93,7 +93,7 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Bunker)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
             transform.gameObject.SetActive(standardEntitySaveData.isActive);
@@ -112,7 +112,7 @@ namespace Entities
         {
             DDebug.Assert(index >= 0 && index < blocks.Length, $"OutSide Index range index=|{index}| in method{nameof(loadDataForBlock)}", this);
             getBlocksIfThereAreNon();
-            //blocks[index].loadData(data);
+            //blocks[index].loadSaveData(data);
         }
 
         private void getBlocksIfThereAreNon()

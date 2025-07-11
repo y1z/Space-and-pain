@@ -5,7 +5,7 @@ namespace interfaces
 {
     public interface ILoadGameData
     {
-        public void loadData(string data);
+        public void loadSaveData(string data);
         public void loadData(StandardEntitySaveData data);
     }
 

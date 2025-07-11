@@ -75,7 +75,7 @@ namespace Managers
             return JsonUtility.ToJson(new Util.MetaData(nameof(ScoreManager)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
         }

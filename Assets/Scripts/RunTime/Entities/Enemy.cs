@@ -115,7 +115,7 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Enemy)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
             selfAssignComponents();

@@ -111,7 +111,7 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(PlayerShoot)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
         }
 

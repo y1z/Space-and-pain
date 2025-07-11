@@ -41,7 +41,7 @@ namespace Entities
             return SaveStringifyer.Stringify(this);
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
             transform.gameObject.SetActive(standardEntitySaveData.isActive);

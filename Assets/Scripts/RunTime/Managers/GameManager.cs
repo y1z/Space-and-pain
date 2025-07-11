@@ -117,7 +117,7 @@ namespace Managers
             return JsonUtility.ToJson(new Util.MetaData(nameof(GameManager)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             JsonUtility.FromJsonOverwrite(data, this);
         }

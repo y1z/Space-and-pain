@@ -86,6 +86,7 @@ public sealed class MainLevelLogic : MonoBehaviour
         if (loadingData[0] == Saving.SavingConstants.ERROR_NO_SAVE_DATA)
         {
             EDebug.LogError(loadingData[0], this);
+            SingletonManager.inst.soundManager.playSFX("deny beep");
             return;
         }
 

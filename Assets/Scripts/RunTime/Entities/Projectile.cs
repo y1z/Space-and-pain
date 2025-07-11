@@ -178,7 +178,7 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Projectile)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
             throw new System.NotImplementedException();
         }
