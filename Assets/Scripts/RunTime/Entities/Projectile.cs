@@ -1,8 +1,11 @@
 using System.Collections;
-using interfaces;
-using Managers;
+using System.Text;
 using Unity.Profiling;
 using UnityEngine;
+
+using interfaces;
+using Managers;
+using Saving;
 
 namespace Entities
 {
@@ -12,14 +15,24 @@ namespace Entities
 
         static readonly ProfilerMarker marker = new ProfilerMarker("MARKER.PROJECTILE");
 
-        [SerializeField] CharacterController cc;
-        [SerializeField] GameStates gameStates;
+        [SerializeField]
+        CharacterController cc;
 
-        [SerializeField] public float speed = 1.0f;
-        [SerializeField] private float distanceTraveled = 0.0f;
-        [Header("Calculate Speed")]
-        [SerializeField] private float maxDistanced = 10.0f;
-        [SerializeField, Range(0.01f, 5.0f)] private float timeToReachMaxDistance = 1.0f;
+        [SerializeField]
+        public GameStates gameStates;
+
+        [SerializeField]
+        public float speed = 1.0f;
+
+        [field:SerializeField]
+        public float distanceTraveled { get; private set; } = 0.0f;
+
+        [field:Header("Calculate Speed")]
+        [field:SerializeField]
+        public float maxDistanced { get; private set; } = 10.0f;
+
+        [field:SerializeField, Range(0.01f, 5.0f)]
+        public float timeToReachMaxDistance { get; private set; } = 1.0f;
 
         [Header("Direction to move")]
         public Vector2 direction = Vector2.up;
@@ -152,7 +165,12 @@ namespace Entities
 
         public string getSaveData()
         {
-            return JsonUtility.ToJson(this);
+            standardEntitySaveData = StandardEntitySaveData.create(_position: transform.position,
+                _speed: new Vector2(speed, 0.0f),
+                _direction: direction,
+                _isActive: transform.gameObject.activeInHierarchy,
+                "Projectile");
+            return SaveStringifyer.Stringify(this);
         }
 
         public string getMetaData()
@@ -172,4 +190,47 @@ namespace Entities
 
         #endregion
     }
+
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(Projectile p)
+        {
+            StringBuilder sb = new();
+            sb.Append(SavingConstants.PROJECTILE_ID);
+            sb.Append(SavingConstants.DIVIDER);
+
+            Saving.SaveStringifyer.StringifyEntitySaveData(p.standardEntitySaveData);
+
+            sb.Append((int) p.gameStates);
+            sb.Append(SavingConstants.DIVIDER);
+
+
+            sb.Append(p.speed);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(p.distanceTraveled);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(p.maxDistanced);
+            sb.Append(SavingConstants.DIVIDER);
+
+
+            sb.Append(p.timeToReachMaxDistance);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(p.direction);
+            sb.Append(SavingConstants.DIVIDER);
+
+
+            sb.Append(p.isPlayerProjectile);
+            sb.Append(SavingConstants.DIVIDER);
+            sb.Append(SavingConstants.SEGMENT_DIVIDER);
+
+
+            return sb.ToString();
+        }
+    }
 }
+

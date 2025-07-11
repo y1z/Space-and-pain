@@ -2,6 +2,8 @@ using System.Text;
 using interfaces;
 using Managers;
 using UnityEngine;
+using Saving;
+using Unity.VisualScripting;
 
 namespace Entities
 {
@@ -87,17 +89,7 @@ namespace Entities
                _isActive: transform.gameObject.activeInHierarchy,
                _prefabName: "Bunker");
 
-            sb.Append(this.getMetaData());
-            sb.AppendLine(SaveManager.DIVIDER);
-            sb.Append(JsonUtility.ToJson(this));
-            sb.AppendLine(SaveManager.DIVIDER);
-            for (int i = 0; i < blocks.Length; i++)
-            {
-                sb.Append(blocks[i].getMetaData());
-                sb.AppendLine(SaveManager.DIVIDER);
-                sb.Append(blocks[i].getSaveData());
-                sb.AppendLine(SaveManager.DIVIDER);
-            }
+            SaveStringifyer.Stringify(this);
 
             return sb.ToString();
         }
@@ -126,17 +118,17 @@ namespace Entities
         {
             DDebug.Assert(index >= 0 && index < blocks.Length, $"OutSide Index range index=|{index}| in method{nameof(loadDataForBlock)}", this);
             getBlocksIfThereAreNon();
-            blocks[index].loadData(data);
+            //blocks[index].loadData(data);
         }
 
         private void getBlocksIfThereAreNon()
         {
             bool areElementsNull = false;
-            for (int i = 0; i < blocks.Length; i++) 
+            for (int i = 0; i < blocks.Length; i++)
             {
                 if (blocks[i] is null)
                 {
-                    areElementsNull = true; 
+                    areElementsNull = true;
                     break;
                 }
             }
@@ -148,6 +140,38 @@ namespace Entities
 
         }
 
+    }
+
+    public static partial class SaveStringifyer
+    {
+        public static string Stringify(Bunker b)
+        {
+            StringBuilder sb = new();
+
+            sb.Append(SavingConstants.BUNKER_ID);
+            sb.Append(SavingConstants.DIVIDER);
+
+            Saving.SaveStringifyer.StringifyEntitySaveData(b.standardEntitySaveData);
+
+            sb.Append(b.blocks.Length);
+            sb.Append(SavingConstants.DIVIDER);
+
+            for (int i = 0; i < b.blocks.Length; ++i)
+            {
+                Saving.SaveStringifyer.StringifyEntitySaveData(b.blocks[i].standardEntitySaveData);
+
+                sb.Append(b.blocks[i].blockHealth);
+                sb.Append(SavingConstants.DIVIDER);
+
+                sb.Append((int)b.blocks[i].state);
+                sb.Append(SavingConstants.DIVIDER);
+            }
+
+
+            sb.Append(SavingConstants.SEGMENT_DIVIDER);
+
+            return sb.ToString();
+        }
     }
 
 }

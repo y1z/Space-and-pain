@@ -17,15 +17,12 @@ namespace Entities
         [SerializeField] private Projectile templateInstance;
 
         [Tooltip("This controls were the projectile will spawn at")]
-        [field: SerializeField] private Transform spawnPoint;
+        [field: SerializeField] public Transform spawnPoint { get; private set; }
 
         const string pathToProjectileResource = "Prefabs/Entities/Player Projectile";
 
         [Tooltip("The max amount of shots the player can have active in the scene")]
         [field: SerializeField] public int maxShots { get; private set; } = 1;
-
-        [field: SerializeField] StandardEntitySaveData standardEntitySaveData;
-
 
         private void Start()
         {
@@ -106,11 +103,6 @@ namespace Entities
 
         public string getSaveData()
         {
-            standardEntitySaveData = StandardEntitySaveData.create(_position: spawnPoint.position,
-                _speed: Vector2.zero,
-                _direction: Vector2.zero,
-                _isActive: transform.gameObject.activeInHierarchy,
-                "NULL");
             return JsonUtility.ToJson(this);
         }
 
@@ -121,9 +113,6 @@ namespace Entities
 
         public void loadData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
-            transform.gameObject.SetActive(standardEntitySaveData.isActive);
-            spawnPoint.position = standardEntitySaveData.position;
         }
 
         public void loadData(StandardEntitySaveData data)

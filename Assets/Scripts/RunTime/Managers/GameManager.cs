@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Managers
 {
     using interfaces;
+    using Saving;
 
     /// <summary>
     /// Dictates the state of the game and let's other know what the current state is
@@ -14,7 +15,8 @@ namespace Managers
     [DefaultExecutionOrder(-1)]
     public sealed class GameManager : MonoBehaviour, ISaveGameData, ILoadGameData
     {
-        [field: SerializeField] public GameStates gameState { get; private set; } = GameStates.IDLE;
+        [field: SerializeField]
+        public GameStates gameState { get; private set; } = GameStates.IDLE;
 
         private Action<GameStates> gameStateSignalSender;
 
@@ -107,7 +109,7 @@ namespace Managers
 
         public string getSaveData()
         {
-            return JsonUtility.ToJson(this);
+            return SaveStringifyer.Stringify(this);
         }
 
         public string getMetaData()
@@ -139,5 +141,21 @@ namespace Managers
         PLAYING,
         GAME_OVER,
         WON,
+    }
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(GameManager gm)
+        {
+            StringBuilder sb = new();
+            sb.Append(SavingConstants.GAME_MANAGER_ID);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int) gm.gameState);
+            sb.Append(SavingConstants.DIVIDER);
+
+            return sb.ToString();
+        }
     }
 }

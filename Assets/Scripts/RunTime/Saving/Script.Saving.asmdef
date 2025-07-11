@@ -1,0 +1,16 @@
+{
+    "name": "Script.Saving",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7fba59bd1077b7447b0d02792f2b5b27"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

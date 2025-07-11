@@ -7,7 +7,8 @@ namespace Managers
 {
     public sealed class ScoreManager : MonoBehaviour, ISaveGameData, ILoadGameData
     {
-        [field: SerializeField] public int score { get; private set; } = 0;
+        [field: SerializeField]
+        public int score { get; private set; } = 0;
 
         public System.Action<int> scoreChange;
 
@@ -66,7 +67,7 @@ namespace Managers
 
         public string getSaveData()
         {
-            return JsonUtility.ToJson(this);
+            return SaveStringifyer.Stringify(this);
         }
 
         public string getMetaData()
@@ -85,6 +86,23 @@ namespace Managers
         }
 
         #endregion
+    }
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(ScoreManager sm)
+        {
+            System.Text.StringBuilder sb = new();
+            sb.Append(Saving.SavingConstants.SCORE_MANAGER_ID);
+            sb.Append(Saving.SavingConstants.DIVIDER);
+
+            sb.Append(sm.score);
+            sb.Append(Saving.SavingConstants.DIVIDER);
+
+
+            return sb.ToString();
+        }
     }
 
 }

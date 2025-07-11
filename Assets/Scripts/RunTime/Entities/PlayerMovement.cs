@@ -1,7 +1,6 @@
 using System;
 using interfaces;
 using Managers;
-using TMPro;
 using UnityEngine;
 
 namespace Entities
