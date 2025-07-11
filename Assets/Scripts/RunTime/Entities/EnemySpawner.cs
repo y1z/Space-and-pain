@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using interfaces;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ namespace Entities
                 _direction: Vector2.zero,
                 transform.gameObject.activeInHierarchy,
                 "Enemy spawner");
-            return JsonUtility.ToJson(this);
+            return SaveStringifyer.Stringify(this);
         }
 
         public void loadData(string data)
@@ -54,6 +55,21 @@ namespace Entities
 
         #endregion
 
+    }
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(EnemySpawner es)
+        {
+            StringBuilder sb = new();
+
+            sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(es.standardEntitySaveData));
+
+            sb.Append(Saving.SavingConstants.SEGMENT_DIVIDER);
+
+            return sb.ToString();
+        }
     }
 
 }

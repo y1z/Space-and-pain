@@ -31,21 +31,19 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     public void save()
     {
-        SaveManager sm = SingletonManager.inst.saveManager;
-        sm.clear();
+        Saving.SaveBuilder sab = new();
 
         playerReference.selfAssignComponents();
 
-        sm.addToBeSaved(playerReference, true);
-        sm.addToBeSaved(playerReference.playerMovement, true);
+        sab.addToBeSaved(playerReference);
 
-        Enemy[] enemies = SingletonManager.inst.enemyManager.enemies.ToArray(); //FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        List<Enemy> enemies = SingletonManager.inst.enemyManager.enemies; //FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         EDebug.Assert(enemies is not null, $"Could not find type of {typeof(Enemy)} in this scene", this);
 
-        for (int i = 0; i < enemies.Length; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            sm.addToBeSaved(enemies[i], true);
+            sab.addToBeSaved(enemies[i]);
         }
 
         EnemySpawner[] spawners = SingletonManager.inst.enemyManager.enemySpawners;
@@ -53,7 +51,7 @@ public sealed class MainLevelLogic : MonoBehaviour
 
         foreach (EnemySpawner s in spawners)
         {
-            sm.addToBeSaved(s, true);
+            sab.addToBeSaved(s);
         }
 
 
@@ -61,37 +59,35 @@ public sealed class MainLevelLogic : MonoBehaviour
 
         for (int i = 0; i < bunkers.Length; i++)
         {
-            sm.addToBeSavedRaw(bunkers[i]);
+            sab.addToBeSaved(bunkers[i]);
         }
 
         Projectile[] projectiles = FindObjectsByType<Projectile>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         for (int i = 0; i < projectiles.Length; i++)
         {
-            sm.addToBeSaved(projectiles[i], true);
+            sab.addToBeSaved(projectiles[i]);
         }
 
-        sm.addToBeSaved(SingletonManager.inst.scoreManager, true);
-        sm.addToBeSaved(SingletonManager.inst.gameManager, true);
+        sab.addToBeSaved(SingletonManager.inst.scoreManager);
+        sab.addToBeSaved(SingletonManager.inst.gameManager);
 
-        sm.printSaveDataDebug();
+        sab.printSaveDataDebug();
 
-        sm.finalizeSave();
+        sab.finalizeSave();
 
         SingletonManager.inst.soundManager.playSFX("deny beep");
     }
 
     public void load()
     {
-        string[] loadingData = SingletonManager.inst.saveManager.loadSaveData();
+        string[] loadingData = Saving.SaveLoading.loadSaveData();
 
-        if (loadingData[0] == "ERROR : NO SAVE DATA FOUND")
+        if (loadingData[0] == Saving.SavingConstants.ERROR_NO_SAVE_DATA)
         {
             EDebug.LogError(loadingData[0], this);
             return;
         }
-
-        Util.MetaData metaData = new("temp");
 
         int enemyIndex = 0;
         int enemySpanwerIndex = 0;
@@ -107,59 +103,6 @@ public sealed class MainLevelLogic : MonoBehaviour
 
         playerReference.selfAssignComponents();
 
-        for (int i = 0; i < enemies.Count; ++i)
-        {
-            enemies[i].selfAssignComponents();
-        }
-
-        for (int i = 0; i < loadingData.Length; ++i)
-        {
-            JsonUtility.FromJsonOverwrite(loadingData[i], metaData);
-
-            ++i;
-            switch (metaData.name)
-            {
-                case nameof(Player):
-                    playerReference.loadData(loadingData[i]);
-                    break;
-                case nameof(PlayerMovement):
-                    playerReference.playerMovement.loadData(loadingData[i]);
-                    break;
-                case nameof(PlayerLiveSystem):
-                    playerReference.playerLiveSystem.loadData(loadingData[i]);
-                    break;
-                case nameof(Enemy):
-                    enemies[enemyIndex].loadData(loadingData[i]);
-                    enemyIndex++;
-                    break;
-                case nameof(EnemySpawner):
-                    enemyManager.loadSpawnerData(loadingData[i], enemySpanwerIndex);
-                    enemySpanwerIndex++;
-                    break;
-                case nameof(Bunker):
-                    bunkerIndex++;
-                    bunkers[bunkerIndex].loadData(loadingData[i]);
-                    blockIndex = 0;
-                    break;
-                case nameof(BunkerBlock):
-                    bunkers[bunkerIndex].loadDataForBlock(loadingData[i], blockIndex);
-                    blockIndex++;
-                    break;
-                case nameof(Projectile):
-                    projectile++;
-                    break;
-                case nameof(ScoreManager):
-                    SingletonManager.inst.scoreManager.loadData(loadingData[i]);
-                    break;
-                case nameof(GameManager):
-                    SingletonManager.inst.gameManager.loadData(loadingData[i]);
-                    break;
-                default:
-                    DDebug.LogError($"un-handled case = {metaData.name}", this);
-                    break;
-
-            }
-        }
 
         SingletonManager.inst.soundManager.playSFX("deny beep");
     }

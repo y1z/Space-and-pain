@@ -1,9 +1,7 @@
 using System.Text;
 using interfaces;
-using Managers;
 using UnityEngine;
 using Saving;
-using Unity.VisualScripting;
 
 namespace Entities
 {
@@ -81,17 +79,13 @@ namespace Entities
 
         public string getSaveData()
         {
-            StringBuilder sb = new();
-
             standardEntitySaveData = StandardEntitySaveData.create(transform.position,
                 Vector2.zero,
                 Vector2.zero,
                _isActive: transform.gameObject.activeInHierarchy,
                _prefabName: "Bunker");
 
-            SaveStringifyer.Stringify(this);
-
-            return sb.ToString();
+            return SaveStringifyer.Stringify(this);
         }
 
         public string getMetaData()
