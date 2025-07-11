@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Text;
 using interfaces;
 using Managers;
 using UnityEngine;
+using Saving;
 
 namespace Entities
 {
@@ -105,7 +107,7 @@ namespace Entities
                Vector2.zero,
                transform.gameObject.activeInHierarchy,
                "Enemy");
-            return JsonUtility.ToJson(this);
+            return SaveStringifyer.Stringify(this);
         }
 
         public string getMetaData()
@@ -131,6 +133,51 @@ namespace Entities
 
         #endregion
 
+    }
+
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(Enemy e)
+        {
+            StringBuilder sb = new();
+            sb.Append(SavingConstants.ENEMY_ID);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(e.standardEntitySaveData));
+
+            sb.Append((int)e.gameStates);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(e.enemyMovement.horizontalMin);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(e.enemyMovement.horizontalMax);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int)e.enemyMovement.state);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int)e.enemyShoot.spawnPoint.position.x);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(e.enemyShoot.spawnPoint.position.y);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(e.enemyShoot.spawnPoint.position.z);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(e.enemyShoot.spawnPoint.position.z);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int)e.enemyPointsAmount);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(SavingConstants.SEGMENT_DIVIDER);
+
+            return sb.ToString();
+        }
     }
 
 }

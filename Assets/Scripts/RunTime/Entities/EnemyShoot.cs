@@ -7,7 +7,7 @@ namespace Entities
     public sealed class EnemyShoot : MonoBehaviour
     {
         public Enemy referenceToEnemy;
-        [SerializeField] private Transform spawnPoint;
+        [SerializeField] public Transform spawnPoint;
 
         private void Start()
         {

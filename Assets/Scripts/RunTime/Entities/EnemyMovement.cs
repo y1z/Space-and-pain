@@ -26,7 +26,7 @@ namespace Entities
         [Range(-10.0f, 0.0f)]
         public float horizontalMin = -8.35f;
 
-        public EnemyMovementState state { get; private set; }
+        public EnemyMovementState state; 
 
         [Header("Movement controls")]
         [field: SerializeField]
