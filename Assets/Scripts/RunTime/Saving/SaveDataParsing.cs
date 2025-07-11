@@ -16,7 +16,7 @@ namespace Saving
         PROJECTILE,
     }
 
-    public static class LoadStringData
+    public static class SaveDataParsing
     {
         private static readonly
             Dictionary<string, TypeIdentifier> stringToType = new Dictionary<string, TypeIdentifier>
