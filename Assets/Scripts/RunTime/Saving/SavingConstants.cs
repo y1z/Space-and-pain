@@ -6,6 +6,7 @@ namespace Saving
 
         public const string PLAYER_ID = "pl";
         public const string ENEMY_ID = "e";
+        public const string ENEMY_SPAWNER_ID = "es";
         public const string BUNKER_ID = "b";
         public const string PROJECTILE_ID = "p";
         public const string GAME_MANAGER_ID = "gm";

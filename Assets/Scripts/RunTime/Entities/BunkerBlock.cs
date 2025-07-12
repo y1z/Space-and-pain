@@ -65,6 +65,40 @@ namespace Entities
             }
         }
 
+        public void setEntitySaveData(StandardEntitySaveData entitySaveData)
+        {
+            transform.position = entitySaveData.position;
+            transform.gameObject.SetActive(entitySaveData.isActive);
+        }
+
+        public void setBlockHealth(int newBlockHealth)
+        {
+            blockHealth = newBlockHealth;
+        }
+
+        public StandardEntitySaveData createEntitySaveData()
+        {
+            StandardEntitySaveData data = StandardEntitySaveData.create(_position: transform.position,
+                _speed: Vector2.zero,
+                _direction: Vector2.zero,
+                _isActive: transform.gameObject.activeInHierarchy,
+                "Bunker Block");
+            return data;
+        }
+
+        public void setSelfEntitySaveData()
+        {
+            transform.gameObject.SetActive(standardEntitySaveData.isActive);
+            transform.position = standardEntitySaveData.position;
+        }
+
+        public void updateEntitySaveData()
+        {
+            standardEntitySaveData = createEntitySaveData();
+        }
+
+
+
     }
 
 }

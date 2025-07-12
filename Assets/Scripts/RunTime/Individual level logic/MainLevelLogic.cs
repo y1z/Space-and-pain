@@ -1,10 +1,13 @@
-using Managers;
-using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+
 using Scriptable_Objects;
 using Entities;
-using System.Collections.Generic;
+using Managers;
+using UI;
+using Saving;
+using System.Linq;
 
 public sealed class MainLevelLogic : MonoBehaviour
 {
@@ -90,22 +93,85 @@ public sealed class MainLevelLogic : MonoBehaviour
             return;
         }
 
-        int enemyIndex = 0;
-        int enemySpanwerIndex = 0;
-        int bunkerIndex = -1; // yes this starting at -1 is intentional 
-        int blockIndex = 0;
-        int projectile = 0;
-
-        List<Enemy> enemies = SingletonManager.inst.enemyManager.enemies;
+        playerReference.playerShoot.deleteAllProjectiles();
 
         EnemyManager enemyManager = SingletonManager.inst.enemyManager;
 
+        for (int i = 0; i < enemyManager.projectiles.Count; ++i)
+        {
+            enemyManager.projectiles[i].transform.gameObject.SetActive(false);
+        }
+
+        List<Enemy> enemies = enemyManager.enemies;
+        EnemySpawner[] enemySpawner = enemyManager.enemySpawners;
         Bunker[] bunkers = FindObjectsByType<Bunker>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        int enemiesIndex = 0;
+        int enemySpawnerIndex = 0;
+        int bunkersIndex = 0;
+        int projectilesIndex = 0;
+
 
         playerReference.selfAssignComponents();
 
+        TypeIdentifier typeID = Saving.TypeIdentifier.NONE;
+        for (int i = 0; i < loadingData.Length; i++)
+        {
+            typeID = Saving.SaveDataParsing.identify(loadingData, i);
 
-        SingletonManager.inst.soundManager.playSFX("deny beep");
+            switch (typeID)
+            {
+                case TypeIdentifier.PLAYER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    playerReference.loadSaveData(loadingData[i]);
+                    break;
+
+                case TypeIdentifier.ENEMY:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    enemies[enemiesIndex].loadSaveData(loadingData[i]);
+                    ++enemiesIndex;
+                    break;
+
+                case TypeIdentifier.ENEMY_SPAWNER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    enemySpawner[enemySpawnerIndex].loadSaveData(loadingData[i]);
+                    ++enemySpawnerIndex;
+                    break;
+
+                case TypeIdentifier.BUNKER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    bunkers[bunkersIndex].loadSaveData(loadingData[i]);
+                    ++bunkersIndex;
+                    break;
+
+                case TypeIdentifier.PROJECTILE:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+
+                    this.loadProjectile(loadingData, i);
+
+                    ++projectilesIndex;
+                    break;
+
+                case TypeIdentifier.SCORE_MANAGER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    SingletonManager.inst.scoreManager.loadSaveData(loadingData[i]);
+                    break;
+
+                case TypeIdentifier.GAME_MANAGER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    SingletonManager.inst.gameManager.loadSaveData(loadingData[i]);
+                    break;
+
+                default:
+                    DDebug.LogError($"un-handled case =|{typeID}|", this);
+                    break;
+            }
+        }
+
+
+        enemyManager.recountHowManyEnemiesAreAlive();
+
+        SingletonManager.inst.soundManager.playSFX("beep");
     }
 
     public void settings()
@@ -157,7 +223,7 @@ public sealed class MainLevelLogic : MonoBehaviour
     /// </summary>
     public void quitToStartScreen()
     {
-        SceneManager.LoadScene("Scenes/Game/StartScreen");
+        SceneManager.LoadSceneAsync("Scenes/Game/StartScreen", LoadSceneMode.Single);
     }
 
     // volume 
@@ -256,7 +322,6 @@ public sealed class MainLevelLogic : MonoBehaviour
 
                 // only exist because when loading the scene back it's variables are null
                 playerReference.selfAssignComponents();
-
                 break;
             default:
                 confirmationMenu.gameObject.SetActive(true);
@@ -278,5 +343,19 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     #endregion
 
+
+    private void loadProjectile(string[] data, int index)
+    {
+        Projectile defaultProjectile = Instantiate<Projectile>(DefaultEntities.defaultProjectile);
+        defaultProjectile.loadSaveData(data[index]);
+
+        if (defaultProjectile.isPlayerProjectile)
+        {
+            playerReference.playerShoot.addProjectile(defaultProjectile);
+            return;
+        }
+        SingletonManager.inst.enemyManager.addProjectile(defaultProjectile);
+
+    }
 
 }

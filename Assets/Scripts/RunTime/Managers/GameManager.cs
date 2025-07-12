@@ -119,7 +119,11 @@ namespace Managers
 
         public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
+            string[] variables = data.Split(SavingConstants.DIVIDER);
+            int index = 1;
+
+            gameState = (GameStates) int.Parse(variables[index]);
+            ++index;
         }
 
         public void loadData(StandardEntitySaveData data)

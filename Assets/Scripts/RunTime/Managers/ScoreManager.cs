@@ -77,7 +77,12 @@ namespace Managers
 
         public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
+            string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
+
+            int index = 1;
+            score = int.Parse(variables[index]);
+            ++index;
+
         }
 
         public void loadData(StandardEntitySaveData data)

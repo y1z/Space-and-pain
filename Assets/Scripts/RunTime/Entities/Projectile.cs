@@ -22,16 +22,22 @@ namespace Entities
         public GameStates gameStates;
 
         [SerializeField]
+        public LayerMask excludeLayers;
+
+        [SerializeField]
+        public LayerMask includeLayers;
+
+        [SerializeField]
         public float speed = 1.0f;
 
-        [field:SerializeField]
+        [field: SerializeField]
         public float distanceTraveled { get; private set; } = 0.0f;
 
-        [field:Header("Calculate Speed")]
-        [field:SerializeField]
+        [field: Header("Calculate Speed")]
+        [field: SerializeField]
         public float maxDistanced { get; private set; } = 10.0f;
 
-        [field:SerializeField, Range(0.01f, 5.0f)]
+        [field: SerializeField, Range(0.01f, 5.0f)]
         public float timeToReachMaxDistance { get; private set; } = 1.0f;
 
         [Header("Direction to move")]
@@ -50,10 +56,12 @@ namespace Entities
             setUp();
         }
 
+        /// <summary>
+        /// TODO : OPTIMIZE THIS 
+        /// </summary>
         private void Update()
         {
             if (gameStates != GameStates.PLAYING) { return; }
-            using var _ = marker.Auto();
 
             Vector3 starting = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 
@@ -115,9 +123,9 @@ namespace Entities
                 EDebug.Assert(cc != null, $"This script needs and instance of {typeof(CharacterController)} to work", this);
             }
             distanceTraveled = 0.0f;
-
             speed = maxDistanced / timeToReachMaxDistance;
-
+            cc.excludeLayers = excludeLayers;
+            cc.includeLayers = includeLayers;
         }
 
         public void teleport(Transform _transform)
@@ -180,7 +188,44 @@ namespace Entities
 
         public void loadSaveData(string data)
         {
-            throw new System.NotImplementedException();
+            string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
+
+            int index = 2;
+            standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
+
+            transform.gameObject.SetActive(standardEntitySaveData.isActive);
+            transform.position = standardEntitySaveData.position;
+
+            gameStates = (GameStates) int.Parse(variables[index]);
+            ++index;
+
+
+            speed = float.Parse(variables[index]);
+            ++index;
+
+            distanceTraveled = float.Parse(variables[index]);
+            ++index;
+
+            maxDistanced = float.Parse(variables[index]);
+            ++index;
+
+            timeToReachMaxDistance = float.Parse(variables[index]);
+            ++index;
+
+            direction.x = float.Parse(variables[index]);
+            ++index;
+
+            direction.y = float.Parse(variables[index]);
+            ++index;
+
+            isPlayerProjectile = int.Parse(variables[index]) > 0 ? true : false;
+            ++index;
+
+            excludeLayers = (LayerMask) int.Parse(variables[index]);
+            ++index;
+
+            includeLayers = (LayerMask) int.Parse(variables[index]);
+            ++index;
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -189,6 +234,13 @@ namespace Entities
         }
 
         #endregion
+
+
+        public static Projectile createDefaultProjectile()
+        {
+            return Instantiate<Projectile>(DefaultEntities.defaultProjectile);
+        }
+
     }
 
 
@@ -201,7 +253,7 @@ namespace Entities
             sb.Append(SavingConstants.PROJECTILE_ID);
             sb.Append(SavingConstants.DIVIDER);
 
-            Saving.SaveStringifyer.StringifyEntitySaveData(p.standardEntitySaveData);
+            sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(p.standardEntitySaveData));
 
             sb.Append((int) p.gameStates);
             sb.Append(SavingConstants.DIVIDER);
@@ -220,12 +272,22 @@ namespace Entities
             sb.Append(p.timeToReachMaxDistance);
             sb.Append(SavingConstants.DIVIDER);
 
-            sb.Append(p.direction);
+            sb.Append(p.direction.x);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(p.direction.y);
             sb.Append(SavingConstants.DIVIDER);
 
 
-            sb.Append(p.isPlayerProjectile);
+            sb.Append(p.isPlayerProjectile ? 1 : 0);
             sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int) p.excludeLayers);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int) p.includeLayers);
+            sb.Append(SavingConstants.DIVIDER);
+
             sb.Append(SavingConstants.SEGMENT_DIVIDER);
 
 

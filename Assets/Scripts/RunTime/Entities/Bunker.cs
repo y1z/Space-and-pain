@@ -95,9 +95,32 @@ namespace Entities
 
         public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
+            string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
+
+            int index = 2;
+            standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
             transform.gameObject.SetActive(standardEntitySaveData.isActive);
             transform.position = standardEntitySaveData.position;
+
+            int len = int.Parse(variables[index]);
+            ++index;
+
+            for (int i = 0; i < len; ++i)
+            {
+                // skipping identifier
+                ++index;
+
+                blocks[i].standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
+
+                blocks[i].setSelfEntitySaveData();
+
+                blocks[i].setBlockHealth(int.Parse(variables[index]));
+                ++index;
+
+                blocks[i].state = (BlockState) int.Parse(variables[index]);
+                ++index;
+            }
+
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -145,19 +168,20 @@ namespace Entities
             sb.Append(SavingConstants.BUNKER_ID);
             sb.Append(SavingConstants.DIVIDER);
 
-            Saving.SaveStringifyer.StringifyEntitySaveData(b.standardEntitySaveData);
+            sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(b.standardEntitySaveData));
 
             sb.Append(b.blocks.Length);
             sb.Append(SavingConstants.DIVIDER);
 
             for (int i = 0; i < b.blocks.Length; ++i)
             {
-                Saving.SaveStringifyer.StringifyEntitySaveData(b.blocks[i].standardEntitySaveData);
+                b.blocks[i].updateEntitySaveData();
+                sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(b.blocks[i].standardEntitySaveData));
 
                 sb.Append(b.blocks[i].blockHealth);
                 sb.Append(SavingConstants.DIVIDER);
 
-                sb.Append((int)b.blocks[i].state);
+                sb.Append((int) b.blocks[i].state);
                 sb.Append(SavingConstants.DIVIDER);
             }
 

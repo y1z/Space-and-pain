@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MainLevelGeneratorData
   m_EditorClassIdentifier: 
   <playerLives>k__BackingField: 3
-  <playerMaxShots>k__BackingField: 4
+  <playerMaxShots>k__BackingField: 2
   <playerStartPosition>k__BackingField: {x: 0, y: -4}
   <enemiesColumnCount>k__BackingField: 7
   <enemiesRowsCount>k__BackingField: 5
@@ -31,7 +31,7 @@ MonoBehaviour:
   <enemySpawnArea>k__BackingField:
     serializedVersion: 2
     x: -8
-    y: 4
+    y: 4.5
     width: 16
     height: 5
   <scoreOffsetFromTopLeft>k__BackingField: {x: 0, y: 0}

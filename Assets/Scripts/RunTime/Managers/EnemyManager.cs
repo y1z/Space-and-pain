@@ -31,11 +31,12 @@ namespace Managers
         [SerializeField]
         Projectile projectileTemplate;
         [field: SerializeField]
-        public Projectile[] projectiles { get; private set; } = new Projectile[MAX_PROJECTILES];
+        public List<Projectile> projectiles { get; private set; } = new List<Projectile>(MAX_PROJECTILES);
 
         [Header("Signals")]
 
         public Action onInitFinish;
+
         [Header("enemy data ")]
         public List<Enemy> enemies;
         [field: SerializeField]
@@ -86,7 +87,14 @@ namespace Managers
             enemyShootCoolDown.onCoolDownReach += randomEnemyShoot;
 
             projectileTemplate = Resources.Load<Projectile>(PATH_TO_PROJECTILE);
+
             EDebug.Assert(projectileTemplate != null, $"This scripts expected a prefab at the resources folder =|{PATH_TO_PROJECTILE}| fix that please", this);
+
+            for (int i = 0; i < projectiles.Count; ++i)
+            {
+                projectiles[i] = projectileTemplate;
+                projectiles[i].excludeLayers = 1 << LayerMask.NameToLayer("Enemy");
+            }
         }
 
         private void Update()
@@ -128,6 +136,19 @@ namespace Managers
             {
                 enemyShootCoolDown.onCoolDownReach -= randomEnemyShoot;
             }
+        }
+
+        public void recountHowManyEnemiesAreAlive()
+        {
+            aliveEnemies = 0;
+            for(int i = 0; i < enemies.Count; ++i)
+            {
+                if (enemies[i].gameObject.activeInHierarchy)
+                {
+                    aliveEnemies += 1;
+                }
+            }
+
         }
 
 
@@ -216,6 +237,7 @@ namespace Managers
 
 
         #region Initialize
+
         private void initalizeEnemies()
         {
             enemySpawners = GameObject.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
@@ -249,7 +271,7 @@ namespace Managers
         private void initalizeProjectile()
         {
             Vector3 defaultProjectilPos = new Vector3(-1337.0f, -1337.0f);
-            for (int i = 0; i < this.projectiles.Length; ++i)
+            for (int i = 0; i < this.projectiles.Count; ++i)
             {
                 this.projectiles[i] = Instantiate<Projectile>(projectileTemplate);
                 this.projectiles[i].gameObject.transform.position = defaultProjectilPos;
@@ -317,7 +339,6 @@ namespace Managers
         }
 
         #endregion
-
 
         #region Coroutines
 
@@ -456,6 +477,15 @@ namespace Managers
             DDebug.Assert(index >= 0 && (index < enemySpawners.Length), $"Index outside range = {index}", this);
             enemySpawners[index].loadSaveData(data);
         }
+
+        public void addProjectile(Projectile _projectile)
+        {
+            DDebug.Assert(!_projectile.isPlayerProjectile, "!_projectile.isPlayerProjectile;// FIX THIS ", this);
+            _projectile = projectileTemplate;
+            _projectile.direction = projectileTemplate.direction;
+            projectiles.Add(_projectile);
+        }
+
     }
 
     #region ComparerClases
@@ -484,4 +514,6 @@ namespace Managers
         }
     }
     #endregion
+
+
 }
