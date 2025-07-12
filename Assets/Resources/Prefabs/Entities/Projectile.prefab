@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5958998780406084579}
   - component: {fileID: 862604015693494857}
   m_Layer: 0
-  m_Name: Enemy Projectile
-  m_TagString: Enemy Projectile
+  m_Name: Projectile
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 887758587905306676}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.3142877, y: -0.06100005, z: 0}
+  m_LocalPosition: {x: -0.4131365, y: -0.72370136, z: -0.20125675}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -47,18 +47,18 @@ CharacterController:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 0.59
-  m_Radius: 0.1
+  m_Height: 0.61
+  m_Radius: 0.15
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: -0.03, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &862604015693494857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,19 +72,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cc: {fileID: 5958998780406084579}
-  gameStates: 0
-  speed: 6.451613
-  <distanceTraveled>k__BackingField: 0
-  <maxDistanced>k__BackingField: 10
-  <timeToReachMaxDistance>k__BackingField: 1.55
-  direction: {x: 0, y: -1}
-  isPlayerProjectile: 0
-  standardEntitySaveData:
-    position: {x: 0, y: 0}
-    speed: {x: 0, y: 0}
-    direction: {x: 0, y: 0}
-    isActive: 0
-    prefabName: 
+  speed: 5
+  distanceTraveled: 0
+  maxDistanced: 9
+  timeToReachMaxDistance: 0.766667
+  direction: {x: 0, y: 1}
+  isPlayerProjectile: 1
 --- !u!1 &8585608745458112646
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +105,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.08, z: 0.20125675}
-  m_LocalScale: {x: 0.21, y: 0.66, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.66, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6948793685102129278}

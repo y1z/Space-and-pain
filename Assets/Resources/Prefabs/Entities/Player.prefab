@@ -88,6 +88,12 @@ MonoBehaviour:
   playerShoot: {fileID: 2590692267078070718}
   playerPause: {fileID: 3342352833795182346}
   playerLiveSystem: {fileID: 3282589708804581763}
+  standardEntitySaveData:
+    position: {x: 0, y: 0}
+    speed: {x: 0, y: 0}
+    direction: {x: 0, y: 0}
+    isActive: 0
+    prefabName: 
 --- !u!114 &2590692267078070718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceToPlayer: {fileID: 1340390992370131382}
   templateInstance: {fileID: 862604015693494857, guid: 37515d3cafb97264293fa0a4e5a3ca4e, type: 3}
-  spawnPoint: {fileID: 8000991329860645031}
+  <spawnPoint>k__BackingField: {fileID: 8000991329860645031}
   <maxShots>k__BackingField: 1
 --- !u!114 &78446576417048164
 MonoBehaviour:
@@ -118,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   cc: {fileID: 2577108809818548305}
+  <dir>k__BackingField: {x: 0, y: 0}
   referenceToPlayer: {fileID: 1340390992370131382}
 --- !u!114 &3342352833795182346
 MonoBehaviour:
@@ -144,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a545aba8860070148923d8f5aaa0d8fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <lives>k__BackingField: 3
   timeUntilRespawn: 1
   spriteRenderer: {fileID: 7862352517325518130}
   cc: {fileID: 2577108809818548305}
@@ -279,3 +287,9 @@ MonoBehaviour:
   playerShoot: {fileID: 0}
   playerPause: {fileID: 0}
   playerLiveSystem: {fileID: 0}
+  standardEntitySaveData:
+    position: {x: 0, y: 0}
+    speed: {x: 0, y: 0}
+    direction: {x: 0, y: 0}
+    isActive: 0
+    prefabName: 
