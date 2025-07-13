@@ -1,3 +1,5 @@
+using Managers;
+
 using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,6 +8,21 @@ public sealed class StartScreenLogic : MonoBehaviour
 {
     public MenuScript menu;
     public MenuScript settings;
+    public ConfirmationMenu confirmationMenu;
+
+    public void Awake()
+    {
+        DDebug.Assert(menu is not null, $"Attach a |{typeof(MenuScript)}| to the variable |{nameof(menu)}| for this to work", this);
+        DDebug.Assert(settings is not null, $"Attach a |{typeof(MenuScript)}| to the variable |{nameof(settings)}| for this to work", this);
+
+        if (confirmationMenu is null)
+        {
+            confirmationMenu = GetComponent<ConfirmationMenu>();
+            DDebug.Assert(confirmationMenu is not null, $"Attach a |{typeof(ConfirmationMenu)}| to the variable |{nameof(confirmationMenu)}| for this to work", this);
+        }
+        confirmationMenu.turnOff();
+        confirmationMenu.gameObject.SetActive(false);
+    }
 
     public void newGame()
     {
@@ -17,6 +34,7 @@ public sealed class StartScreenLogic : MonoBehaviour
         SceneManager.LoadSceneAsync("Scenes/Game/Tutorial", LoadSceneMode.Single);
     }
 
+
     public void quit()
     {
         Application.Quit();
@@ -24,18 +42,42 @@ public sealed class StartScreenLogic : MonoBehaviour
 
     public void changeToSettings()
     {
-        menu.isOn = false;
-        menu.gameObject.SetActive(false);
-        settings.isOn = true;
-        settings.gameObject.SetActive(true);
+        menu.turnOffAndHide();
+        settings.turnOnAndShow();
+
+        confirmationMenu.confirmationEvent += confirmationMenuEventShowMenu;
+        confirmationMenu.turnOffAndHide();
     }
 
     public void changeToMenu()
     {
-        menu.isOn = true;
-        menu.gameObject.SetActive(true);
-        settings.isOn = false;
-        settings.gameObject.SetActive(false);
+        menu.turnOnAndShow();
+        settings.turnOffAndHide();
 
+        confirmationMenu.turnOffAndHide();
+        confirmationMenu.confirmationEvent -= confirmationMenuEventShowMenu;
     }
+
+    public void confirmationMenuEventShowMenu(bool _isConfirmed)
+    {
+        showStartMenu();
+    }
+
+
+    public void showConfirmationMenu()
+    {
+        confirmationMenu.turnOnAndShow();
+
+        settings.turnOffAndHide();
+    }
+
+    public void showStartMenu()
+    {
+        confirmationMenu.turnOffAndHide();
+
+        settings.turnOffAndHide();
+
+        menu.turnOnAndShow();
+    }
+
 }

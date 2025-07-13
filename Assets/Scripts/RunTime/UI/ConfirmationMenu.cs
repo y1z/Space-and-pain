@@ -16,9 +16,9 @@ namespace UI
 
         private void Awake()
         {
-            DDebug.Assert(menuScript != null, "(menuScript == null) fix that", this);
-            DDebug.Assert(yesButton != null, "(yesButton != null) fix that", this);
-            DDebug.Assert(noButton != null, "(noButton != null) fix that", this);
+            DDebug.Assert(menuScript != null, "(menuScript is null) fix that", this);
+            DDebug.Assert(yesButton != null, "(yesButton is null) fix that", this);
+            DDebug.Assert(noButton != null, "(noButton is null) fix that", this);
         }
 
         public void OnEnable()
@@ -60,8 +60,17 @@ namespace UI
 
         private void onNoButtonPress()
         {
-
             confirmationEvent?.Invoke(false);
+        }
+
+        public void turnOffAndHide()
+        {
+            menuScript.turnOffAndHide();
+        }
+
+        public void turnOnAndShow()
+        {
+            menuScript.turnOnAndShow();
         }
 
     }

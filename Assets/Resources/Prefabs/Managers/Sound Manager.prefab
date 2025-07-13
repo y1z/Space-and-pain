@@ -457,6 +457,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 871cffec52d80c941a56ae707fbfd56e, type: 2}
   voiceAudio:
   - {fileID: 11400000, guid: 5fde140594650004492c6a491d98ae9a, type: 2}
+  - {fileID: 11400000, guid: 6a008d0f1e4ec444788613baa2b6661d, type: 2}
   lastUsedAudio: {fileID: 0}
 --- !u!1 &7840137798793951359
 GameObject:

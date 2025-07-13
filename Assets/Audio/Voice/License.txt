@@ -1,0 +1,6 @@
+LICENSE FROM "https://www.text2speech.org/" verbatim
+----------------------------------------------------------
+Text2Speech.org is a free online text-to-speech converter. Just enter your
+text, select one of the voices and download or listen to the resulting mp3
+file. This service is free and you are allowed to use the speech files for any 
+purpose, including commercial uses.
