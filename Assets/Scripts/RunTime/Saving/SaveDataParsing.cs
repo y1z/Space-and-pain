@@ -17,6 +17,7 @@ namespace Saving
         PROJECTILE,
         SCORE_MANAGER,
         GAME_MANAGER,
+        ENEMY_MANAGER,
     }
 
     public static class SaveDataParsing
@@ -32,6 +33,7 @@ namespace Saving
                 {PROJECTILE_ID, TypeIdentifier.PROJECTILE},
                 {SCORE_MANAGER_ID, TypeIdentifier.SCORE_MANAGER},
                 {GAME_MANAGER_ID, TypeIdentifier.GAME_MANAGER},
+                {ENEMY_MANAGER_ID, TypeIdentifier.ENEMY_MANAGER},
             };
 
 

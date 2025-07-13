@@ -7,7 +7,6 @@ using Entities;
 using Managers;
 using UI;
 using Saving;
-using System.Linq;
 
 public sealed class MainLevelLogic : MonoBehaviour
 {
@@ -74,6 +73,7 @@ public sealed class MainLevelLogic : MonoBehaviour
 
         sab.addToBeSaved(SingletonManager.inst.scoreManager);
         sab.addToBeSaved(SingletonManager.inst.gameManager);
+        sab.addToBeSaved(SingletonManager.inst.enemyManager);
 
         sab.printSaveDataDebug();
 
@@ -109,7 +109,6 @@ public sealed class MainLevelLogic : MonoBehaviour
         int enemiesIndex = 0;
         int enemySpawnerIndex = 0;
         int bunkersIndex = 0;
-        int projectilesIndex = 0;
 
 
         playerReference.selfAssignComponents();
@@ -148,8 +147,6 @@ public sealed class MainLevelLogic : MonoBehaviour
                     EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
 
                     this.loadProjectile(loadingData, i);
-
-                    ++projectilesIndex;
                     break;
 
                 case TypeIdentifier.SCORE_MANAGER:
@@ -160,6 +157,11 @@ public sealed class MainLevelLogic : MonoBehaviour
                 case TypeIdentifier.GAME_MANAGER:
                     EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
                     SingletonManager.inst.gameManager.loadSaveData(loadingData[i]);
+                    break;
+
+                case TypeIdentifier.ENEMY_MANAGER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    SingletonManager.inst.enemyManager.loadSaveData(loadingData[i]);
                     break;
 
                 default:
@@ -348,12 +350,14 @@ public sealed class MainLevelLogic : MonoBehaviour
     {
         Projectile defaultProjectile = Instantiate<Projectile>(DefaultEntities.defaultProjectile);
         defaultProjectile.loadSaveData(data[index]);
+        defaultProjectile.subscribeIfNotSubscribed();
 
         if (defaultProjectile.isPlayerProjectile)
         {
             playerReference.playerShoot.addProjectile(defaultProjectile);
             return;
         }
+
         SingletonManager.inst.enemyManager.addProjectile(defaultProjectile);
 
     }

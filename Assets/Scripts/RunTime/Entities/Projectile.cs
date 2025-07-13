@@ -50,6 +50,8 @@ namespace Entities
 
         public StandardEntitySaveData standardEntitySaveData;
 
+        private bool isSubscribed = false;
+
 
         private void Awake()
         {
@@ -141,15 +143,30 @@ namespace Entities
         }
 
         #region GameManagerBoilerPlate
-        private void OnEnable()
+
+        public void subscribeIfNotSubscribed()
         {
+            if (isSubscribed) { return; }
             SingletonManager.inst.gameManager.subscribe(setState);
             setState(SingletonManager.inst.gameManager.gameState);
+            isSubscribed = true;
+        }
+
+        private void OnEnable()
+        {
+            subscribeIfNotSubscribed();
         }
 
         private void OnDisable()
         {
+            unSubscribeIfSubscribed();
+        }
+
+        public void unSubscribeIfSubscribed()
+        {
+            if(!isSubscribed) { return; }
             SingletonManager.inst.gameManager.unSubscribe(setState);
+            isSubscribed = false;
         }
 
         private void setState(GameStates state)

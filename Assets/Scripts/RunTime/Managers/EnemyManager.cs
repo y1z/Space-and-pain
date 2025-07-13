@@ -1,18 +1,21 @@
 using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using Entities;
-using UnityEngine.SceneManagement;
+using Saving;
+using interfaces;
 
 namespace Managers
 {
-    public sealed class EnemyManager : MonoBehaviour
+    public sealed class EnemyManager : MonoBehaviour, ISaveGameData, ILoadGameData
     {
         const string PATH_TO_PROJECTILE = "Prefabs/Entities/Enemy Projectile";
         const int MAX_PROJECTILES = 3;
-        internal enum EnemyManagerState
+        public enum EnemyManagerState
         {
             INIT_ENEMIES,
             MOVE_GROUP_HORIZONTALY,
@@ -22,9 +25,11 @@ namespace Managers
 
         private int currentId = 0;
 
-        private GameStates gameStates;
+        [field: SerializeField]
+        public GameStates gameStates { get; private set; }
 
-        private EnemyManagerState enemyManagerState;
+        [field: SerializeField]
+        public EnemyManagerState enemyManagerState { get; private set; }
 
         [Header("Data for shooting")]
 
@@ -43,23 +48,25 @@ namespace Managers
         public EnemySpawner[] enemySpawners { get; private set; } = null;
 
         [field: SerializeField]
-        public int aliveEnemies { get; private set; } = 0;
+        public int aliveEnemiesCount { get; private set; } = 0;
 
         public bool areInAGroup { get; private set; } = false;
 
         [Header("enemy controls")]
-        [SerializeField]
-        float teleportDistance = 1.0f;
+        [field: SerializeField]
+        public float teleportDistance { get; private set; } = 1.0f;
 
         public float howLongUntilNextMove = 0.1f;
 
-        private float currentHowLongUntilNextMove = 0.0f;
+        [field: SerializeField]
+        public float currentHowLongUntilNextMove { get; private set; } = 0.0f;
 
-        [SerializeField]
-        [Range(0.0001f, 1.0f), Tooltip("Controls how fast the enemies go down when 1 hits the edge (lower number is faster)")]
-        private float moveDownFactorSpeedUp = 0.3f;
+        [field: SerializeField]
+        [field: Range(0.0001f, 1.0f), Tooltip("Controls how fast the enemies go down when 1 hits the edge (lower number is faster)")]
+        public float moveDownFactorSpeedUp { get; private set; } = 0.3f;
 
-        private int enemyToMoveIndex = 0;
+        [field: SerializeField]
+        public int enemyToMoveIndex { get; private set; } = 0;
 
         [Header("Enemy next round controls")]
         [Tooltip("[Lower is faster]How much to speed up enemy movement the next round ")]
@@ -68,16 +75,16 @@ namespace Managers
         [Tooltip("[Lower is faster]How much to speed up the enemy movement when going down next round")]
         public float moveDownFactorSpeedUpSpeedUpRate = 1.0f;
 
-        [SerializeField]
-        private bool moveEnemiesToTheRight = false;
+        [field: SerializeField]
+        public bool moveEnemiesToTheRight { get; private set; } = false;
 
-        [Header("Cool down")]
+        [field: Header("Cool down")]
 
-        [SerializeField, Range(0.001f, 1.0f)]
-        private float minimumCoolDown = 1.0f;
+        [field: SerializeField, Range(0.001f, 1.0f)]
+        public float minimumCoolDown { get; private set; } = 1.0f;
 
-        [SerializeField, Range(1.0f, 10.0f)]
-        private float maximumCoolDown = 2.0f;
+        [field: SerializeField, Range(1.0f, 10.0f)]
+        public float maximumCoolDown { get; private set; } = 2.0f;
 
         Util.CoolDownInRange enemyShootCoolDown = null;
 
@@ -140,12 +147,12 @@ namespace Managers
 
         public void recountHowManyEnemiesAreAlive()
         {
-            aliveEnemies = 0;
-            for(int i = 0; i < enemies.Count; ++i)
+            aliveEnemiesCount = 0;
+            for (int i = 0; i < enemies.Count; ++i)
             {
                 if (enemies[i].gameObject.activeInHierarchy)
                 {
-                    aliveEnemies += 1;
+                    aliveEnemiesCount += 1;
                 }
             }
 
@@ -248,7 +255,7 @@ namespace Managers
             for (int i = 0; i < enemySpawners.Length; i++)
             {
                 enemies.Add(enemySpawners[i].Spawn());
-                aliveEnemies++;
+                aliveEnemiesCount++;
             }
 
             sortEnemies();
@@ -286,8 +293,8 @@ namespace Managers
 
         private void onEnemyDies(int id)
         {
-            aliveEnemies--;
-            EDebug.Log("Alive Enemies = " + aliveEnemies, this);
+            aliveEnemiesCount--;
+            EDebug.Log("Alive Enemies = " + aliveEnemiesCount, this);
 
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -297,7 +304,7 @@ namespace Managers
                 }
             }
 
-            if (aliveEnemies < 1)
+            if (aliveEnemiesCount < 1)
             {
                 enemyManagerState = EnemyManagerState.MOVE_NONE;
                 SingletonManager.inst.gameManager.setState(GameStates.WON);
@@ -335,7 +342,7 @@ namespace Managers
         private void onActiveSceneChanged(Scene current, Scene next)
         {
             enemies.Clear();
-            aliveEnemies = 0;
+            aliveEnemiesCount = 0;
         }
 
         #endregion
@@ -459,12 +466,12 @@ namespace Managers
 
         private void recylcleEnemies()
         {
-            aliveEnemies = 0;
+            aliveEnemiesCount = 0;
             for (int i = 0; i < enemySpawners.Length; ++i)
             {
                 enemies[i].gameObject.SetActive(true);
                 enemies[i].transform.position = enemySpawners[i].transform.position;
-                aliveEnemies++;
+                aliveEnemiesCount++;
             }
 
 
@@ -486,9 +493,77 @@ namespace Managers
             projectiles.Add(_projectile);
         }
 
+        #region interfacesImpl
+
+        public string getSaveData()
+        {
+            return SaveStringifyer.Stringify(this);
+        }
+
+        public string getMetaData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void loadSaveData(string data)
+        {
+            int index = 1;
+            string[] variables = data.Split(SavingConstants.DIVIDER);
+
+            gameStates = (GameStates) int.Parse(variables[index]);
+            ++index;
+
+            enemyManagerState = (EnemyManagerState) int.Parse(variables[index]);
+            ++index;
+
+            aliveEnemiesCount = int.Parse(variables[index]);
+            ++index;
+
+            areInAGroup = int.Parse(variables[index]) > 0;
+            ++index;
+
+            teleportDistance = float.Parse(variables[index]);
+            ++index;
+
+            howLongUntilNextMove = float.Parse(variables[index]);
+            ++index;
+
+            currentHowLongUntilNextMove = float.Parse(variables[index]);
+            ++index;
+
+            moveDownFactorSpeedUp = float.Parse(variables[index]);
+            ++index;
+
+            enemyToMoveIndex = int.Parse(variables[index]);
+            ++index;
+
+            howLongUntilNextEnemyMovementSpeedUpRate = float.Parse(variables[index]);
+            ++index;
+
+            moveDownFactorSpeedUpSpeedUpRate = float.Parse(variables[index]);
+            ++index;
+
+            moveEnemiesToTheRight = int.Parse(variables[index]) > 0;
+            ++index;
+
+            minimumCoolDown = float.Parse(variables[index]);
+            ++index;
+
+            maximumCoolDown = float.Parse(variables[index]);
+            ++index;
+
+        }
+
+        public void loadData(StandardEntitySaveData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 
     #region ComparerClases
+
     internal sealed class HorizontalEnemyCompare : Comparer<Enemy>
     {
         public override int Compare(Enemy left, Enemy right)
@@ -513,7 +588,69 @@ namespace Managers
             return left.gameObject.transform.position.y.CompareTo(right.gameObject.transform.position.y);
         }
     }
+
     #endregion
 
+    #region Stringifyer
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(EnemyManager em)
+        {
+            StringBuilder sb = new();
+
+            sb.Append(SavingConstants.ENEMY_MANAGER_ID);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int) em.gameStates);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append((int) em.enemyManagerState);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.aliveEnemiesCount);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.areInAGroup ? 1 : 0);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.teleportDistance);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.howLongUntilNextMove);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.currentHowLongUntilNextMove);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.moveDownFactorSpeedUp);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.enemyToMoveIndex);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.howLongUntilNextEnemyMovementSpeedUpRate);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.moveDownFactorSpeedUpSpeedUpRate);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.moveEnemiesToTheRight ? 1 : 0);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.minimumCoolDown);
+            sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(em.maximumCoolDown);
+            sb.Append(SavingConstants.DIVIDER);
+            sb.Append(SavingConstants.SEGMENT_DIVIDER);
+
+            return sb.ToString();
+        }
+    }
+
+    #endregion
 
 }
+

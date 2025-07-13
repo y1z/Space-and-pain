@@ -159,6 +159,8 @@ namespace Managers
             sb.Append((int) gm.gameState);
             sb.Append(SavingConstants.DIVIDER);
 
+            sb.Append(SavingConstants.SEGMENT_DIVIDER);
+
             return sb.ToString();
         }
     }

@@ -18,6 +18,12 @@ namespace Managers
             scoreChange?.Invoke(score);
         }
 
+        public void setScore(int newScore)
+        {
+            score = newScore;
+            scoreChange?.Invoke(score);
+        }
+
         public void resetScore()
         {
             score = 0;
@@ -80,7 +86,8 @@ namespace Managers
             string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
 
             int index = 1;
-            score = int.Parse(variables[index]);
+            int newScore = int.Parse(variables[index]);
+            this.setScore(newScore);
             ++index;
 
         }
@@ -104,6 +111,7 @@ namespace Managers
 
             sb.Append(sm.score);
             sb.Append(Saving.SavingConstants.DIVIDER);
+            sb.Append(Saving.SavingConstants.SEGMENT_DIVIDER);
 
 
             return sb.ToString();

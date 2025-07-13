@@ -9,12 +9,12 @@ public sealed class StartScreenLogic : MonoBehaviour
 
     public void newGame()
     {
-        SceneManager.LoadScene("Scenes/Game/Main");
+        SceneManager.LoadSceneAsync("Scenes/Game/Main", LoadSceneMode.Single);
     }
 
     public void loadTutorial()
     {
-        SceneManager.LoadScene("Scenes/Game/Tutorial");
+        SceneManager.LoadSceneAsync("Scenes/Game/Tutorial", LoadSceneMode.Single);
     }
 
     public void quit()
