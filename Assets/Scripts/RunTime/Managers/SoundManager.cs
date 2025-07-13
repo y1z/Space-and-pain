@@ -9,10 +9,6 @@ namespace Managers
     /// </summary>
     public sealed class SoundManager : MonoBehaviour
     {
-        public const string MATER_VOLUME_KEY = "master_volume";
-        public const string SFX_VOLUME_KEY = "sfx_volume";
-        public const string MUSIC_VOLUME_KEY = "music_volume";
-        public const string VOICE_VOLUME_KEY = "voice_volume";
 
         public const float LOWEST_DECIBELS_POSSIBLE = 40.0F;
         // decibels 
@@ -148,7 +144,8 @@ namespace Managers
 
         public void setMasterVolume(float newVolumePercent)
         {
-            mixer.SetFloat(MATER_VOLUME_KEY, calculateVolume(newVolumePercent));
+            mixer.SetFloat(Util.Settings.MASTER_VOLUME_KEY, calculateVolume(newVolumePercent));
+            Util.Settings.setMasterVolume(newVolumePercent);
         }
 
         public void setVolume(GameAudioType gameAudioType, float newVolumePercent)
@@ -156,13 +153,19 @@ namespace Managers
             switch (gameAudioType)
             {
                 case GameAudioType.SFX:
-                    mixer.SetFloat(SFX_VOLUME_KEY, calculateVolume(newVolumePercent));
+                    mixer.SetFloat(Util.Settings.SFX_VOLUME_KEY, calculateVolume(newVolumePercent));
+                    Util.Settings.setSfxVolume(newVolumePercent);
+
                     break;
                 case GameAudioType.MUSIC:
-                    mixer.SetFloat(MUSIC_VOLUME_KEY, calculateVolume(newVolumePercent));
+                    mixer.SetFloat(Util.Settings.MUSIC_VOLUME_KEY, calculateVolume(newVolumePercent));
+                    Util.Settings.setMusicVolume(newVolumePercent);
+
                     break;
                 case GameAudioType.VOICE:
-                    mixer.SetFloat(VOICE_VOLUME_KEY, calculateVolume(newVolumePercent));
+                    mixer.SetFloat(Util.Settings.VOICE_VOLUME_KEY, calculateVolume(newVolumePercent));
+                    Util.Settings.setVoiceVolume(newVolumePercent);
+
                     break;
                 case GameAudioType.NONE:
                 default:

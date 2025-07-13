@@ -44,6 +44,20 @@ namespace UI
             selectorPosition();
         }
 
+        public void turnOffAndHide()
+        {
+            isOn = false;
+            transform.gameObject.SetActive(false);
+            transform.SetAsFirstSibling();
+        }
+
+        public void turnOnAndShow()
+        {
+            isOn = true;
+            transform.gameObject.SetActive(true);
+            transform.SetAsLastSibling();
+        }
+
         #region MathodsCalledByTheUpdateFunction
 
         void handleInput() 
@@ -191,6 +205,7 @@ namespace UI
             yield return new WaitForSeconds(inputDelay);
             blockedInputs = blockedInputs & ~InputInfo.HORIZONTAL;
         }
+
         #endregion
 
     }
