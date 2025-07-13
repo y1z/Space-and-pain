@@ -9,6 +9,7 @@ namespace UI
         public void setMasterVolume(SliderEventData eventData)
         {
             SingletonManager.inst.soundManager.setMasterVolume(eventData.percentOfTurnOnUnits);
+            SingletonManager.inst.soundManager.playSFX("beep");
         }
 
         public void setSFXVolume(SliderEventData eventData)
