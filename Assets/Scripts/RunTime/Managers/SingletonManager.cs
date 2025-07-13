@@ -16,7 +16,6 @@ namespace Managers
         [field: SerializeField] public EnemyManager enemyManager { get; private set; }
         [field: SerializeField] public SoundManager soundManager { get; private set; }
         [field: SerializeField] public ScoreManager scoreManager { get; private set; }
-        [field: SerializeField] public SaveManager saveManager { get; private set; }
 
         private void Awake()
         {
@@ -60,11 +59,6 @@ namespace Managers
                 EDebug.Assert(scoreManager != null, $"{nameof(scoreManager)} needs a {typeof(ScoreManager)} to work.", this);
             }
 
-            if (saveManager == null)
-            {
-                saveManager = GetComponentInChildren<SaveManager>();
-                EDebug.Assert(saveManager != null, $"{nameof(saveManager)} needs a {typeof(SaveManager)} to work.", this);
-            }
         }
     }
 }

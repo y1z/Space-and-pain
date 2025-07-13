@@ -12,11 +12,15 @@ namespace Saving
         STANDARD_ENTITY_SAVE_DATA,
         PLAYER,
         ENEMY,
+        ENEMY_SPAWNER,
         BUNKER,
         PROJECTILE,
+        SCORE_MANAGER,
+        GAME_MANAGER,
+        ENEMY_MANAGER,
     }
 
-    public static class LoadStringData
+    public static class SaveDataParsing
     {
         private static readonly
             Dictionary<string, TypeIdentifier> stringToType = new Dictionary<string, TypeIdentifier>
@@ -24,8 +28,12 @@ namespace Saving
                 {STANDARD_ENTITY_SAVE_DATA_ID, TypeIdentifier.STANDARD_ENTITY_SAVE_DATA },
                 {PLAYER_ID, TypeIdentifier.PLAYER},
                 {ENEMY_ID, TypeIdentifier.ENEMY},
+                {ENEMY_SPAWNER_ID, TypeIdentifier.ENEMY_SPAWNER},
                 {BUNKER_ID, TypeIdentifier.BUNKER},
                 {PROJECTILE_ID, TypeIdentifier.PROJECTILE},
+                {SCORE_MANAGER_ID, TypeIdentifier.SCORE_MANAGER},
+                {GAME_MANAGER_ID, TypeIdentifier.GAME_MANAGER},
+                {ENEMY_MANAGER_ID, TypeIdentifier.ENEMY_MANAGER},
             };
 
 
@@ -33,7 +41,11 @@ namespace Saving
         {
             TypeIdentifier result = TypeIdentifier.NONE;
 
-            stringToType.TryGetValue(_data[index], out result);
+            string identifyerData = _data[index];
+
+            int dividerIndex = identifyerData.IndexOf(SavingConstants.DIVIDER);
+
+            stringToType.TryGetValue(identifyerData[0..dividerIndex], out result);
 
             return result;
         }

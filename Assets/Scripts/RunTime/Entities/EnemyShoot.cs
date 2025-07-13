@@ -1,4 +1,8 @@
+
 using Managers;
+
+
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Entities
@@ -20,9 +24,9 @@ namespace Entities
 
         public void shoot()
         {
-            Projectile[] projectile = SingletonManager.inst.enemyManager.projectiles;
+            List<Projectile> projectile = SingletonManager.inst.enemyManager.projectiles;
 
-            for (int i = 0; i < projectile.Length; i++)
+            for (int i = 0; i < projectile.Count; i++)
             {
                 if (!projectile[i].gameObject.activeInHierarchy)
                 {

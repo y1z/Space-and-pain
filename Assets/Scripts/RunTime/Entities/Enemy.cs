@@ -5,6 +5,7 @@ using interfaces;
 using Managers;
 using UnityEngine;
 using Saving;
+using Mono.Cecil.Cil;
 
 namespace Entities
 {
@@ -115,13 +116,43 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Enemy)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
-            selfAssignComponents();
-            this.gameObject.SetActive(standardEntitySaveData.isActive);
+            string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
+
+            int index = 2;
+            standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
+
+            transform.gameObject.SetActive(standardEntitySaveData.isActive);
             transform.position = standardEntitySaveData.position;
             enemyMovement.setTeleportDistance(standardEntitySaveData.speed.x);
+
+            gameStates = (GameStates) int.Parse(variables[index]);
+            ++index;
+
+            this.enemyMovement.horizontalMin = float.Parse(variables[index]);
+            ++index;
+
+            this.enemyMovement.horizontalMax = float.Parse(variables[index]);
+            ++index;
+
+            enemyMovement.state = (EnemyMovementState) int.Parse(variables[index]);
+            ++index;
+
+            Vector3 spawnPointPos = Vector2.zero;
+            spawnPointPos.x = float.Parse(variables[index]);
+            ++index;
+
+            spawnPointPos.y = float.Parse(variables[index]);
+            ++index;
+
+            spawnPointPos.z = float.Parse(variables[index]);
+            ++index;
+
+            enemyShoot.spawnPoint.position = spawnPointPos;
+
+            enemyPointsAmount = (EnemyPointsAmount) int.Parse(variables[index]);
+
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -147,7 +178,7 @@ namespace Entities
 
             sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(e.standardEntitySaveData));
 
-            sb.Append((int)e.gameStates);
+            sb.Append((int) e.gameStates);
             sb.Append(SavingConstants.DIVIDER);
 
             sb.Append(e.enemyMovement.horizontalMin);
@@ -156,16 +187,13 @@ namespace Entities
             sb.Append(e.enemyMovement.horizontalMax);
             sb.Append(SavingConstants.DIVIDER);
 
-            sb.Append((int)e.enemyMovement.state);
+            sb.Append((int) e.enemyMovement.state);
             sb.Append(SavingConstants.DIVIDER);
 
-            sb.Append((int)e.enemyShoot.spawnPoint.position.x);
+            sb.Append(e.enemyShoot.spawnPoint.position.x);
             sb.Append(SavingConstants.DIVIDER);
 
             sb.Append(e.enemyShoot.spawnPoint.position.y);
-            sb.Append(SavingConstants.DIVIDER);
-
-            sb.Append(e.enemyShoot.spawnPoint.position.z);
             sb.Append(SavingConstants.DIVIDER);
 
             sb.Append(e.enemyShoot.spawnPoint.position.z);

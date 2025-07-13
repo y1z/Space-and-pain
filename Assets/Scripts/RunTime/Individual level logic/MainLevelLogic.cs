@@ -1,10 +1,12 @@
-using Managers;
-using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+
 using Scriptable_Objects;
 using Entities;
-using System.Collections.Generic;
+using Managers;
+using UI;
+using Saving;
 
 public sealed class MainLevelLogic : MonoBehaviour
 {
@@ -31,21 +33,19 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     public void save()
     {
-        SaveManager sm = SingletonManager.inst.saveManager;
-        sm.clear();
+        Saving.SaveBuilder sab = new();
 
         playerReference.selfAssignComponents();
 
-        sm.addToBeSaved(playerReference, true);
-        sm.addToBeSaved(playerReference.playerMovement, true);
+        sab.addToBeSaved(playerReference);
 
-        Enemy[] enemies = SingletonManager.inst.enemyManager.enemies.ToArray(); //FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        List<Enemy> enemies = SingletonManager.inst.enemyManager.enemies; //FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         EDebug.Assert(enemies is not null, $"Could not find type of {typeof(Enemy)} in this scene", this);
 
-        for (int i = 0; i < enemies.Length; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            sm.addToBeSaved(enemies[i], true);
+            sab.addToBeSaved(enemies[i]);
         }
 
         EnemySpawner[] spawners = SingletonManager.inst.enemyManager.enemySpawners;
@@ -53,7 +53,7 @@ public sealed class MainLevelLogic : MonoBehaviour
 
         foreach (EnemySpawner s in spawners)
         {
-            sm.addToBeSaved(s, true);
+            sab.addToBeSaved(s);
         }
 
 
@@ -61,107 +61,119 @@ public sealed class MainLevelLogic : MonoBehaviour
 
         for (int i = 0; i < bunkers.Length; i++)
         {
-            sm.addToBeSavedRaw(bunkers[i]);
+            sab.addToBeSaved(bunkers[i]);
         }
 
         Projectile[] projectiles = FindObjectsByType<Projectile>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         for (int i = 0; i < projectiles.Length; i++)
         {
-            sm.addToBeSaved(projectiles[i], true);
+            sab.addToBeSaved(projectiles[i]);
         }
 
-        sm.addToBeSaved(SingletonManager.inst.scoreManager, true);
-        sm.addToBeSaved(SingletonManager.inst.gameManager, true);
+        sab.addToBeSaved(SingletonManager.inst.scoreManager);
+        sab.addToBeSaved(SingletonManager.inst.gameManager);
+        sab.addToBeSaved(SingletonManager.inst.enemyManager);
 
-        sm.printSaveDataDebug();
+        sab.printSaveDataDebug();
 
-        sm.finalizeSave();
+        sab.finalizeSave();
 
         SingletonManager.inst.soundManager.playSFX("deny beep");
     }
 
     public void load()
     {
-        string[] loadingData = SingletonManager.inst.saveManager.loadSaveData();
+        string[] loadingData = Saving.SaveLoading.loadSaveData();
 
-        if (loadingData[0] == "ERROR : NO SAVE DATA FOUND")
+        if (loadingData[0] == Saving.SavingConstants.ERROR_NO_SAVE_DATA)
         {
             EDebug.LogError(loadingData[0], this);
+            SingletonManager.inst.soundManager.playSFX("deny beep");
             return;
         }
 
-        Util.MetaData metaData = new("temp");
-
-        int enemyIndex = 0;
-        int enemySpanwerIndex = 0;
-        int bunkerIndex = -1; // yes this starting at -1 is intentional 
-        int blockIndex = 0;
-        int projectile = 0;
-
-        List<Enemy> enemies = SingletonManager.inst.enemyManager.enemies;
+        playerReference.playerShoot.deleteAllProjectiles();
 
         EnemyManager enemyManager = SingletonManager.inst.enemyManager;
 
+        for (int i = 0; i < enemyManager.projectiles.Count; ++i)
+        {
+            enemyManager.projectiles[i].transform.gameObject.SetActive(false);
+        }
+
+        List<Enemy> enemies = enemyManager.enemies;
+        EnemySpawner[] enemySpawner = enemyManager.enemySpawners;
         Bunker[] bunkers = FindObjectsByType<Bunker>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        int enemiesIndex = 0;
+        int enemySpawnerIndex = 0;
+        int bunkersIndex = 0;
+
 
         playerReference.selfAssignComponents();
 
-        for (int i = 0; i < enemies.Count; ++i)
+        TypeIdentifier typeID = Saving.TypeIdentifier.NONE;
+        for (int i = 0; i < loadingData.Length; i++)
         {
-            enemies[i].selfAssignComponents();
-        }
+            typeID = Saving.SaveDataParsing.identify(loadingData, i);
 
-        for (int i = 0; i < loadingData.Length; ++i)
-        {
-            JsonUtility.FromJsonOverwrite(loadingData[i], metaData);
-
-            ++i;
-            switch (metaData.name)
+            switch (typeID)
             {
-                case nameof(Player):
-                    playerReference.loadData(loadingData[i]);
-                    break;
-                case nameof(PlayerMovement):
-                    playerReference.playerMovement.loadData(loadingData[i]);
-                    break;
-                case nameof(PlayerLiveSystem):
-                    playerReference.playerLiveSystem.loadData(loadingData[i]);
-                    break;
-                case nameof(Enemy):
-                    enemies[enemyIndex].loadData(loadingData[i]);
-                    enemyIndex++;
-                    break;
-                case nameof(EnemySpawner):
-                    enemyManager.loadSpawnerData(loadingData[i], enemySpanwerIndex);
-                    enemySpanwerIndex++;
-                    break;
-                case nameof(Bunker):
-                    bunkerIndex++;
-                    bunkers[bunkerIndex].loadData(loadingData[i]);
-                    blockIndex = 0;
-                    break;
-                case nameof(BunkerBlock):
-                    bunkers[bunkerIndex].loadDataForBlock(loadingData[i], blockIndex);
-                    blockIndex++;
-                    break;
-                case nameof(Projectile):
-                    projectile++;
-                    break;
-                case nameof(ScoreManager):
-                    SingletonManager.inst.scoreManager.loadData(loadingData[i]);
-                    break;
-                case nameof(GameManager):
-                    SingletonManager.inst.gameManager.loadData(loadingData[i]);
-                    break;
-                default:
-                    DDebug.LogError($"un-handled case = {metaData.name}", this);
+                case TypeIdentifier.PLAYER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    playerReference.loadSaveData(loadingData[i]);
                     break;
 
+                case TypeIdentifier.ENEMY:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    enemies[enemiesIndex].loadSaveData(loadingData[i]);
+                    ++enemiesIndex;
+                    break;
+
+                case TypeIdentifier.ENEMY_SPAWNER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    enemySpawner[enemySpawnerIndex].loadSaveData(loadingData[i]);
+                    ++enemySpawnerIndex;
+                    break;
+
+                case TypeIdentifier.BUNKER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    bunkers[bunkersIndex].loadSaveData(loadingData[i]);
+                    ++bunkersIndex;
+                    break;
+
+                case TypeIdentifier.PROJECTILE:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+
+                    this.loadProjectile(loadingData, i);
+                    break;
+
+                case TypeIdentifier.SCORE_MANAGER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    SingletonManager.inst.scoreManager.loadSaveData(loadingData[i]);
+                    break;
+
+                case TypeIdentifier.GAME_MANAGER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    SingletonManager.inst.gameManager.loadSaveData(loadingData[i]);
+                    break;
+
+                case TypeIdentifier.ENEMY_MANAGER:
+                    EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                    SingletonManager.inst.enemyManager.loadSaveData(loadingData[i]);
+                    break;
+
+                default:
+                    DDebug.LogError($"un-handled case =|{typeID}|", this);
+                    break;
             }
         }
 
-        SingletonManager.inst.soundManager.playSFX("deny beep");
+
+        enemyManager.recountHowManyEnemiesAreAlive();
+
+        SingletonManager.inst.soundManager.playSFX("beep");
     }
 
     public void settings()
@@ -213,7 +225,7 @@ public sealed class MainLevelLogic : MonoBehaviour
     /// </summary>
     public void quitToStartScreen()
     {
-        SceneManager.LoadScene("Scenes/Game/StartScreen");
+        SceneManager.LoadSceneAsync("Scenes/Game/StartScreen", LoadSceneMode.Single);
     }
 
     // volume 
@@ -312,7 +324,6 @@ public sealed class MainLevelLogic : MonoBehaviour
 
                 // only exist because when loading the scene back it's variables are null
                 playerReference.selfAssignComponents();
-
                 break;
             default:
                 confirmationMenu.gameObject.SetActive(true);
@@ -334,5 +345,21 @@ public sealed class MainLevelLogic : MonoBehaviour
 
     #endregion
 
+
+    private void loadProjectile(string[] data, int index)
+    {
+        Projectile defaultProjectile = Instantiate<Projectile>(DefaultEntities.defaultProjectile);
+        defaultProjectile.loadSaveData(data[index]);
+        defaultProjectile.subscribeIfNotSubscribed();
+
+        if (defaultProjectile.isPlayerProjectile)
+        {
+            playerReference.playerShoot.addProjectile(defaultProjectile);
+            return;
+        }
+
+        SingletonManager.inst.enemyManager.addProjectile(defaultProjectile);
+
+    }
 
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using interfaces;
 using UnityEngine;
 
@@ -35,14 +36,17 @@ namespace Entities
             standardEntitySaveData = StandardEntitySaveData.create(_position: transform.position,
                 _speed: Vector2.zero,
                 _direction: Vector2.zero,
-                transform.gameObject.activeInHierarchy,
-                "Enemy spawner");
-            return JsonUtility.ToJson(this);
+                _isActive: transform.gameObject.activeInHierarchy,
+                _prefabName: "Enemy spawner");
+            return SaveStringifyer.Stringify(this);
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
+            string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
+
+            int index = 2;
+            standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
             transform.gameObject.SetActive(standardEntitySaveData.isActive);
             transform.position = standardEntitySaveData.position;
         }
@@ -54,6 +58,24 @@ namespace Entities
 
         #endregion
 
+    }
+
+    public static partial class SaveStringifyer
+    {
+
+        public static string Stringify(EnemySpawner es)
+        {
+            StringBuilder sb = new();
+
+            sb.Append(Saving.SavingConstants.ENEMY_SPAWNER_ID);
+            sb.Append(Saving.SavingConstants.DIVIDER);
+
+            sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(es.standardEntitySaveData));
+
+            sb.Append(Saving.SavingConstants.SEGMENT_DIVIDER);
+
+            return sb.ToString();
+        }
     }
 
 }

@@ -117,9 +117,13 @@ namespace Managers
             return JsonUtility.ToJson(new Util.MetaData(nameof(GameManager)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
+            string[] variables = data.Split(SavingConstants.DIVIDER);
+            int index = 1;
+
+            gameState = (GameStates) int.Parse(variables[index]);
+            ++index;
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -154,6 +158,8 @@ namespace Managers
 
             sb.Append((int) gm.gameState);
             sb.Append(SavingConstants.DIVIDER);
+
+            sb.Append(SavingConstants.SEGMENT_DIVIDER);
 
             return sb.ToString();
         }

@@ -1,9 +1,7 @@
 using System.Text;
 using interfaces;
-using Managers;
 using UnityEngine;
 using Saving;
-using Unity.VisualScripting;
 
 namespace Entities
 {
@@ -81,17 +79,13 @@ namespace Entities
 
         public string getSaveData()
         {
-            StringBuilder sb = new();
-
             standardEntitySaveData = StandardEntitySaveData.create(transform.position,
                 Vector2.zero,
                 Vector2.zero,
                _isActive: transform.gameObject.activeInHierarchy,
                _prefabName: "Bunker");
 
-            SaveStringifyer.Stringify(this);
-
-            return sb.ToString();
+            return SaveStringifyer.Stringify(this);
         }
 
         public string getMetaData()
@@ -99,11 +93,34 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Bunker)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
+            string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
+
+            int index = 2;
+            standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
             transform.gameObject.SetActive(standardEntitySaveData.isActive);
             transform.position = standardEntitySaveData.position;
+
+            int len = int.Parse(variables[index]);
+            ++index;
+
+            for (int i = 0; i < len; ++i)
+            {
+                // skipping identifier
+                ++index;
+
+                blocks[i].standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
+
+                blocks[i].setSelfEntitySaveData();
+
+                blocks[i].setBlockHealth(int.Parse(variables[index]));
+                ++index;
+
+                blocks[i].state = (BlockState) int.Parse(variables[index]);
+                ++index;
+            }
+
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -118,7 +135,7 @@ namespace Entities
         {
             DDebug.Assert(index >= 0 && index < blocks.Length, $"OutSide Index range index=|{index}| in method{nameof(loadDataForBlock)}", this);
             getBlocksIfThereAreNon();
-            //blocks[index].loadData(data);
+            //blocks[index].loadSaveData(data);
         }
 
         private void getBlocksIfThereAreNon()
@@ -151,19 +168,20 @@ namespace Entities
             sb.Append(SavingConstants.BUNKER_ID);
             sb.Append(SavingConstants.DIVIDER);
 
-            Saving.SaveStringifyer.StringifyEntitySaveData(b.standardEntitySaveData);
+            sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(b.standardEntitySaveData));
 
             sb.Append(b.blocks.Length);
             sb.Append(SavingConstants.DIVIDER);
 
             for (int i = 0; i < b.blocks.Length; ++i)
             {
-                Saving.SaveStringifyer.StringifyEntitySaveData(b.blocks[i].standardEntitySaveData);
+                b.blocks[i].updateEntitySaveData();
+                sb.Append(Saving.SaveStringifyer.StringifyEntitySaveData(b.blocks[i].standardEntitySaveData));
 
                 sb.Append(b.blocks[i].blockHealth);
                 sb.Append(SavingConstants.DIVIDER);
 
-                sb.Append((int)b.blocks[i].state);
+                sb.Append((int) b.blocks[i].state);
                 sb.Append(SavingConstants.DIVIDER);
             }
 

@@ -1,60 +1,38 @@
-using System.Text;
-using System.Collections.Generic;
 using UnityEngine;
-using interfaces;
-using System.Linq;
+using System.Text;
 
-namespace Managers
+using interfaces;
+
+namespace Saving
 {
+
+    using static SavingConstants;
+
     /// <summary>
     /// <para> Use 'addToBeSaved' for all the objects you want to save then use 'finalizeSave' to save that data </para>
     /// <para> Use 'loadSaveData()' to get all the save data in string form</para>
     /// </summary>
-    public sealed class SaveManager : MonoBehaviour
+    public sealed class SaveBuilder 
     {
-        public const string DIVIDER = "<*>";
-        const string SAVE_KEY = "save_key";
-        public int saveIndex = 0;
-
         static readonly Color DEFAULT_COLOR = Color.white;
 
         [field: SerializeField]
         public StringBuilder saveData { get; private set; } = new StringBuilder();
 
-        public void addToBeSaved(ISaveGameData thingToBeSaved, bool shouldAddMetaData)
+        public void addToBeSaved(ISaveGameData thingToBeSaved, bool shouldAddMetaData = false)
         {
             if (shouldAddMetaData)
             {
                 saveData.Append(thingToBeSaved.getMetaData());
-                saveData.Append(DIVIDER);
             }
             saveData.Append(thingToBeSaved.getSaveData());
-            saveData.Append(DIVIDER);
         }
-
-        public void addToBeSavedRaw(ISaveGameData thingToBeSaved)
-        {
-            saveData.Append(thingToBeSaved.getSaveData());
-        }
-
 
         public void finalizeSave()
         {
-            PlayerPrefs.SetString(SAVE_KEY + saveIndex, saveData.ToString());
+            PlayerPrefs.SetString(SAVE_KEY + SavingStatics.getSavingIndex(), saveData.ToString());
             PlayerPrefs.Save();
-            DDebug.Log("<color=green> SAVE WAS FINALIZED </color>", this);
-        }
-
-        public string[] loadSaveData()
-        {
-            List<string> result = PlayerPrefs.GetString(SAVE_KEY + saveIndex, "ERROR : NO SAVE DATA FOUND" + DIVIDER).Split(DIVIDER).ToList();
-
-            if (string.IsNullOrEmpty(result[result.Count - 1]))
-            {
-                result.RemoveAt(result.Count - 1);
-            }
-
-            return result.ToArray();
+            DDebug.Log("<color=green> SAVE WAS FINALIZED </color>");
         }
 
         public void clear()
@@ -78,7 +56,7 @@ namespace Managers
                 color = DEFAULT_COLOR;
             }
 
-            string[] dataToPrint = saveData.ToString().Split(DIVIDER);
+            string[] dataToPrint = saveData.ToString().Split(SEGMENT_DIVIDER);
 
             foreach (string data in dataToPrint)
             {

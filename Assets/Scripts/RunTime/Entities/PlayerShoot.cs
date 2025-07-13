@@ -9,6 +9,8 @@ namespace Entities
     [System.Serializable]
     public sealed class PlayerShoot : MonoBehaviour, ISaveGameData, ILoadGameData
     {
+        public const int MAXIMUM_MAX_SHOTS = 1337;
+
         private List<Projectile> projectiles = new();
 
         [SerializeField] private Player referenceToPlayer;
@@ -54,7 +56,7 @@ namespace Entities
             {
                 activeProjectile = projectiles[i].gameObject.activeInHierarchy ? activeProjectile + 1 : activeProjectile;
             }
-            EDebug.Log("Active Projectiles =" + activeProjectile);
+
             if (activeProjectile >= maxShots) { return; }
 
             Projectile futureProjectile = recycle();
@@ -94,9 +96,56 @@ namespace Entities
             return result;
         }
 
+        public void addProjectile(Projectile _projectile)
+        {
+            DDebug.Assert(_projectile.isPlayerProjectile, "_projectile.isPlayerProjectile != true; FIX THAT", this);
+            projectiles.Add(_projectile);
+        }
+
+        /// <summary>
+        /// add projectiles to the player pool of projectile (will increase the maximum amount of shots possible)
+        /// </summary>
+        public void addDefaultProjectileToPool()
+        {
+            projectiles.Add(create());
+
+            if (projectiles.Count > maxShots) 
+            { 
+                maxShots = projectiles.Count;
+            }
+        }
+
+        /// <summary>
+        /// Add projectiles to the pool until it is equal to 'maxShots' 
+        /// </summary>
+        public void createUpToMaxShots()
+        {
+            if(projectiles.Count < maxShots) { return; }
+
+            for(int i = projectiles.Count; i < maxShots; ++i)
+            {
+                addDefaultProjectileToPool();
+            }
+        }
+
         public void setMaxShots(int _maxShots)
         {
-            maxShots = Mathf.Clamp(_maxShots, 0, 1337);
+            maxShots = Mathf.Clamp(_maxShots, 0, MAXIMUM_MAX_SHOTS);
+        }
+
+        public void setSpawnPoint(Vector3 newSpawnPoint)
+        {
+            spawnPoint.position = newSpawnPoint;
+        }
+
+        public void deleteAllProjectiles()
+        {
+            for(int i = projectiles.Count - 1; i > -1; --i)
+            {
+                Destroy(projectiles[i]);
+            }
+
+            projectiles.Clear();
         }
 
         #region InterfacesImpl
@@ -111,7 +160,7 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(PlayerShoot)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
         }
 

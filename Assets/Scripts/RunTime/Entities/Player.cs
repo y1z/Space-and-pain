@@ -6,6 +6,7 @@ using Managers;
 using interfaces;
 using System.Text;
 using Saving;
+using System;
 
 
 namespace Entities
@@ -132,12 +133,61 @@ namespace Entities
             return JsonUtility.ToJson(new Util.MetaData(nameof(Player)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
-            selfAssignComponents();
+            string[] variables = data.Split(SavingConstants.DIVIDER);
+
+            int index = 2;
+            standardEntitySaveData = StandardEntitySaveData.loadData(variables, ref index);
+
+            transform.position = standardEntitySaveData.position;
             playerMovement.speed = standardEntitySaveData.speed.x;
-            playerMovement.setDir(standardEntitySaveData.direction);
+
+            transform.gameObject.SetActive(standardEntitySaveData.isActive);
+
+            currentGameState = (GameStates) int.Parse(variables[index]);
+            ++index;
+
+            startingPosition.x = float.Parse(variables[index]);
+            ++index;
+
+            startingPosition.y = float.Parse(variables[index]);
+            ++index;
+
+            playerState = (PlayerState) int.Parse(variables[index]);
+            ++index;
+
+            playerMovement.speed = float.Parse(variables[index]);
+            ++index;
+
+            float dir_x = float.Parse(variables[index]);
+            ++index;
+            float dir_y = float.Parse(variables[index]);
+            ++index;
+
+            playerMovement.setDir(new Vector2(dir_x, dir_y));
+
+            Vector3 newSpawnPoint = Vector3.zero;
+
+            newSpawnPoint.x = float.Parse(variables[index]);
+            ++index;
+
+            newSpawnPoint.y = float.Parse(variables[index]);
+            ++index;
+
+            newSpawnPoint.z = float.Parse(variables[index]);
+            ++index;
+
+            playerShoot.setSpawnPoint(newSpawnPoint);
+
+            playerShoot.setMaxShots(int.Parse(variables[index]));
+            ++index;
+
+            playerLiveSystem.setLivesAmount(int.Parse(variables[index]));
+            ++index;
+
+            playerLiveSystem.timeUntilRespawn = float.Parse(variables[index]);
+            ++index;
         }
 
         public void loadData(StandardEntitySaveData data)

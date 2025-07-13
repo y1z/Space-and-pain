@@ -18,6 +18,12 @@ namespace Managers
             scoreChange?.Invoke(score);
         }
 
+        public void setScore(int newScore)
+        {
+            score = newScore;
+            scoreChange?.Invoke(score);
+        }
+
         public void resetScore()
         {
             score = 0;
@@ -75,9 +81,15 @@ namespace Managers
             return JsonUtility.ToJson(new Util.MetaData(nameof(ScoreManager)));
         }
 
-        public void loadData(string data)
+        public void loadSaveData(string data)
         {
-            JsonUtility.FromJsonOverwrite(data, this);
+            string[] variables = data.Split(Saving.SavingConstants.DIVIDER);
+
+            int index = 1;
+            int newScore = int.Parse(variables[index]);
+            this.setScore(newScore);
+            ++index;
+
         }
 
         public void loadData(StandardEntitySaveData data)
@@ -99,6 +111,7 @@ namespace Managers
 
             sb.Append(sm.score);
             sb.Append(Saving.SavingConstants.DIVIDER);
+            sb.Append(Saving.SavingConstants.SEGMENT_DIVIDER);
 
 
             return sb.ToString();
