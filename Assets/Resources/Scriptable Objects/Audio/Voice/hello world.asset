@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b590a0d6a206246a917659403f546a, type: 3}
+  m_Name: hello world
+  m_EditorClassIdentifier: 
+  <audioType>k__BackingField: 3
+  <audioClip>k__BackingField: {fileID: 8300000, guid: a3d3e626163a6ac4e98811554d99fbd0, type: 3}
+  <audioName>k__BackingField: hello world
