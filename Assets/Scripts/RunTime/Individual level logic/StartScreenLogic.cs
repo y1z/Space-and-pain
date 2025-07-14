@@ -24,6 +24,11 @@ public sealed class StartScreenLogic : MonoBehaviour
         confirmationMenu.gameObject.SetActive(false);
     }
 
+    public void Start()
+    {
+        SingletonManager.inst.soundManager.playMusic("track 2", true);
+    }
+
     public void newGame()
     {
         SceneManager.LoadSceneAsync("Scenes/Game/Main", LoadSceneMode.Single);
@@ -32,6 +37,11 @@ public sealed class StartScreenLogic : MonoBehaviour
     public void loadTutorial()
     {
         SceneManager.LoadSceneAsync("Scenes/Game/Tutorial", LoadSceneMode.Single);
+    }
+
+    public void loadCredits()
+    {
+        SceneManager.LoadSceneAsync("Scenes/Game/Credits", LoadSceneMode.Single);
     }
 
 
