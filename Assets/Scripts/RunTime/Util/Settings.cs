@@ -11,12 +11,13 @@ namespace Util
         public const string FULL_SCREEN_KEY = "full_screen";
 
         public const float DEFAULT_VOLUME = 0.5F;
+        public const float DEFAULT_MASTER_VOLUME = 1.0f;
 
         public static void init()
         {
             if (!PlayerPrefs.HasKey(MASTER_VOLUME_KEY))
             {
-                PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, DEFAULT_VOLUME);
+                PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, DEFAULT_MASTER_VOLUME);
             }
 
             if (!PlayerPrefs.HasKey(MUSIC_VOLUME_KEY))
