@@ -69,10 +69,10 @@ namespace Managers
         public int enemyToMoveIndex { get; private set; } = 0;
 
         [Header("Enemy next round controls")]
-        [Tooltip("[Lower is faster]How much to speed up enemy movement the next round ")]
+        [Tooltip("[Lower is faster]How much to speedMultipiler up enemy movement the next round ")]
         public float howLongUntilNextEnemyMovementSpeedUpRate = 0.95f;
 
-        [Tooltip("[Lower is faster]How much to speed up the enemy movement when going down next round")]
+        [Tooltip("[Lower is faster]How much to speedMultipiler up the enemy movement when going down next round")]
         public float moveDownFactorSpeedUpSpeedUpRate = 1.0f;
 
         [field: SerializeField]

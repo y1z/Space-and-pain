@@ -455,6 +455,8 @@ MonoBehaviour:
   sfxAudio: []
   musicAudio:
   - {fileID: 11400000, guid: 871cffec52d80c941a56ae707fbfd56e, type: 2}
+  - {fileID: 11400000, guid: a19ebeeba700c7a418c5cee07a1ecabc, type: 2}
+  - {fileID: 11400000, guid: 6cc62dd4e3700894c860cb9768ce61f3, type: 2}
   voiceAudio:
   - {fileID: 11400000, guid: 5fde140594650004492c6a491d98ae9a, type: 2}
   - {fileID: 11400000, guid: 6a008d0f1e4ec444788613baa2b6661d, type: 2}
