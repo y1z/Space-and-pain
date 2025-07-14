@@ -1,4 +1,5 @@
 using Managers;
+using Scriptable_Objects;
 
 using UI;
 using UnityEngine;
@@ -22,10 +23,19 @@ public sealed class StartScreenLogic : MonoBehaviour
         }
         confirmationMenu.turnOff();
         confirmationMenu.gameObject.SetActive(false);
+
     }
 
     public void Start()
     {
+        Util.Settings.init();
+
+        SingletonManager.inst.soundManager.setMasterVolume(Util.Settings.getMasterVolume());
+        SingletonManager.inst.soundManager.setVolume(GameAudioType.SFX, Util.Settings.getSfxVolume());
+        SingletonManager.inst.soundManager.setVolume(GameAudioType.MUSIC, Util.Settings.getMusicVolume());
+        SingletonManager.inst.soundManager.setVolume(GameAudioType.VOICE, Util.Settings.getVoiceVolume());
+
+
         SingletonManager.inst.soundManager.playMusic("track 2", true);
     }
 

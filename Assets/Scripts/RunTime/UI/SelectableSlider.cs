@@ -10,6 +10,9 @@ namespace UI
         [Tooltip("Sends a signal every-time the slider changes"), Space(30.0f)]
         public UnityEvent<SliderEventData> sliderUnitChange;
 
+        [Tooltip("Sends a signal at the end of the start function"), Space(30.0f)]
+        public UnityEvent<SelectableSlider> postStartFunction;
+
         [Tooltip("This is the container of the slider Units (aka the objects need for the slider to work)")]
         [SerializeField] private HorizontalOrVerticalLayoutGroup sliderContainer;
 
@@ -36,8 +39,12 @@ namespace UI
 
             EDebug.Assert(sliderUnits.Length > 1, $"This scripts needs an array of {typeof(Image)}", this);
             turnOnCount = sliderUnits.Length / 2;
+
             base.interactionType = InteractionType.LEFT_RIGHT;
+
             drawSliderUnits();
+
+            postStartFunction?.Invoke(this);
         }
 
         private void Update()
@@ -78,7 +85,7 @@ namespace UI
             return UiResult.SUCCESS;
         }
 
-        private void drawSliderUnits()
+        public void drawSliderUnits()
         {
             for (int i = 0; i < sliderUnits.Length; ++i)
             {
@@ -94,7 +101,7 @@ namespace UI
 
         public override float getValue()
         {
-            return ((float)turnOnCount / (float)sliderUnits.Length);
+            return ((float) turnOnCount / (float) sliderUnits.Length);
         }
 
         public override void setValue(float newValue)
