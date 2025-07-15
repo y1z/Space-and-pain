@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 887758587905306676}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.3142877, y: -0.06100005, z: 0}
+  m_LocalPosition: {x: 1.8571429, y: 0.13899994, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -73,6 +73,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cc: {fileID: 5958998780406084579}
   gameStates: 0
+  excludeLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  includeLayers:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 6.451613
   <distanceTraveled>k__BackingField: 0
   <maxDistanced>k__BackingField: 10

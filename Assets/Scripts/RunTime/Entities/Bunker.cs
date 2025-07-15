@@ -75,6 +75,20 @@ namespace Entities
 
         }
 
+        private void spriteSwitch(BunkerBlock bb)
+        {
+            switch (bb.state)
+            {
+                case BlockState.FULL_HEALTH:
+                    bb.blockSprite.sprite = fullHealthSprite.sprite;
+                    break;
+                case BlockState.HALF_HEALTH:
+                    bb.blockSprite.sprite = halfHealthSprite.sprite;
+                    break;
+            }
+
+        }
+
         #region InterfacesImpl
 
         public string getSaveData()
@@ -119,6 +133,8 @@ namespace Entities
 
                 blocks[i].state = (BlockState) int.Parse(variables[index]);
                 ++index;
+
+                this.spriteSwitch(blocks[i]);
             }
 
         }
