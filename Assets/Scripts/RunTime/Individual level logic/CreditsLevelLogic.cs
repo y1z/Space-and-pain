@@ -56,7 +56,7 @@ public sealed class CreditsLevelLogic : MonoBehaviour
             credits.Add(newCreditsBox);
         }
 
-        float backGroundHieght = creditsBoxTemplate.background.rectTransform.sizeDelta.y;
+        float backGroundHieght = Screen.height;
 
         for (int i = 0; i < credits.Count; ++i)
         {
