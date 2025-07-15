@@ -50,11 +50,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  enemyCount: 0
   gameStates: 0
   enemyMovement: {fileID: 4352383549930590260}
-  enemySprite: {fileID: 6664358090523110049}
   enemyShoot: {fileID: 4493143995358786091}
+  enemySprite: {fileID: 6664358090523110049}
+  enemyPointsAmount: 50
+  standardEntitySaveData:
+    position: {x: 0, y: 0}
+    speed: {x: 0, y: 0}
+    direction: {x: 0, y: 0}
+    isActive: 0
+    prefabName: 
 --- !u!114 &4352383549930590260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,8 +76,11 @@ MonoBehaviour:
   cc: {fileID: 4505386361415653240}
   horizontalMax: 8.35
   horizontalMin: -8.35
+  state: 0
   direction: {x: 1, y: 0}
-  teleportDistance: 0.05
+  <teleportDistance>k__BackingField: 0.05
+  currentTeleportDistance: 0.05
+  teleportDistanceDown: 0
   currentTimeUntilNextTeleport: 0
   timeUntilNextTeleport: 0.2
   referenceToEnemy: {fileID: 3285680448794960126}
@@ -221,7 +230,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
+  m_Sprite: {fileID: -6877657737085974523, guid: 7e1c543d24c889a4c887b014efd27e57, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
