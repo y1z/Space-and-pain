@@ -1,12 +1,17 @@
 using UnityEngine;
-using Managers;
 using System.Collections;
+
+using Managers;
+using TMPro;
 
 public sealed class RoundsScript : MonoBehaviour
 {
     private GameStates gameStates;
 
     private EnemyManager enemyManagerReference;
+
+    [SerializeField]
+    private TextMeshProUGUI roundText;
 
     private void Start()
     {

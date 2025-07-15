@@ -1,4 +1,5 @@
 using Scriptable_Objects;
+
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -11,7 +12,6 @@ namespace Managers
     {
 
         public const float LOWEST_DECIBELS_POSSIBLE = 40.0F;
-        // decibels 
 
         const string SFX_FOLDER = "Scriptable Objects/Audio/SFX";
 
