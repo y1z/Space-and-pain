@@ -1,0 +1,7 @@
+CC0 attributions
+--------------------------------
+Space Ship sprites:
+https://opengameart.org/content/2d-spaceship-sprites-with-engines
+
+background sprite:
+https://ansimuz.itch.io/space-background
