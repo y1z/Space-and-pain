@@ -1,25 +1,45 @@
+using Entities;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-public class TutorialLevelLogic : MonoBehaviour
+namespace IndividualLevelLogic
 {
-    /// <summary>
-    /// TODO : REMOVE THIS FUNCTION
-    /// </summary>
-    public void loadStartScreen()
-    {
-        SceneManager.LoadScene("Scenes/Game/StartScreen");
-    }
 
-    /// <summary>
-    /// TODO : REMOVE THIS UPDATE
-    /// </summary>
-    public void Update()
+    public sealed class TutorialLevelLogic : MonoBehaviour
     {
-        if (Managers.SingletonManager.inst.inputManager.isPauseActionPressedThisFrame())
+        internal enum TutorialSates
         {
-            loadStartScreen();
+            NONE,
+            Start,
+            TeachMovement,
+            TeachShoot,
+            TeachPlayerLives,
+            TeachBunker,
+            TeachBunkerEnemyShoot,
+            TeachPlayerShootBunkerShoot
+        }
+
+        public Enemy tutorialEnemy;
+        public Bunker tutorialBunker;
+        public Player tutorialPlayer;
+
+        private TutorialSates tutoriaStates = TutorialSates.NONE;
+
+        public void loadStartScreen()
+        {
+            SceneManager.LoadScene("Scenes/Game/StartScreen");
+        }
+
+        /// <summary>
+        /// TODO : REMOVE THIS UPDATE
+        /// </summary>
+        public void Update()
+        {
+            if (Managers.SingletonManager.inst.inputManager.isPauseActionPressedThisFrame())
+            {
+                loadStartScreen();
+            }
         }
     }
 }
