@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -20,8 +19,6 @@ namespace IndividualLevelLogic
 
         const float INVERSE_TIME_TO_REACH_TOP_SCRREN = 1.0f / TIME_TO_REACH_TOP_SCRREN;
 
-
-        // multiplier 
         public List<CreditsBox> credits;
         public CreditsBox creditsBoxTemplate = null;
         public float speedMultiplier = 1.0f;
@@ -129,5 +126,6 @@ namespace IndividualLevelLogic
 
 
         #endregion
+
     }
 }
