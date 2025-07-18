@@ -33,6 +33,7 @@ namespace Entities
                     projectile[i].gameObject.SetActive(true);
                     projectile[i].setUp();
                     projectile[i].teleport(spawnPoint);
+                    break;
                 }
             }
 

@@ -13,7 +13,7 @@ namespace Managers
 {
     public sealed class EnemyManager : MonoBehaviour, ISaveGameData, ILoadGameData
     {
-        const string PATH_TO_PROJECTILE = "Prefabs/Entities/Enemy Projectile";
+        public const string PATH_TO_PROJECTILE = "Prefabs/Entities/Enemy Projectile";
         const int MAX_PROJECTILES = 3;
         public enum EnemyManagerState
         {
@@ -97,9 +97,10 @@ namespace Managers
 
             EDebug.Assert(projectileTemplate != null, $"This scripts expected a prefab at the resources folder =|{PATH_TO_PROJECTILE}| fix that please", this);
 
+            Vector3 offScreenPostion = Vector3.one * 420691337.0f;
             for (int i = 0; i < projectiles.Count; ++i)
             {
-                projectiles[i] = projectileTemplate;
+                projectiles[i] = Instantiate(projectileTemplate, offScreenPostion, Quaternion.identity);
                 projectiles[i].excludeLayers = 1 << LayerMask.NameToLayer("Enemy");
             }
         }
