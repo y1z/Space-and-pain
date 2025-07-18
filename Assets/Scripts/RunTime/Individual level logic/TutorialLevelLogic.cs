@@ -23,9 +23,7 @@ namespace IndividualLevelLogic
             TeachShoot,
             TeachPlayerLives,
             TeachEnemyShoot,
-            TeachBunkerEnemyShoot,
             TeachBunker,
-            TeachPlayerShootBunkerShoot,
             END,
         }
 
@@ -41,9 +39,13 @@ namespace IndividualLevelLogic
 
         public RectTransform positionForTextBoxes;
 
+
+        public RectTransform finalTextBox;
+
+
         public TextMeshProUGUI uiText;
 
-        private TutorialStates tutorialState = TutorialStates.NONE;
+        public TutorialStates tutorialState = TutorialStates.NONE;
 
         public List<TutorialTextBox> textBoxesInScene = new();
         public List<TutorialTextBox> textBoxesInUse = new();
@@ -51,6 +53,9 @@ namespace IndividualLevelLogic
 
 
         public bool waitForInput { get; set; } = false;
+        public bool turnOnWaitForInput { get; set; } = true;
+
+        public bool hasMoveFinalTextBox { get; set; } = false;
         public int currentTextBoxIndex = 0;
 
 
@@ -68,6 +73,11 @@ namespace IndividualLevelLogic
             waitForInput = false;
             SingletonManager.inst.soundManager.playMusic("track 2", looping: true);
             SingletonManager.inst.gameManager.setState(GameStates.PAUSE);
+
+            UI.PlayerLivesDisplay tmp = LivesDisplay.GetComponentInChildren<UI.PlayerLivesDisplay>();
+            tutorialPlayer.playerLiveSystem.setLivesAmount(4);
+
+            tmp.Init(tutorialPlayer);
             ScoreDisplay.gameObject.SetActive(false);
             LivesDisplay.gameObject.SetActive(false);
 
@@ -75,6 +85,9 @@ namespace IndividualLevelLogic
 
             Projectile template = Resources.Load<Projectile>(EnemyManager.PATH_TO_PROJECTILE);
             tutorialEnemyProjectile = Instantiate<Projectile>(template, offScreenPos, Quaternion.identity);
+
+
+            tutorialPlayer.playerShoot.setMaxShots(2);
 
         }
 
@@ -85,7 +98,7 @@ namespace IndividualLevelLogic
                 loadStartScreen();
             }
 
-            if (waitForInput)
+            if (waitForInput && turnOnWaitForInput)
             {
                 getInput();
                 moveTextBox();
@@ -137,6 +150,9 @@ namespace IndividualLevelLogic
                     hideCurrentTextBoxes();
                     findTextBoxesOfState(tutorialState);
 
+                    SingletonManager.inst.scoreManager.setScore(0);
+                    tutorialPlayer.playerLiveSystem.setLivesAmount(4);
+
                     waitForInput = true;
                     break;
                 case TutorialStates.TeachEnemyShoot:
@@ -148,7 +164,7 @@ namespace IndividualLevelLogic
                     hideCurrentTextBoxes();
                     findTextBoxesOfState(tutorialState);
 
-                    tutorialEnemy.transform.position = new Vector3(0.0f, 3.0f,0.0f);
+                    tutorialEnemy.transform.position = new Vector3(0.0f, 3.0f, 0.0f);
                     tutorialEnemyProjectile.transform.position = new(0.0f, 2.0f, 0.0f);
                     tutorialEnemyProjectile.teleport(new Vector3(0.0f, 2.0f, 0.0f));
                     tutorialEnemyProjectile.gameObject.SetActive(true);
@@ -158,17 +174,39 @@ namespace IndividualLevelLogic
                     break;
 
                 case TutorialStates.TeachBunker:
-
+                    tutorialEnemy.transform.position = Vector3.one * 42069.0f;
+                    positionForTextBoxes.localPosition = Vector3.zero;
                     queueOfExpectInputs.Enqueue(InputInfo.SHOOT_ACTION_PRESSED_THIS_FRAME);
                     queueOfExpectInputs.Enqueue(InputInfo.SHOOT_ACTION_PRESSED_THIS_FRAME);
+                    queueOfExpectInputs.Enqueue(InputInfo.SHOOT_ACTION_PRESSED_THIS_FRAME);
+                    tutorialBunker.transform.position = new Vector3(0.0f, 3.0f);
 
-                    positionForTextBoxes.localPosition = Vector3.down * 400;
                     hideCurrentTextBoxes();
                     findTextBoxesOfState(tutorialState);
+                    waitForInput = true;
                     break;
+                case TutorialStates.END:
+
+                    SingletonManager.inst.gameManager.setState(GameStates.PLAYING);
+                    hideCurrentTextBoxes();
+                    bool hasFinalInput = finalInput();
+                    if (hasFinalInput && (hasMoveFinalTextBox == false))
+                    {
+                        finalTextBox.localPosition = Vector3.one * 42069.0f;
+                        hasMoveFinalTextBox = true;
+                    }
+                    else if (hasMoveFinalTextBox == false)
+                    {
+                        hideAllTextBoxes();
+                        finalTextBox.gameObject.SetActive(true);
+                        finalTextBox.localPosition = Vector3.zero;
+                    }
+
+                    break;
+                    /*
                 default:
                     DDebug.LogError($"Un-handled case = |{tutorialState}|", this);
-                    break;
+                    break;*/
             }
         }
 
@@ -185,12 +223,28 @@ namespace IndividualLevelLogic
             }
         }
 
+        private bool finalInput()
+        {
+            return SingletonManager.inst.inputManager.isShootActionPressedThisFrame();
+        }
+
         public void hideCurrentTextBoxes()
         {
             for (int i = 0; i < textBoxesInUse.Count; i++)
             {
                 textBoxesInUse[i].background.rectTransform.localPosition = Vector3.one * 420691337.0f;
                 textBoxesInUse[i].gameObject.SetActive(false);
+            }
+
+        }
+
+        public void hideAllTextBoxes()
+        {
+
+            for (int i = 0; i < textBoxesInScene.Count; i++)
+            {
+                textBoxesInScene[i].background.rectTransform.localPosition = Vector3.one * 420691337.0f;
+                textBoxesInScene[i].gameObject.SetActive(false);
             }
 
         }
@@ -222,7 +276,15 @@ namespace IndividualLevelLogic
             {
                 currentTextBoxIndex = 0;
                 waitForInput = false;
-                this.tutorialState = this.tutorialState + 1;
+                if (tutorialState == TutorialStates.TeachBunker)
+                {
+                    this.tutorialState = TutorialStates.END;
+                    turnOnWaitForInput = false;
+                }
+                else
+                {
+                    this.tutorialState = this.tutorialState + 1;
+                }
                 return;
             }
 
