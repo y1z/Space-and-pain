@@ -1,4 +1,5 @@
 using Managers;
+using Saving;
 using Scriptable_Objects;
 
 using UI;
@@ -56,6 +57,21 @@ namespace IndividualLevelLogic
         public void loadCredits()
         {
             SceneManager.LoadSceneAsync("Scenes/Game/Credits", LoadSceneMode.Single);
+        }
+
+        public void loadGame()
+        {
+
+            string[] thing = Saving.SaveLoading.loadSaveData();
+            if (thing[0] == SavingConstants.ERROR_NO_SAVE_DATA) 
+            {
+                SingletonManager.inst.soundManager.playSFX("deny beep");
+
+                return;
+            }
+
+            SceneManager.LoadSceneAsync("Scenes/Game/MainLoadSave", LoadSceneMode.Single);
+
         }
 
 

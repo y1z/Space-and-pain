@@ -86,6 +86,10 @@ namespace Managers
         [field: SerializeField, Range(1.0f, 10.0f)]
         public float maximumCoolDown { get; private set; } = 2.0f;
 
+        [field:Header("lowest point")]
+        [field: SerializeField, Range(0.0f, -4.0f)]
+        public float lowestPoint { get; private set; } = 0.0f;
+
         Util.CoolDownInRange enemyShootCoolDown = null;
 
         private void Start()
@@ -195,6 +199,11 @@ namespace Managers
                 return;
             }
 
+            if(enemies[enemyToMoveIndex].transform.position.y <= this.lowestPoint)
+            {
+                SingletonManager.inst.gameManager.setState(GameStates.GAME_OVER);
+            }
+
 
             enemyToMoveIndex = (enemyToMoveIndex + 1) % enemies.Count;
             currentHowLongUntilNextMove -= howLongUntilNextMove;
@@ -266,6 +275,7 @@ namespace Managers
                 enemies[i].onDies += onEnemyDies;
                 enemies[i].id = currentId++;
                 enemies[i].enemyMovement.setMovementStateToGroup();
+                enemies[i].lowestPointToReach = this.lowestPoint;
             }
 
             enemyManagerState = EnemyManagerState.MOVE_GROUP_HORIZONTALY;

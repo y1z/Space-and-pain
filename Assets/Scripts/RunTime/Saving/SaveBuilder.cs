@@ -35,6 +35,13 @@ namespace Saving
             DDebug.Log("<color=green> SAVE WAS FINALIZED </color>");
         }
 
+        public void finalizeCheckPoint()
+        {
+            PlayerPrefs.SetString(SAVE_KEY + SavingStatics.getSavingIndex() + SavingConstants.checkpoint , saveData.ToString());
+            PlayerPrefs.Save();
+            DDebug.Log("<color=cyan>CHECK POINT FINALIZED</color>");
+        }
+
         public void clear()
         {
             saveData.Clear();

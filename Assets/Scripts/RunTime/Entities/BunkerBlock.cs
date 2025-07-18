@@ -97,6 +97,12 @@ namespace Entities
             standardEntitySaveData = createEntitySaveData();
         }
 
+        void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            EDebug.Log("<color=red>bunker block</color>");
+
+        }
+
 
 
     }
