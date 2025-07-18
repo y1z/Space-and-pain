@@ -18,6 +18,10 @@ namespace Entities
 
         public StandardEntitySaveData standardEntitySaveData;
 
+        public float currentTime = 0.0f;
+
+        private bool goUP = false;
+
         private void Awake()
         {
             EDebug.Assert(fullHealthSprite != null, "Script needs the full health sprite to work", this);
@@ -34,6 +38,35 @@ namespace Entities
                 blocks[i].blockHit += onBlockHit;
             }
 
+        }
+
+        private void FixedUpdate()
+        {
+            currentTime += Time.fixedDeltaTime;
+            float delta_y = Mathf.Sin(currentTime);
+
+            if (goUP)
+            {
+                for (int i = 0; i < blocks.Length; ++i)
+                {
+                    Vector3 currentPos = blocks[i].transform.position;
+                    currentPos += Vector3.up * 0.010f;
+                    blocks[i].transform.position = currentPos;
+                }
+                goUP = false;
+
+            }
+            else
+            {
+                for (int i = 0; i < blocks.Length; ++i)
+                {
+                    Vector3 currentPos = blocks[i].transform.position;
+                    currentPos += Vector3.up * (-0.010f);
+                    blocks[i].transform.position = currentPos;
+                }
+
+                goUP = true;
+            }
         }
 
         private void setBlockToHalfHealthSprite(int index)

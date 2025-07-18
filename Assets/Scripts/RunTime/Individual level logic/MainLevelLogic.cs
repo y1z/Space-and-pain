@@ -21,12 +21,29 @@ namespace IndividualLevelLogic
         [field: SerializeField, Tooltip("The settings menu")]
         MenuScript settingsMenu;
 
+        [field: SerializeField, Tooltip("The settings menu")]
+        MenuScript gameOverMenu;
+
         [field: SerializeField, Tooltip("The menu used to confirm options")]
         ConfirmationMenu confirmationMenu;
+        
+        [field: SerializeField, Tooltip("scripts that keeps track of the rounds")]
+        RoundsScript roundsScript;
 
         Player playerReference = null;
 
         bool isConfirmationMenuOn = false;
+
+
+        private void Start()
+        {
+            
+        }
+
+        public void doOnNextRoundLoad()
+        {
+            saveCheckPoint();
+        }
 
 
         public void resumeGame()
@@ -83,6 +100,55 @@ namespace IndividualLevelLogic
             sab.finalizeSave();
 
             SingletonManager.inst.soundManager.playSFX("deny beep");
+        }
+
+        public void saveCheckPoint()
+        {
+            Saving.SaveBuilder sab = new();
+
+            playerReference.selfAssignComponents();
+
+            sab.addToBeSaved(playerReference);
+
+            List<Enemy> enemies = SingletonManager.inst.enemyManager.enemies; //FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            EDebug.Assert(enemies is not null, $"Could not find type of {typeof(Enemy)} in this scene", this);
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                sab.addToBeSaved(enemies[i]);
+            }
+
+            EnemySpawner[] spawners = SingletonManager.inst.enemyManager.enemySpawners;
+            EDebug.Assert(spawners is not null, $"Could not find type of {typeof(EnemySpawner)} in this scene", this);
+
+            foreach (EnemySpawner s in spawners)
+            {
+                sab.addToBeSaved(s);
+            }
+
+
+            Bunker[] bunkers = FindObjectsByType<Bunker>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            for (int i = 0; i < bunkers.Length; i++)
+            {
+                sab.addToBeSaved(bunkers[i]);
+            }
+
+            Projectile[] projectiles = FindObjectsByType<Projectile>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            for (int i = 0; i < projectiles.Length; i++)
+            {
+                sab.addToBeSaved(projectiles[i]);
+            }
+
+            sab.addToBeSaved(SingletonManager.inst.scoreManager);
+            sab.addToBeSaved(SingletonManager.inst.gameManager);
+            sab.addToBeSaved(SingletonManager.inst.enemyManager);
+
+            sab.printSaveDataDebug();
+
+            sab.finalizeCheckPoint();
         }
 
         public void load()
@@ -177,6 +243,102 @@ namespace IndividualLevelLogic
             enemyManager.recountHowManyEnemiesAreAlive();
 
             SingletonManager.inst.soundManager.playSFX("beep");
+        }
+
+
+        public void loadCheckPoint()
+        {
+            string[] loadingData = Saving.SaveLoading.loadCheckPointData();
+
+            if (loadingData[0] == Saving.SavingConstants.ERROR_NO_SAVE_DATA)
+            {
+                EDebug.LogError(loadingData[0], this);
+                SingletonManager.inst.soundManager.playSFX("deny beep");
+                return;
+            }
+
+            playerReference.playerShoot.deleteAllProjectiles();
+
+            EnemyManager enemyManager = SingletonManager.inst.enemyManager;
+
+            for (int i = 0; i < enemyManager.projectiles.Count; ++i)
+            {
+                enemyManager.projectiles[i].transform.gameObject.SetActive(false);
+            }
+
+            List<Enemy> enemies = enemyManager.enemies;
+            EnemySpawner[] enemySpawner = enemyManager.enemySpawners;
+            Bunker[] bunkers = FindObjectsByType<Bunker>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            int enemiesIndex = 0;
+            int enemySpawnerIndex = 0;
+            int bunkersIndex = 0;
+
+
+            playerReference.selfAssignComponents();
+
+            TypeIdentifier typeID = Saving.TypeIdentifier.NONE;
+            for (int i = 0; i < loadingData.Length; i++)
+            {
+                typeID = Saving.SaveDataParsing.identify(loadingData, i);
+
+                switch (typeID)
+                {
+                    case TypeIdentifier.PLAYER:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                        playerReference.loadSaveData(loadingData[i]);
+                        break;
+
+                    case TypeIdentifier.ENEMY:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                        enemies[enemiesIndex].loadSaveData(loadingData[i]);
+                        ++enemiesIndex;
+                        break;
+
+                    case TypeIdentifier.ENEMY_SPAWNER:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                        enemySpawner[enemySpawnerIndex].loadSaveData(loadingData[i]);
+                        ++enemySpawnerIndex;
+                        break;
+
+                    case TypeIdentifier.BUNKER:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                        bunkers[bunkersIndex].loadSaveData(loadingData[i]);
+                        ++bunkersIndex;
+                        break;
+
+                    case TypeIdentifier.PROJECTILE:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+
+                        this.loadProjectile(loadingData, i);
+                        break;
+
+                    case TypeIdentifier.SCORE_MANAGER:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                        SingletonManager.inst.scoreManager.loadSaveData(loadingData[i]);
+                        break;
+
+                    case TypeIdentifier.GAME_MANAGER:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                        SingletonManager.inst.gameManager.loadSaveData(loadingData[i]);
+                        break;
+
+                    case TypeIdentifier.ENEMY_MANAGER:
+                        EDebug.Log($" Loaded <color=cyan> |{typeID.ToString()}| </color>", this);
+                        SingletonManager.inst.enemyManager.loadSaveData(loadingData[i]);
+                        break;
+
+                    default:
+                        DDebug.LogError($"un-handled case =|{typeID}|", this);
+                        break;
+                }
+            }
+
+
+            enemyManager.recountHowManyEnemiesAreAlive();
+
+            SingletonManager.inst.soundManager.playSFX("beep");
+            SingletonManager.inst.gameManager.setState(GameStates.PLAYING);
         }
 
         public void settings()
@@ -290,6 +452,8 @@ namespace IndividualLevelLogic
         {
             Managers.SingletonManager.inst.gameManager.subscribe(setState);
             SceneManager.activeSceneChanged += onActiveSceneChange;
+
+            roundsScript.onNextRoundLoad.AddListener(doOnNextRoundLoad);
         }
 
         private void OnDisable()
@@ -297,6 +461,8 @@ namespace IndividualLevelLogic
             Managers.SingletonManager.inst.gameManager.unSubscribe(setState);
 
             SceneManager.activeSceneChanged -= onActiveSceneChange;
+
+            roundsScript.onNextRoundLoad.RemoveListener(doOnNextRoundLoad);
         }
 
         private void setState(GameStates _gameStates)
@@ -310,7 +476,11 @@ namespace IndividualLevelLogic
                     confirmationMenu.turnOff();
                     pauseMenu.gameObject.SetActive(true);
                     settingsMenu.gameObject.SetActive(false);
+
+                    gameOverMenu.turnOffAndHide();
+
                     pauseMenu.isOn = true;
+
                     settingsMenu.isOn = false;
 
                     if (playerReference is null)
@@ -328,6 +498,14 @@ namespace IndividualLevelLogic
                     // only exist because when loading the scene back it's variables are null
                     playerReference.selfAssignComponents();
                     break;
+                case GameStates.GAME_OVER:
+                    settingsMenu.turnOffAndHide();
+                    pauseMenu.turnOffAndHide();
+                    gameOverMenu.turnOnAndShow(); 
+                    break;
+                case GameStates.LOAD_SAVE_THING:
+                    load();
+                    break;
                 default:
                     confirmationMenu.gameObject.SetActive(true);
                     confirmationMenu.transform.localPosition = new Vector3(1337, 1337);
@@ -336,6 +514,8 @@ namespace IndividualLevelLogic
                     settingsMenu.gameObject.SetActive(false);
                     pauseMenu.isOn = false;
                     settingsMenu.isOn = false;
+
+                    gameOverMenu.turnOffAndHide(); 
                     break;
 
             }

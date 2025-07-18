@@ -25,5 +25,20 @@ namespace Saving
             return result.ToArray();
         }
 
+        public static string[] loadCheckPointData()
+        {
+            var segment_div = SEGMENT_DIVIDER;
+
+            List<string> 
+                result = PlayerPrefs.GetString(SAVE_KEY + SavingStatics.getSavingIndex(), ERROR_NO_SAVE_DATA + segment_div).Split(segment_div).ToList();
+
+            if (string.IsNullOrEmpty(result[result.Count - 1]))
+            {
+                result.RemoveAt(result.Count - 1);
+            }
+
+            return result.ToArray();
+        }
+
     }
 }

@@ -41,6 +41,9 @@ namespace Entities
 
         public StandardEntitySaveData standardEntitySaveData;
 
+        [Tooltip("How low can you go before it is game over")]
+        public float lowestPointToReach = -3.0f;
+
         #region GameManagerBoilerPlate
 
         private void OnEnable()
@@ -162,6 +165,13 @@ namespace Entities
 
 
         #endregion
+
+
+        void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            EDebug.Log("<color=red>Enemy </color>");
+
+        }
 
     }
 

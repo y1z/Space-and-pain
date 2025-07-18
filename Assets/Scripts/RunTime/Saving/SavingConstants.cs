@@ -16,6 +16,7 @@ namespace Saving
         public const string DIVIDER = "/";
         public const string SEGMENT_DIVIDER = "%*&";
         public const string SAVE_KEY = "save_key";
-        public const string ERROR_NO_SAVE_DATA = "ERROR : NO SAVE DATA FOUND";  
+        public const string ERROR_NO_SAVE_DATA = "ERROR : NO SAVE DATA FOUND";
+        public const string checkpoint = "_checkpoint";
     }
 }

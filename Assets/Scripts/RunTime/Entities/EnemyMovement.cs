@@ -83,6 +83,12 @@ namespace Entities
                 calculateTeleportDown();
             }
 
+            if(transform.position.y < this.referenceToEnemy.lowestPointToReach)
+            {
+                SingletonManager.inst.gameManager.setState(GameStates.GAME_OVER);
+                return;
+            }
+
             switch (state)
             {
                 case EnemyMovementState.SINGLE:
@@ -261,5 +267,12 @@ namespace Entities
         {
 
         }
+
+        void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            EDebug.Log("<color=red>Enemy Movement</color>");
+
+        }
+
     }
 }

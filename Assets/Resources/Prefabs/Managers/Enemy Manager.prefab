@@ -44,15 +44,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc97c1c7998fe7c47b0a8dae9d65a660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <gameStates>k__BackingField: 0
+  <enemyManagerState>k__BackingField: 0
   projectileTemplate: {fileID: 0}
   <projectiles>k__BackingField:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   enemies: []
-  <aliveEnemies>k__BackingField: 0
-  teleportDistance: 0.6
+  <enemySpawners>k__BackingField: []
+  <aliveEnemiesCount>k__BackingField: 0
+  <teleportDistance>k__BackingField: 1
   howLongUntilNextMove: 0.09
-  moveEnemiesToTheRight: 0
-  minimumCoolDown: 1
-  maximumCoolDown: 2
+  <currentHowLongUntilNextMove>k__BackingField: 0
+  <moveDownFactorSpeedUp>k__BackingField: 0.3
+  <enemyToMoveIndex>k__BackingField: 0
+  howLongUntilNextEnemyMovementSpeedUpRate: 0.95
+  moveDownFactorSpeedUpSpeedUpRate: 1
+  <moveEnemiesToTheRight>k__BackingField: 0
+  <minimumCoolDown>k__BackingField: 1
+  <maximumCoolDown>k__BackingField: 2
+  <lowestPoint>k__BackingField: 0

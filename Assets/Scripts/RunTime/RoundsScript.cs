@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 
 using Managers;
@@ -13,6 +14,8 @@ public sealed class RoundsScript : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI roundText;
 
+    public UnityEvent onNextRoundLoad;
+
     private void Start()
     {
         if (enemyManagerReference is null)
@@ -26,6 +29,8 @@ public sealed class RoundsScript : MonoBehaviour
     {
         enemyManagerReference.prepareNextRound();
         yield return new WaitForEndOfFrame();
+
+        onNextRoundLoad?.Invoke();
         SingletonManager.inst.gameManager.setState(GameStates.PLAYING);
     }
 

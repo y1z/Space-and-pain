@@ -66,6 +66,7 @@ namespace Entities
             if (hit.gameObject.CompareTag("Enemy"))
             {
                 EDebug.Log("Enemy hit");
+                SingletonManager.inst.gameManager.setState(GameStates.GAME_OVER);
                 cc.enabled = false;
                 transform.position = referenceToPlayer.startingPosition;
                 cc.enabled = true;

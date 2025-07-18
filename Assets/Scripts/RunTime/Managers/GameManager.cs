@@ -140,11 +140,13 @@ namespace Managers
         IDLE = 0,
         INIT_LEVEL,
         INIT_ENEMYS,
+        FINISHED_GEN, // finished
         UI,
         PAUSE,
         PLAYING,
         GAME_OVER,
         WON,
+        LOAD_SAVE_THING,
     }
 
     public static partial class SaveStringifyer

@@ -2796,6 +2796,14 @@ MonoBehaviour:
     eventsToBeCalled:
       m_PersistentCalls:
         m_Calls: []
+  - stateToBeSet: 9
+    eventsToBeCalled:
+      m_PersistentCalls:
+        m_Calls: []
+  - stateToBeSet: 6
+    eventsToBeCalled:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1001 &1213000706
 PrefabInstance:
   m_ObjectHideFlags: 0
