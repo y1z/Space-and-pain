@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2079009458556143262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 239547164661201787}
+  - component: {fileID: 5218224221701184390}
+  m_Layer: 0
+  m_Name: gfx Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &239547164661201787
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079009458556143262}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2242723157874201859}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5218224221701184390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079009458556143262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3e379ccc593ab0458e7c3c7a32d0004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <isFullScreen>k__BackingField: 0
 --- !u!1 &5382825946662643396
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,6 +125,7 @@ Transform:
   - {fileID: 1646520509614652673}
   - {fileID: 2157498779993942329}
   - {fileID: 2823199770055157843}
+  - {fileID: 239547164661201787}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6267793223250411363
@@ -99,6 +145,7 @@ MonoBehaviour:
   <enemyManager>k__BackingField: {fileID: 6090944471492691215}
   <soundManager>k__BackingField: {fileID: 7212046557203305079}
   <scoreManager>k__BackingField: {fileID: 7946395327993744830}
+  <gfxManager>k__BackingField: {fileID: 5218224221701184390}
 --- !u!1001 &286729989671105819
 PrefabInstance:
   m_ObjectHideFlags: 0

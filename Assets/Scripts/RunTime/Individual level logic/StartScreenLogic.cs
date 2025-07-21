@@ -54,10 +54,16 @@ namespace IndividualLevelLogic
             SceneManager.LoadSceneAsync("Scenes/Game/Tutorial", LoadSceneMode.Single);
         }
 
+        public void changeFullScreen(bool _isFullScreen)
+        {
+            SingletonManager.inst.gfxManager.setFullScreen(_isFullScreen);
+        }
+
         public void loadCredits()
         {
             SceneManager.LoadSceneAsync("Scenes/Game/Credits", LoadSceneMode.Single);
         }
+
 
         public void loadGame()
         {

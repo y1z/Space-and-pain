@@ -226,7 +226,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 180938985577504335, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -714.28577
+      value: -800
       objectReference: {fileID: 0}
     - target: {fileID: 320996269820045805, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -354,7 +354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1244927254056779026, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -82.14286
+      value: -91.666664
       objectReference: {fileID: 0}
     - target: {fileID: 1613512939043319950, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -370,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1613512939043319950, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -942.8572
+      value: -933.3333
       objectReference: {fileID: 0}
     - target: {fileID: 1627120846929669817, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -580,6 +580,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -50
       objectReference: {fileID: 0}
+    - target: {fileID: 4084151941765788242, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2067451863}
+    - target: {fileID: 4084151941765788242, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: changeFullScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084151941765788242, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
+      propertyPath: checkedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: IndividualLevelLogic.StartScreenLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 4468434639060767733, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -738,7 +750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5326071934557366216, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -410.7143
+      value: -458.3333
       objectReference: {fileID: 0}
     - target: {fileID: 5861409610922437877, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -914,7 +926,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7353117752647013879, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -246.42859
+      value: -275
       objectReference: {fileID: 0}
     - target: {fileID: 7425818570291120532, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_Pivot.x
@@ -1246,7 +1258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9208005742249783043, guid: 5a67f5967107de54e923c6b0e123db2d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -575
+      value: -641.6667
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -12,11 +12,15 @@ namespace Saving
         public const string GAME_MANAGER_ID = "gm";
         public const string SCORE_MANAGER_ID = "sm";
         public const string ENEMY_MANAGER_ID = "em";
+        public const string GFX_MANAGER_ID = "gfxm";
+
         public const string STANDARD_ENTITY_SAVE_DATA_ID = "std.esd";
         public const string DIVIDER = "/";
         public const string SEGMENT_DIVIDER = "%*&";
         public const string SAVE_KEY = "save_key";
         public const string ERROR_NO_SAVE_DATA = "ERROR : NO SAVE DATA FOUND";
         public const string checkpoint = "_checkpoint";
+
+        public const string thing = "";
     }
 }

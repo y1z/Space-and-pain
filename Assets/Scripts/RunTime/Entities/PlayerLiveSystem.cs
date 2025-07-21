@@ -77,7 +77,7 @@ namespace Entities
                 SingletonManager.inst.soundManager.playVoice("game over");
                 SingletonManager.inst.gameManager.printSubscribers();
                 SingletonManager.inst.gameManager.setState(GameStates.GAME_OVER);
-                SceneManager.LoadScene("Scenes/Game/StartScreen");
+                //SceneManager.LoadScene("Scenes/Game/StartScreen");
             }
 
             yield return new WaitForSeconds(timeUntilRespawn);
